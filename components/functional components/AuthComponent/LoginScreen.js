@@ -38,27 +38,64 @@ const LoginScreen = ({ navigation, route }) => {
 
 
 
-    // async function login() {
-    //     if (email.trim().length === 0 || pass.trim().length === 0) {
-    //         Toast.show({
-    //             type: 'error',
-    //             text1: 'Missing Data',
-    //             visibilityTime: 1000
-    //         });
-    //         return;
-    //     }
-    //     try {
-    //         await signInWithEmailAndPassword(auth, email, pass);
-    //         route.params.finishAuth()
+    async function login() {
+        // if (email.trim().length === 0 || pass.trim().length === 0) {
+        //     Toast.show({
+        //         type: 'error',
+        //         text1: 'Missing Data',
+        //         visibilityTime: 1000
+        //     });
+        //     return;
+        // }
+        // const payload = {
+        //     "email_id": "helen@gmail.com",
+        //     "password": "helen@123"
+        // }
+        // console.log(`${CONST.baseUrlAuth}api/registrant/signin`)
+        // try {
+        //     axios.get(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then((response)=>{
+        //         console.log(response.data)
+        //     }).catch((err)=>{
+        //         console.log(err.response.data)
+        //     })
+        //     // route.params.finishAuth()
 
-    //     } catch (error) {
-    //         Toast.show({
-    //             type: 'error',
-    //             text1: error.response.data
-    //         });
-    //         throw error
-    //     }
-    // }
+        // } catch (error) {
+        //     Toast.show({
+        //         type: 'error',
+        //         text1: error.response.data
+        //     });
+        //     throw error
+        // }
+
+
+
+        let data = JSON.stringify({
+            "email_id": "helen@gmail.com",
+            "password": "helen@123"
+          });
+          
+          let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: 'https://apr-marathon-render.onrender.com/api/registrant/signin',
+            headers: { 
+              'Content-Type': 'application/json', 
+              'Cookie': 'connect.sid=s%3ApgvzayDJQYhq-bMjKF5jB2J5pK86qoLo.N96qcjTGs8RCXdJGq3WRY5SbCtVmyU%2Fk3DH0vqMhcTU'
+            },
+            data : data
+          };
+          
+          axios.request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    }
+
+
 
 
     return (
@@ -177,6 +214,7 @@ const LoginScreen = ({ navigation, route }) => {
 
                 <RectButton marginTop={24} text="Sign In" onClick={() => {
                     // login()
+                    route.params.finishAuth()
                 }} />
 
                 <Text
@@ -236,10 +274,10 @@ const LoginScreen = ({ navigation, route }) => {
 
 
 
-                {/* <Toast
+                <Toast
                     position='bottom'
                     bottomOffset={20}
-                /> */}
+                />
             </ScrollView>
 
         </View>

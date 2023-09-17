@@ -12,6 +12,10 @@ import LoginScreen from './components/functional components/AuthComponent/LoginS
 import SignUpScreen from './components/functional components/AuthComponent/SignupScreen';
 import { COLORS } from './contants';
 import OTPScreen from './components/functional components/AuthComponent/OTPScreen';
+import Events from './components/functional components/EventsComponent/Events';
+import EventDescription from './components/functional components/EventsComponent/EventDescription';
+import MySchedule from './components/functional components/ScheduleComponent/MySchedule';
+import AddRegistrant from './components/functional components/EventsComponent/AddRegistrant';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -45,55 +49,75 @@ export default function App() {
     return null;
   }
 
+  const TabNav = ()=>{
+    return(
+      <Tab.Navigator theme={theme} screenOptions={{ headerShown: false, tabBarActiveTintColor: COLORS.blue, tabBarInactiveTintColor: COLORS.greenAccent, backgroundColor: "white" }}>
+
+      <Tab.Screen name={"Events"} component={Events} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='calendar' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
+      <Tab.Screen name={"My Schedule"} component={MySchedule} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='clock' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
+      <Tab.Screen name={"Settings"} component={Trial} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='settings' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
+
+    </Tab.Navigator>
+    )
+  } 
+
   return (
     <RootSiblingParent>
       <NavigationContainer>
-      {
-        auth ? (
-          <Tab.Navigator theme={theme} screenOptions={{ headerShown: false, tabBarActiveTintColor: COLORS.blue, tabBarInactiveTintColor: COLORS.greenAccent, backgroundColor:"white" }}>
-            
-            <Tab.Screen name={"Events"} component={Trial} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='calendar' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
-            <Tab.Screen name={"My Schedule"} component={Trial} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='clock' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
-            <Tab.Screen name={"Settings"} component={Trial} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='settings' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
+        {
+          auth ? (
 
-          </Tab.Navigator>
-
-        ) :
-          (
-            <Stack.Navigator theme={theme} screenOptions={{ headerShown: false }} initialRouteName="Landing">
+            <Stack.Navigator theme={theme} screenOptions={{ headerShown: false }} initialRouteName="Dashboard">
 
               <Stack.Group screenOptions={{ headerStyle: { backgroundColor: COLORS.white } }}  >
-                  
 
+                <Stack.Screen name="Home" component={TabNav } />
 
-
-                      <Stack.Screen name="LoginScreen" component={LoginScreen} initialParams={{ finishAuth: finishAuth }}/>
-
-                      <Stack.Screen name="SignUpScreen" component={SignUpScreen} initialParams={{ finishAuth: finishAuth }} />
-
-
-                      {/* <Stack.Screen name="MobileVerificationScreen" component={MobileVerificationScreen} initialParams={{ finishAuth: finishAuth, setCurr: setCurr }} /> */}
-
-                      <Stack.Screen name="OTPScreen" component={OTPScreen} initialParams={{ finishAuth: finishAuth }} />
-
-                      {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} initialParams={{ finishAuth: finishAuth }} /> */}
+                <Stack.Screen name="EventDescription" component={EventDescription} />
+                <Stack.Screen name="AddRegistrant" component={AddRegistrant} />
 
 
 
 
-
-
-
-                  
-
-                
               </Stack.Group>
             </Stack.Navigator>
 
-           )
+          ) :
+            (
+              <Stack.Navigator theme={theme} screenOptions={{ headerShown: false }} initialRouteName="Landing">
+
+                <Stack.Group screenOptions={{ headerStyle: { backgroundColor: COLORS.white } }}  >
+
+
+
+
+                  <Stack.Screen name="LoginScreen" component={LoginScreen} initialParams={{ finishAuth: finishAuth }} />
+
+                  <Stack.Screen name="SignUpScreen" component={SignUpScreen} initialParams={{ finishAuth: finishAuth }} />
+
+
+                  {/* <Stack.Screen name="MobileVerificationScreen" component={MobileVerificationScreen} initialParams={{ finishAuth: finishAuth, setCurr: setCurr }} /> */}
+
+                  <Stack.Screen name="OTPScreen" component={OTPScreen} initialParams={{ finishAuth: finishAuth }} />
+
+                  {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} initialParams={{ finishAuth: finishAuth }} /> */}
+
+
+
+
+
+
+
+
+
+
+                </Stack.Group>
+              </Stack.Navigator>
+
+            )
         }
       </NavigationContainer>
-      </RootSiblingParent>
+    </RootSiblingParent>
   );
 }
 
