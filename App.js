@@ -20,6 +20,9 @@ import AddRegistrant from './components/functional components/EventsComponent/Ad
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddRunners from './components/functional components/EventsComponent/AddRunners';
 import authContext from './contants/authContext';
+import MasterList from './components/functional components/EventsComponent/MasterList';
+
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -122,6 +125,7 @@ export default function App() {
                 <Stack.Screen name="EventDescription" component={EventDescription} />
                 <Stack.Screen name="AddRegistrant" component={AddRegistrant} />
                 <Stack.Screen name="AddRunners" component={AddRunners} />
+                <Stack.Screen name="MasterList" component={MasterList} />
 
 
 

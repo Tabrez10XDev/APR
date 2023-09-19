@@ -53,7 +53,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
         console.log("Ended")
 
-        navigation.navigate("AddRunners",{...payload, current: 0, total: 4})
+        navigation.navigate("AddRunners",{...payload, current: 0, total: 4, stateArray: [{},{},{},{}], param: data })
 
         // try {
         //     axios.post(`${CONST.baseUrlAuth}api/registration/add/registrant`, payload).then((response) => {

@@ -11,10 +11,10 @@ import common from '../../../contants/common';
 import authContext from '../../../contants/authContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import DatePickerModal from '../../ui components/DatePickerModal';
+import { StackActions } from '@react-navigation/native';
 
 const AddRunners = ({ route, navigation }) => {
     const data = route.params
-    const [stackIndex, setStackIndex] = useState(1);
 
 
     const [open, setOpen] = useState(false)
@@ -33,24 +33,35 @@ const AddRunners = ({ route, navigation }) => {
         value: "OTHERS"
     }]
 
+    const [stateArray, setStateArray] = useState(data.stateArray)
 
-    const [state, setState] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        number: "",
-        flatNo: null,
-        residentType: null,
-        address: "",
-        tower: null,
-        phase: null,
-        city: null,
-        state: null,
-        country: "",
-        zipCode: "",
-        runnersClass: null,
-        date: new Date()
-    })
+    const [current, setCurrent] = useState(data.current)
+
+    const [state, setState] = useState(stateArray[current])
+
+    const [selectedDate, setSelectedDate] = useState(state.date ?? "")
+    const [stackIndex, setStackIndex] = useState(state.size ?? 1);
+
+    useEffect(() => {
+        setState(stateArray[current])
+        setStackIndex(stateArray[current].size ?? 1)
+    }, [current])
+
+    // useEffect(()=>{
+    //         console.log(data.current)
+    //         setCurrent(data.current)
+    // },[])
+
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            console.log(data.current)
+            setCurrent(data.current)
+        });
+
+        return unsubscribe;
+    }, [navigation]);
+
 
     return (
 
@@ -79,7 +90,7 @@ const AddRunners = ({ route, navigation }) => {
                         </Text>
                     </View>
 
-                    <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ minHeight: '100%', width: '90%', alignSelf: 'center' }}>
+                    <ScrollView contentContainerStyle={{ minHeight: '100%', width: '90%', alignSelf: 'center' }}>
 
                         <Text
                             style={{
@@ -90,7 +101,7 @@ const AddRunners = ({ route, navigation }) => {
                                 marginTop: 12
                             }}
                         >
-                            Runner Details* ({route.params.current + 1}/{route.params.total})
+                            Runner Details* ({current + 1}/{route.params.total})
                         </Text>
 
                         <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
@@ -110,8 +121,8 @@ const AddRunners = ({ route, navigation }) => {
                                 <Input
                                     placeholder="Enter Here"
                                     inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
-                                    // onChangeText={(value) => setState(current => ({ ...current, firstName: value }))}
-                                    value={data.first_name}
+                                    onChangeText={(value) => setState(current => ({ ...current, firstName: value }))}
+                                    value={state.firstName}
                                     placeholderTextColor={COLORS.lightGray}
                                 />
                             </View>
@@ -131,13 +142,12 @@ const AddRunners = ({ route, navigation }) => {
                                 <Input
                                     placeholder="Enter Here"
                                     inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
-                                    // onChangeText={(value) => setState(current => ({ ...current, lastName: value }))}
-                                    value={data.last_name}
+                                    onChangeText={(value) => setState(current => ({ ...current, lastName: value }))}
+                                    value={state.lastName}
                                     placeholderTextColor={COLORS.lightGray}
                                 />
                             </View>
                         </View>
-
 
                         <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
                             <View style={{ width: '50%' }}>
@@ -159,7 +169,7 @@ const AddRunners = ({ route, navigation }) => {
                                         placeholder="Enter Here"
                                         inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', disabled: true }}
                                         // onChangeText={(value) => setState(current => ({ ...current, firstName: value }))}
-                                        value={data.first_name}
+                                        value={selectedDate ? selectedDate : ""}
                                         placeholderTextColor={COLORS.lightGray}
                                     />
                                 </TouchableOpacity>
@@ -202,9 +212,9 @@ const AddRunners = ({ route, navigation }) => {
                                     labelField="label"
                                     valueField="value"
                                     placeholder="Gender"
-                                    value={state.residentType}
+                                    value={state.gender}
                                     onChange={item => {
-                                        setState(current => ({ ...current, residentType: item.value }))
+                                        setState(current => ({ ...current, gender: item.value }))
                                     }}
 
                                 />
@@ -226,8 +236,8 @@ const AddRunners = ({ route, navigation }) => {
                         <Input
                             placeholder="Enter Here"
                             inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start' }}
-                            // onChangeText={(value) => setState(current => ({ ...current, email: value }))}
-                            value={data.email_id}
+                            onChangeText={(value) => setState(current => ({ ...current, email: value }))}
+                            value={state.email}
                             placeholderTextColor={COLORS.lightGray}
                         />
 
@@ -249,9 +259,9 @@ const AddRunners = ({ route, navigation }) => {
                                     <Feather name="phone" size={24} color={COLORS.icons} style={{ position: 'absolute', zIndex: 5, left: 8, top: '40%' }} />
                                     <Input
                                         placeholder="Enter Here"
-                                        inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start', paddingLeft: 42 }}
+                                        inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', paddingLeft: 42 }}
                                         onChangeText={(value) => setState(current => ({ ...current, number: value }))}
-                                        value={data.phone_number}
+                                        value={state.number}
                                         placeholderTextColor={COLORS.lightGray}
                                     />
                                 </View>
@@ -273,9 +283,9 @@ const AddRunners = ({ route, navigation }) => {
                                     <Feather name="phone" size={24} color={COLORS.icons} style={{ position: 'absolute', zIndex: 5, left: 8, top: '40%' }} />
                                     <Input
                                         placeholder="Enter Here"
-                                        inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start', paddingLeft: 42 }}
-                                        onChangeText={(value) => setState(current => ({ ...current, number: value }))}
-                                        value={data.phone_number}
+                                        inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', paddingLeft: 42 }}
+                                        onChangeText={(value) => setState(current => ({ ...current, emergencyNumber: value }))}
+                                        value={state.emergencyNumber ?? data.param.phone_number}
                                         placeholderTextColor={COLORS.lightGray}
                                     />
                                 </View>
@@ -295,7 +305,7 @@ const AddRunners = ({ route, navigation }) => {
                             T Shirt Size<Text style={{ color: COLORS.red }}>*</Text>
                         </Text>
 
-                        <View style={{width:'100%', height:60}}>
+                        <View style={{ width: '100%', height: 60 }}>
                             <ScrollView
                                 horizontal={true}
                                 showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} style={{ width: '98%', alignSelf: 'center', height: 60 }}>
@@ -435,14 +445,14 @@ const AddRunners = ({ route, navigation }) => {
                                 }}
                                 inputSearchStyle={{}}
                                 iconStyle={{}}
-                                data={[]}
+                                data={common.bloodGroups}
                                 maxHeight={300}
                                 labelField="label"
-                                valueField="value"
+                                valueField="label"
                                 placeholder="Blood Group"
-                                value={state.residentType}
+                                value={state.bloodGroup}
                                 onChange={item => {
-                                    setState(current => ({ ...current, residentType: item.value }))
+                                    setState(current => ({ ...current, bloodGroup: item.value }))
                                 }}
 
                             />
@@ -467,33 +477,66 @@ const AddRunners = ({ route, navigation }) => {
                                 }}
                                 inputSearchStyle={{}}
                                 iconStyle={{}}
-                                data={[]}
+                                data={data.param.run_category}
                                 maxHeight={300}
-                                labelField="label"
-                                valueField="value"
+                                labelField="race_type_name"
+                                valueField="race_type_id"
                                 placeholder="Run Category"
-                                value={state.residentType}
+                                value={state.runCategory}
                                 onChange={item => {
-                                    setState(current => ({ ...current, residentType: item.value }))
+                                    setState(current => ({ ...current, runCategory: item.value }))
                                 }}
 
                             />
 
                         </View>
 
-<View style={{width:'100%', alignSelf:'center',flexDirection:'row', justifyContent:'space-evenly'}}>
-                        <WhiteButton onClick={()=>{}} text={"Back"} alignSelf={'center'} marginTop={24} width='45%' />
-                        <RectButton onClick={()=>{}} text={"Next"} alignSelf={'center'} marginTop={24} width='45%' />
+                        <View style={{ width: '100%', alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                            <WhiteButton onClick={() => {
+                                if (current > 0) {
+                                    let temp = stateArray
+                                    temp[current] = state
+                                    setStateArray(temp)
+                                    setCurrent(current - 1)
+                                } else {
+                                    navigation.dispatch(StackActions.pop(1))
+                                }
+                            }} text={"Back"} alignSelf={'center'} marginTop={24} width='45%' />
+                            <RectButton onClick={() => {
+                                if (current < data.total - 1) {
+                                    let _state = state
+                                    _state["date"] = selectedDate
+                                    _state['size'] = stackIndex
+                                    _state['emergencyNumber'] = state.emergencyNumber ?? data.param.phone_number
+                                    let temp = stateArray
+                                    temp[current] = _state
+                                    setStateArray(temp)
+                                    setCurrent(current + 1)
+                                } else {
+                                    let _state = state
+                                    _state["date"] = selectedDate
+                                    _state['size'] = stackIndex
+                                    _state['emergencyNumber'] = state.emergencyNumber ?? data.param.phone_number
+
+                                    let temp = stateArray
+                                    temp[current] = _state
+                                    setStateArray(temp)
+
+                                    let _data = data
+                                    data.stateArray = stateArray
+                                    navigation.navigate("MasterList", data)
+                                }
+                            }} text={"Next"} alignSelf={'center'} marginTop={24} width='45%' />
 
 
-</View>
+                        </View>
 
 
 
 
                     </ScrollView>
 
-                    <DatePickerModal modalVisible={open} setModalVisible={setOpen} setSelectedDate={state.date} />
+                    <DatePickerModal modalVisible={open} setModalVisible={setOpen} setSelectedDate={setSelectedDate} />
 
                     {/* <DatePicker
                         modal

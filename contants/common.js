@@ -6192,7 +6192,34 @@ const common = {
         {
             "name": "West Bengal"
         }
+    ],
+    "bloodGroups": [
+        {
+            "label": "A+"
+        },
+        {
+            "label": "A-"
+        },
+        {
+            "label": "B+"
+        },
+        {
+            "label": "B-"
+        },
+        {
+            "label": "AB+"
+        },
+        {
+            "label": "AB-"
+        },
+        {
+            "label": "O+"
+        },
+        {
+            "label": "O-"
+        }
     ]
+
 
 
 }
