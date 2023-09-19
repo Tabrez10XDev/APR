@@ -31,42 +31,75 @@ const SignUpScreen = ({ navigation, route }) => {
     const [visibility, setVisibility] = useState(false)
     const [email, setEmail] = useState("")
     const [pass, setPass] = useState("")
+    const [state, setState] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        corpCode: null,
+        number: ""
+    })
+
+
+    async function signup() {
+
+        if(!isChecked){
+            Toast.show({
+                type: 'error',
+                text1: 'Agree to Terms&Conditions',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
+        if (state.firstName.trim().length === 0 || state.lastName.trim().length === 0 || state.email.trim().length === 0 || state.password.trim().length === 0 || state.number.trim().length === 0) {
+            Toast.show({
+                type: 'error',
+                text1: 'Missing Data',
+                visibilityTime: 1000
+            });
+            return;
+        }
+        const payload = {
+            "first_name": state.firstName,
+            "middle_name": null,
+            "last_name": state.lastName,
+            "email_id": state.email,
+            "password": state.password,
+            "mobile_number": state.number
+        }
+
+        console.log(payload)
+        try {
+            axios.post(`${CONST.baseUrlAuth}api/registrant/signup`, payload).then(async (response) => {
+                console.log(response.data)
+                navigation.navigate("OTPScreen",{number: state.number, email: state.email})
+            }).catch((err) => {
+                console.log(err.response.data)
+                Toast.show({
+                    type: 'error',
+                    text1: err.response.data
+                });
+            })
+
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: error.response.data
+            });
+            throw error
+        }
+    }
 
 
 
 
-
-
-
-
-
-    // async function login() {
-    //     if (email.trim().length === 0 || pass.trim().length === 0) {
-    //         Toast.show({
-    //             type: 'error',
-    //             text1: 'Missing Data',
-    //             visibilityTime: 1000
-    //         });
-    //         return;
-    //     }
-    //     try {
-    //         await signInWithEmailAndPassword(auth, email, pass);
-    //         route.params.finishAuth()
-
-    //     } catch (error) {
-    //         Toast.show({
-    //             type: 'error',
-    //             text1: error.response.data
-    //         });
-    //         throw error
-    //     }
-    // }
 
 
     return (
 
         <View style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
-            <ScrollView contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom:100 }}>
+            <ScrollView contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom: 100 }}>
 
 
 
@@ -101,28 +134,59 @@ const SignUpScreen = ({ navigation, route }) => {
                     Sign Up
                 </Text>
 
-                <Text
-                    style={{
-                        fontSize: SIZES.medium,
-                        fontFamily: FONTS.bold,
-                        color: COLORS.black,
-                        width: '90%',
-                        textAlign: 'left',
-                        marginTop: 14
-                    }}
-                >
-                    Name
-                </Text>
+                <View style={{ flexDirection: 'row', width: '90%', alignItems: 'center', justifyContent: "space-between" }}>
+                    <View style={{ alignSelf: 'flex-start', width: '48%' }}>
+                        <Text
+                            style={{
+                                fontSize: SIZES.medium,
+                                fontFamily: FONTS.bold,
+                                color: COLORS.black,
+                                textAlign: 'left',
+                                marginTop: 14
+                            }}
+                        >
+                            First Name
+                        </Text>
 
-                <Input
-                    placeholder="Email"
-                    onChangeText={(value) => setEmail(value)}
-                    value={email}
-                    placeholderTextColor={COLORS.lightGray}
-                    inputStyle={{ marginTop: 8 }}
+                        <Input
+                            placeholder="Enter Here"
+                            onChangeText={(value) => setState(current=>({...current, firstName:value}))}
+                            value={state.firstName}
+                            placeholderTextColor={COLORS.lightGray}
+                            inputprops={{width:"100%", alignSelf:'flex-start'}}
 
-                />
+                        />
 
+                    </View>
+
+                    <View style={{ alignSelf: 'flex-start', width: '48%' }}>
+                        <Text
+                            style={{
+                                fontSize: SIZES.medium,
+                                fontFamily: FONTS.bold,
+                                color: COLORS.black,
+                                textAlign: 'left',
+                                marginTop: 14
+                            }}
+                        >
+                           Last Name
+                        </Text>
+
+                        <Input
+                            placeholder="Enter Here"
+                            onChangeText={(value) => setState(current=>({...current, lastName:value}))}
+                            value={state.lastName}
+                            placeholderTextColor={COLORS.lightGray}
+                            inputprops={{width:"100%", alignSelf:'flex-start'}}
+
+                        />
+
+                    </View>
+
+                    
+                </View>
+
+           
                 <Text
                     style={{
                         fontSize: SIZES.medium,
@@ -137,9 +201,9 @@ const SignUpScreen = ({ navigation, route }) => {
                 </Text>
 
                 <Input
-                    placeholder="Email"
-                    onChangeText={(value) => setEmail(value)}
-                    value={email}
+                    placeholder="Enter Here"
+                    onChangeText={(value) => setState(current=>({...current, email:value}))}
+                    value={state.email}
                     placeholderTextColor={COLORS.lightGray}
                     inputStyle={{ marginTop: 8 }}
 
@@ -160,9 +224,9 @@ const SignUpScreen = ({ navigation, route }) => {
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                     <Input
-                        placeholder="Password"
-                        onChangeText={(value) => setEmail(value)}
-                        value={email}
+                        placeholder="Enter Here"
+                        onChangeText={(value) => setState(current=>({...current, password:value}))}
+                        value={state.password}
                         placeholderTextColor={COLORS.lightGray}
                         inputprops={{ secureTextEntry: !visibility }}
                     />
@@ -195,9 +259,9 @@ const SignUpScreen = ({ navigation, route }) => {
                 </Text>
 
                 <Input
-                    placeholder="Email"
-                    onChangeText={(value) => setEmail(value)}
-                    value={email}
+                    placeholder="Enter Here"
+                    onChangeText={(value) => setState(current=>({...current, corpCode:value}))}
+                    value={state.corpCode}
                     placeholderTextColor={COLORS.lightGray}
                     inputStyle={{ marginTop: 8 }}
 
@@ -217,14 +281,14 @@ const SignUpScreen = ({ navigation, route }) => {
                 </Text>
 
                 <Input
-                    placeholder="Email"
-                    onChangeText={(value) => setEmail(value)}
-                    value={email}
+                    placeholder="Enter Here"
+                    onChangeText={(value) => setState(current=>({...current, number:value}))}
+                    value={state.number}
                     placeholderTextColor={COLORS.lightGray}
                     inputStyle={{ marginTop: 8 }}
 
                 />
-                <View style={{ flexDirection: 'row', alignSelf: 'center', width: '90%', marginTop: 8, justifyContent:'space-between' }}>
+                <View style={{ flexDirection: 'row', alignSelf: 'center', width: '90%', marginTop: 8, justifyContent: 'space-between' }}>
 
                     <BouncyCheckbox
                         size={25}
@@ -258,8 +322,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
 
                 <RectButton marginTop={24} text="Sign Up" onClick={() => {
-                    // login()
-                    navigation.navigate("OTPScreen")
+                    signup()
 
                 }} />
 
@@ -299,10 +362,10 @@ const SignUpScreen = ({ navigation, route }) => {
 
 
 
-                {/* <Toast
+                <Toast
                     position='bottom'
                     bottomOffset={20}
-                /> */}
+                />
             </ScrollView>
 
         </View>

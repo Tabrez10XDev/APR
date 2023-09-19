@@ -10,6 +10,7 @@ import {
     TextInput,
     Dimensions
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { StatusBar } from "react-native";
 import { COLORS, SIZES, FONTS, assets, CONST, } from "../../../contants";
@@ -32,67 +33,56 @@ const LoginScreen = ({ navigation, route }) => {
 
 
 
-
+    const saveAuth = async (id) => {
+        try {
+          await AsyncStorage.setItem('AuthState', id.toString())
+          route.params.finishAuth()
+        } catch (err) {
+          alert(err)
+        }
+      }
 
 
 
 
 
     async function login() {
-        // if (email.trim().length === 0 || pass.trim().length === 0) {
-        //     Toast.show({
-        //         type: 'error',
-        //         text1: 'Missing Data',
-        //         visibilityTime: 1000
-        //     });
-        //     return;
-        // }
-        // const payload = {
-        //     "email_id": "helen@gmail.com",
-        //     "password": "helen@123"
-        // }
-        // console.log(`${CONST.baseUrlAuth}api/registrant/signin`)
-        // try {
-        //     axios.get(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then((response)=>{
-        //         console.log(response.data)
-        //     }).catch((err)=>{
-        //         console.log(err.response.data)
-        //     })
-        //     // route.params.finishAuth()
+        if (email.trim().length === 0 || pass.trim().length === 0) {
+            Toast.show({
+                type: 'error',
+                text1: 'Missing Data',
+                visibilityTime: 1000
+            });
+            return;
+        }
+        const payload = {
+            "email_id": email,
+            "password": pass
+        }
+        console.log(`${CONST.baseUrlAuth}api/registrant/signin`)
+        try {
+            axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then((response) => {
+                console.log(response.data)
+                saveAuth(response.data.user_id)
+                
+            }).catch((err) => {
+                console.log(err.response.data)
+                Toast.show({
+                    type: 'error',
+                    text1: err.response.data
+                });
+            })
+            // route.params.finishAuth()
 
-        // } catch (error) {
-        //     Toast.show({
-        //         type: 'error',
-        //         text1: error.response.data
-        //     });
-        //     throw error
-        // }
+        } catch (error) {
+            console.log(err.response.data)
 
-
-
-        let data = JSON.stringify({
-            "email_id": "helen@gmail.com",
-            "password": "helen@123"
-          });
-          
-          let config = {
-            method: 'get',
-            maxBodyLength: Infinity,
-            url: 'https://apr-marathon-render.onrender.com/api/registrant/signin',
-            headers: { 
-              'Content-Type': 'application/json', 
-              'Cookie': 'connect.sid=s%3ApgvzayDJQYhq-bMjKF5jB2J5pK86qoLo.N96qcjTGs8RCXdJGq3WRY5SbCtVmyU%2Fk3DH0vqMhcTU'
-            },
-            data : data
-          };
-          
-          axios.request(config)
-          .then((response) => {
-            console.log(JSON.stringify(response.data));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+            Toast.show({
+                type: 'error',
+                text1: error.response.data
+            });
+            throw error
+        }
     }
 
 
@@ -101,7 +91,7 @@ const LoginScreen = ({ navigation, route }) => {
     return (
 
         <View style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
-            <ScrollView contentContainerStyle={{ alignItems: 'center',alignItems: 'center' }}>
+            <ScrollView contentContainerStyle={{ alignItems: 'center', alignItems: 'center' }}>
 
 
 
@@ -114,7 +104,7 @@ const LoginScreen = ({ navigation, route }) => {
 
                 <Image
                     source={assets.authDecor}
-                    style={{ width: '35%', resizeMode: 'cover', height: '20%',position:'absolute', top:0, right:0 }}
+                    style={{ width: '35%', resizeMode: 'cover', height: '20%', position: 'absolute', top: 0, right: 0 }}
                 />
 
                 <Image
@@ -150,7 +140,7 @@ const LoginScreen = ({ navigation, route }) => {
                 </Text>
 
                 <Input
-                    placeholder="Email"
+                    placeholder="Enter Here"
                     onChangeText={(value) => setEmail(value)}
                     value={email}
                     placeholderTextColor={COLORS.lightGray}
@@ -173,9 +163,9 @@ const LoginScreen = ({ navigation, route }) => {
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                     <Input
-                        placeholder="Password"
-                        onChangeText={(value) => setEmail(value)}
-                        value={email}
+                        placeholder="Enter Here"
+                        onChangeText={(value) => setPass(value)}
+                        value={pass}
                         placeholderTextColor={COLORS.lightGray}
                         inputprops={{ secureTextEntry: !visibility }}
                     />
@@ -213,8 +203,8 @@ const LoginScreen = ({ navigation, route }) => {
 
 
                 <RectButton marginTop={24} text="Sign In" onClick={() => {
-                    // login()
-                    route.params.finishAuth()
+                    login()
+                    // route.params.finishAuth()
                 }} />
 
                 <Text

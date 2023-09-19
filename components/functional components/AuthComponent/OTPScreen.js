@@ -9,12 +9,13 @@ import {
 
 import { StatusBar } from "react-native";
 
-import { COLORS, SIZES, FONTS, assets } from "../../../contants";
+import { COLORS, SIZES, FONTS, assets, CONST } from "../../../contants";
 import { RectButton } from "../../ui components/Buttons";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
 import { useState, useEffect } from "react";
 import Toast from 'react-native-toast-message';
-
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const OTPScreen = ({ route }) => {
@@ -22,6 +23,86 @@ const OTPScreen = ({ route }) => {
 
     const [remainingTime, setRemainingTime] = useState(30);
     const [timerActive, setTimerActive] = useState(false);
+
+
+    const saveAuth = async (id) => {
+        try {
+            await AsyncStorage.setItem('AuthState', id.toString())
+            route.params.finishAuth()
+        } catch (err) {
+            alert(err)
+        }
+    }
+
+
+
+    async function verifyOTP(otp) {
+
+        const payload = {
+            "phone_number": route.params.number,
+            "otp": otp
+        }
+        console.log(`${CONST.baseUrlAuth}api/registrant/verify/otp`)
+        try {
+            axios.post(`${CONST.baseUrlAuth}api/registrant/verify/otp`, payload).then(async (response) => {
+                console.log(response.data)
+                if (response.data.success) {
+                    saveAuth(response.data.registrant_id)
+                    
+                }else{
+                    Toast.show({
+                        type: 'error',
+                        text1: response.data.message
+
+                    });
+                }
+            }).catch((err) => {
+                console.log(err.response.data)
+                Toast.show({
+                    type: 'error',
+                    text1: err.response.data
+                });
+            })
+
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: error.response.data
+            });
+            throw error
+        }
+    }
+
+
+    async function resendOTP() {
+
+        const payload = {
+            "email_id": route.params.email,
+            "mobile_number": route.params.number
+        }
+        // try {
+        axios.post(`${CONST.baseUrlAuth}api/registrant/resend/otp`, payload).then((response) => {
+            console.log(response.data)
+            startTimer()
+        }).catch((err) => {
+            console.error(err.response.data)
+            Toast.show({
+                type: 'error',
+                text1: err.response.data
+            });
+        })
+
+        // } 
+        // catch (error) {
+        //     Toast.show({
+        //         type: 'error',
+        //         text1: error.response.data
+        //     });
+        //     throw error
+        // }
+    }
+
+
 
     useEffect(() => {
         let interval;
@@ -93,14 +174,7 @@ const OTPScreen = ({ route }) => {
                     }}
                     codeInputHighlightStyle={{ borderColor: COLORS.blue }}
                     onCodeFilled={(code => {
-                        if (code == "000000") {
-                                route.params.finishAuth()
-                        } else {
-                            Toast.show({
-                                type: 'error',
-                                text1: 'Wrong OTP'
-                            });
-                        }
+                        verifyOTP(code)
                         console.log(`Code is ${code}, you are good to go!`)
                     })}
                 />
@@ -123,7 +197,7 @@ const OTPScreen = ({ route }) => {
 
 
                     <Text
-                        onPress={() => { if (!timerActive) startTimer() }}
+                        onPress={() => { if (!timerActive) resendOTP() }}
                         style={{
                             textAlign: 'center',
                             fontSize: SIZES.font,

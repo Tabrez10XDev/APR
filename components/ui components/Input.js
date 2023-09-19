@@ -19,7 +19,8 @@ function Input({
   inputType,
   autoFocus,
   Descriptioninput,
-  SearchHomeTab
+  SearchHomeTab,
+  editable = true
 }) {
   const { colors } = useTheme();
   const styles = useMemo(
@@ -70,6 +71,7 @@ function Input({
     <View style={styles.container}>
 
       <TextInput
+        editable={editable}
         placeholderTextColor={COLORS.gray_text_color}
         style={styles.input_style}
         placeholder={placeholder}

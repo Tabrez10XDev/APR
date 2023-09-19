@@ -8,15 +8,23 @@ import axios from 'axios';
 const EventDescription = ({ route, navigation }) => {
     const data = route.params
 
-    async function joinNow(){
-        axios.post(`${CONST.baseUrlRegister}api/registration/registration/data`,{
-            registrant_id: 3,
+    async function joinNow() {
+        axios.post(`${CONST.baseUrlRegister}api/registration/registration/data`, {
+            registrant_id: data.userId,
             registrant_type_id: data.type_id
-        }).then((response)=>{
-            console.log(response.data)
-            navigation.navigate("AddRegistrant", response.data)
+        }).then((response) => {
+            // console.log(response.data)
+            let towers = []
+            let phases = []
+            response.data.registrant_source.map((ele, inx) => {
+                console.log(ele.source_name)
+                if (ele.source_name.toLowerCase().includes("tower")) towers.push({ label: ele.source_name, value: ele.source_id })
+                else phases.push({ label: ele.source_name, value: ele.source_id })
 
-        }).catch((err)=>{
+            })
+            navigation.navigate("AddRegistrant", { ...response.data, towers: towers, phases: phases })
+
+        }).catch((err) => {
             console.log(err.response.data)
         })
     }
@@ -61,7 +69,7 @@ const EventDescription = ({ route, navigation }) => {
                 </Text>
             </View>
 
-            <ScrollView contentContainerStyle={{ minHeight: '100%', paddingBottom: 150 }}>
+            <ScrollView contentContainerStyle={{ minHeight: '100%', paddingBottom: 50 }}>
 
 
                 <View style={{ width: '95%', padding: 8, borderRadius: 16, borderWidth: 1, borderColor: '#D9D9D9', alignSelf: 'center', marginTop: 16, alignItems: 'center', height: '30%', justifyContent: 'space-evenly' }}>
@@ -145,17 +153,34 @@ const EventDescription = ({ route, navigation }) => {
                         </Text>
                         {data.race_timing.map((ele, inx) => {
                             return (
-                                <Text
-                                    style={{
-                                        fontSize: SIZES.font,
-                                        fontFamily: FONTS.semiBold,
-                                        color: COLORS.black,
-                                        textAlign: 'left',
-                                        marginTop: 6
-                                    }}
-                                >
-                                    {data.raceCategories[ele.race_type_id_ref]} - {data.ageCategories[ele.age_type_id_ref]} Years
-                                </Text>
+
+                                ele.timing == undefined ?
+                                    <Text
+                                        style={{
+                                            fontSize: SIZES.font,
+                                            fontFamily: FONTS.semiBold,
+                                            color: COLORS.black,
+                                            textAlign: 'left',
+                                            marginTop: 6
+                                        }}
+                                    >
+                                        {data.raceCategories[ele.race_type_id_ref]} - {data.ageCategories[ele.age_type_id_ref]} Years
+                                    </Text> : ele.timing.map((item, inx) => {
+                                        return(
+                                        <Text
+                                            style={{
+                                                fontSize: SIZES.font,
+                                                fontFamily: FONTS.semiBold,
+                                                color: COLORS.black,
+                                                textAlign: 'left',
+                                                marginTop: 6
+                                            }}
+                                        >
+                                            {data.raceCategories[item.race_type_id_ref]} - {data.ageCategories[item.age_type_id_ref]} Years
+                                        </Text>
+                                        )
+                                    })
+
                             )
                         })}
                     </View>
@@ -174,7 +199,9 @@ const EventDescription = ({ route, navigation }) => {
                             Time
                         </Text>
                         {data.race_timing.map((ele, inx) => {
-                            return (
+                           return (
+
+                            ele.timing == undefined ?
                                 <Text
                                     style={{
                                         fontSize: SIZES.font,
@@ -184,9 +211,24 @@ const EventDescription = ({ route, navigation }) => {
                                         marginTop: 6
                                     }}
                                 >
-                                    {ele.race_time.substring(0, 5)}
-                                </Text>
-                            )
+                                    {ele.race_time.substring(0,5)}
+                                </Text> : ele.timing.map((item, inx) => {
+                                    return(
+                                    <Text
+                                        style={{
+                                            fontSize: SIZES.font,
+                                            fontFamily: FONTS.semiBold,
+                                            color: COLORS.black,
+                                            textAlign: 'right',
+                                            marginTop: 6
+                                        }}
+                                    >
+                                        {item.race_time.substring(0,5)}
+                                    </Text>
+                                    )
+                                })
+
+                        )
                         })}
                     </View>
 
@@ -258,7 +300,7 @@ const EventDescription = ({ route, navigation }) => {
                     </View>
                 </View>
 
-                <View style={{ width: '90%', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', alignSelf:'center', marginTop:12 }}>
+                <View style={{ width: '90%', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', alignSelf: 'center', marginTop: 12 }}>
                     <View>
                         <Text
                             style={{
@@ -282,7 +324,7 @@ const EventDescription = ({ route, navigation }) => {
                         </Text>
                     </View>
 
-                    <RectButton onClick={()=>{joinNow()}} text={"Join Now"} width={"45%"} />
+                    <RectButton onClick={() => { joinNow() }} text={"Join Now"} width={"45%"} />
 
                 </View>
 

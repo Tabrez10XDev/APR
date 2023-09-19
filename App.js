@@ -6,17 +6,20 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { useFonts } from 'expo-font';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Trial from './components/functional components/Trial';
 import { Feather } from '@expo/vector-icons';
 import LoginScreen from './components/functional components/AuthComponent/LoginScreen';
 import SignUpScreen from './components/functional components/AuthComponent/SignupScreen';
+import Trial from './components/functional components/Trial';
+
 import { COLORS } from './contants';
 import OTPScreen from './components/functional components/AuthComponent/OTPScreen';
 import Events from './components/functional components/EventsComponent/Events';
 import EventDescription from './components/functional components/EventsComponent/EventDescription';
 import MySchedule from './components/functional components/ScheduleComponent/MySchedule';
 import AddRegistrant from './components/functional components/EventsComponent/AddRegistrant';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddRunners from './components/functional components/EventsComponent/AddRunners';
+import authContext from './contants/authContext';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +35,30 @@ const theme = {
 export default function App() {
 
   const [auth, setAuth] = useState(false)
+  const [userId, setUserId] = useState("-1")
+
+  useEffect(()=>{
+    getData()
+  },[])
+
+
+  const getData = async () => {
+    try {
+        
+            const result = await AsyncStorage.getItem('AuthState')
+            if (result !== null && result != "-1" && result != undefined) {
+                setAuth(true)
+                setUserId(result)
+            } else {
+                setUserId("-1")
+                setAuth(false)
+            }
+        
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 
   const [loaded] = useFonts({
     SFProExtraBold: require("./assets/fonts/OpenSans-ExtraBold.ttf"),
@@ -41,8 +68,22 @@ export default function App() {
     SFProRegular: require("./assets/fonts/OpenSans-Regular.ttf"),
   })
 
+  const saveAuth = async (id) => {
+    try {
+      await AsyncStorage.setItem('AuthState', id)
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+
   const finishAuth = () => {
     setAuth(true)
+  }
+
+  const logout = () => {
+    saveAuth("-1")
+    setAuth(false)
   }
 
   if (!loaded) {
@@ -55,7 +96,7 @@ export default function App() {
 
       <Tab.Screen name={"Events"} component={Events} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='calendar' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
       <Tab.Screen name={"My Schedule"} component={MySchedule} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='clock' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
-      <Tab.Screen name={"Settings"} component={Trial} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='settings' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
+      <Tab.Screen name={"Settings"} initialParams={{logout: logout}} component={Trial} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='settings' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
 
     </Tab.Navigator>
     )
@@ -63,6 +104,11 @@ export default function App() {
 
   return (
     <RootSiblingParent>
+      <authContext.Provider
+      value={{userId, setUserId}}
+      >
+
+      
       <NavigationContainer>
         {
           auth ? (
@@ -75,6 +121,7 @@ export default function App() {
 
                 <Stack.Screen name="EventDescription" component={EventDescription} />
                 <Stack.Screen name="AddRegistrant" component={AddRegistrant} />
+                <Stack.Screen name="AddRunners" component={AddRunners} />
 
 
 
@@ -117,6 +164,7 @@ export default function App() {
             )
         }
       </NavigationContainer>
+      </authContext.Provider>
     </RootSiblingParent>
   );
 }

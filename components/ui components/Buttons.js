@@ -33,6 +33,21 @@ export const RectButton = ({ text, onClick, hide, ...props }) => {
             </TouchableOpacity>)
 }
 
+export const WhiteButton = ({ text, onClick, hide, ...props }) => {
+
+    return (
+        hide ? null :
+            <TouchableOpacity
+                style={{ height: 48, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', width: '90%', borderRadius: 6, marginTop: 16, borderWidth:1, borderColor:COLORS.blue, ...props }}
+                onPress={() => { onClick() }}
+            >
+
+                <Text style={{
+                    color: COLORS.blue, fontSize: 18, fontFamily: FONTS.semiBold,
+                }}>{text}</Text>
+            </TouchableOpacity>)
+}
+
 export const GSignInButton = ({onClick,text, ...props}) => {
     return (<TouchableOpacity
         style={{ ...props,height: 48, justifyContent: 'center', alignItems: 'center', width: '90%', borderRadius: 8, marginTop:12, borderWidth:1, borderColor:COLORS.blue, borderStyle:'dashed' }}
