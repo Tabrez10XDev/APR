@@ -18,14 +18,14 @@ const AddRegistrant = ({ route, navigation }) => {
     async function addRegistrant(userId) {
 
 
-        // if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0) {
-        //     Toast.show({
-        //         type: 'error',
-        //         text1: 'Missing Data',
-        //         visibilityTime: 1000
-        //     });
-        //     return;
-        // }
+        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0) {
+            Toast.show({
+                type: 'error',
+                text1: 'Missing Data',
+                visibilityTime: 1000
+            });
+            return;
+        }
 
         let address = state.flatNo
         if (state.residentType == "villa") address += ", " + state.phase + ", "

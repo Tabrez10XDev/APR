@@ -72,7 +72,7 @@ const MasterList = ({ route, navigation }) => {
         try {
             axios.put(`${CONST.baseUrlRegister}api/registration/add/registrant/web`, payload).then((response) => {
                 console.log(response.data)
-
+                console.log("Success")
             }).catch((err) => {
                 console.log(err.response.data)
                 Toast.show({
@@ -81,7 +81,6 @@ const MasterList = ({ route, navigation }) => {
                 });
             })
             // route.params.finishAuth()
-
         } catch (error) {
             console.log(err.response.data)
 
