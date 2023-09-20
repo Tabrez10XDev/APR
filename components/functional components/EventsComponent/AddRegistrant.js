@@ -9,13 +9,16 @@ import { useState, useEffect } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import common from '../../../contants/common';
 import authContext from '../../../contants/authContext';
+import Toast from 'react-native-toast-message';
 
 const AddRegistrant = ({ route, navigation }) => {
     const data = route.params
 
 
     async function addRegistrant(userId) {
-        // if (email.trim().length === 0 || pass.trim().length === 0) {
+
+
+        // if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0) {
         //     Toast.show({
         //         type: 'error',
         //         text1: 'Missing Data',
@@ -25,13 +28,13 @@ const AddRegistrant = ({ route, navigation }) => {
         // }
 
         let address = state.flatNo
-        if(state.residentType == "villa") address += ", " + state.phase + ", "
-        if(state.residentType == "tower") address += ", " + state.tower + ", "
+        if (state.residentType == "villa") address += ", " + state.phase + ", "
+        if (state.residentType == "tower") address += ", " + state.tower + ", "
 
         address += state.address
 
         let registrantOfAPR = false
-        if(state.residentType == "villa" || state.residentType == "tower") registrantOfAPR = true
+        if (state.residentType == "villa" || state.residentType == "tower") registrantOfAPR = true
 
         const payload = {
             "registrant_id": userId,
@@ -45,15 +48,25 @@ const AddRegistrant = ({ route, navigation }) => {
             "pin_code": state.zipCode,
             "need_80G_certificate": false,
             "pancard_number": null,
-            "registrant_source_ref": null,
-            "registrant_class_ref": null,
+            "registrant_source_ref": state.sourceRef,
+            "registrant_class_ref": state.runnersClass,
             "event_id_ref": 3,
             "role": "registrant"
         }
 
-        console.log("Ended")
+        let _stateArray = []
+        data.registrant_class.map((ele) => {
+            if (ele.category_id == state.runnersClass) {
+                for (i = 0; i < ele.runners_allowed_count; i++) {
+                    _stateArray.push({})
+                }
+            }
+        })
 
-        navigation.navigate("AddRunners",{...payload, current: 0, total: 4, stateArray: [{},{},{},{}], param: data })
+        console.log(JSON.stringify(payload))
+
+
+        navigation.navigate("AddRunners", { ...payload, current: 0, total: _stateArray.length, stateArray: _stateArray, param: data })
 
         // try {
         //     axios.post(`${CONST.baseUrlAuth}api/registration/add/registrant`, payload).then((response) => {
@@ -107,11 +120,12 @@ const AddRegistrant = ({ route, navigation }) => {
         address: "",
         tower: null,
         phase: null,
-        city: null,
-        state: null,
+        city: "",
+        state: "",
         country: "",
         zipCode: "",
-        runnersClass: null
+        runnersClass: null,
+        sourceRef: null
     })
 
     return (
@@ -324,11 +338,13 @@ const AddRegistrant = ({ route, navigation }) => {
                                 data={data.phases}
                                 maxHeight={300}
                                 labelField="label"
-                                valueField="value"
+                                valueField="label"
                                 placeholder="Choose the villa"
                                 value={state.phase}
                                 onChange={item => {
-                                    setState(current => ({ ...current, phase: item.value }))
+                                    setState(current => ({ ...current, sourceRef: item.value }))
+                                    setState(current => ({ ...current, phase: item.label }))
+
                                 }}
 
                             />
@@ -364,7 +380,9 @@ const AddRegistrant = ({ route, navigation }) => {
                                 placeholder="Choose the tower"
                                 value={state.tower}
                                 onChange={item => {
-                                    setState(current => ({ ...current, tower: item.value }))
+                                    setState(current => ({ ...current, sourceRef: item.value }))
+                                    setState(current => ({ ...current, tower: item.label }))
+
                                 }}
 
                             />
@@ -412,7 +430,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                 placeholder="City"
                                 value={state.city}
                                 onChange={item => {
-                                    setState(current => ({ ...current, city: item.value }))
+                                    setState(current => ({ ...current, city: item.name }))
                                 }}
 
                             />
@@ -444,7 +462,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                 placeholder="State"
                                 value={state.state}
                                 onChange={item => {
-                                    setState(current => ({ ...current, state: item.value }))
+                                    setState(current => ({ ...current, state: item.name }))
                                 }}
 
                             />
@@ -505,10 +523,10 @@ const AddRegistrant = ({ route, navigation }) => {
                             }}
                             inputSearchStyle={{}}
                             iconStyle={{}}
-                            data={data.registrant_class}
+                            data={data.classes}
                             maxHeight={300}
-                            labelField="category_name"
-                            valueField="category_id"
+                            labelField="label"
+                            valueField="value"
                             placeholder="Select"
                             value={state.runnersClass}
                             onChange={item => {
@@ -518,11 +536,15 @@ const AddRegistrant = ({ route, navigation }) => {
                         />
 
 
-                        <RectButton onClick={()=>{addRegistrant(userId)}} text={"Add Runner Details"} alignSelf={'center'} marginTop={24} />
+                        <RectButton onClick={() => { addRegistrant(userId) }} text={"Add Runner Details"} alignSelf={'center'} marginTop={24} />
 
 
 
                     </ScrollView>
+                    <Toast
+                        position='bottom'
+                        bottomOffset={40}
+                    />
                 </View>
             )
 

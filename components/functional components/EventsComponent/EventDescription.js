@@ -22,7 +22,14 @@ const EventDescription = ({ route, navigation }) => {
                 else phases.push({ label: ele.source_name, value: ele.source_id })
 
             })
-            navigation.navigate("AddRegistrant", { ...response.data, towers: towers, phases: phases })
+            let classes = []
+            response.data.registrant_class.map((ele,inx)=>{
+                let temp = {}
+                temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." +ele.category_price + ")"
+                temp['value'] = ele.category_id
+                classes.push(temp)
+            })
+            navigation.navigate("AddRegistrant", { ...response.data, towers: towers, phases: phases, classes: classes })
 
         }).catch((err) => {
             console.log(err.response.data)

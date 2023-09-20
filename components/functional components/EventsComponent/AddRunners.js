@@ -12,6 +12,8 @@ import authContext from '../../../contants/authContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import DatePickerModal from '../../ui components/DatePickerModal';
 import { StackActions } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+import moment from 'moment/moment';
 
 const AddRunners = ({ route, navigation }) => {
     const data = route.params
@@ -33,6 +35,8 @@ const AddRunners = ({ route, navigation }) => {
         value: "OTHERS"
     }]
 
+    const newDate = new Date()
+    const currDate = moment().format("YYYY-MM-DD")
     const [stateArray, setStateArray] = useState(data.stateArray)
 
     const [current, setCurrent] = useState(data.current)
@@ -47,10 +51,6 @@ const AddRunners = ({ route, navigation }) => {
         setStackIndex(stateArray[current].size ?? 1)
     }, [current])
 
-    // useEffect(()=>{
-    //         console.log(data.current)
-    //         setCurrent(data.current)
-    // },[])
 
 
     useEffect(() => {
@@ -452,7 +452,7 @@ const AddRunners = ({ route, navigation }) => {
                                 placeholder="Blood Group"
                                 value={state.bloodGroup}
                                 onChange={item => {
-                                    setState(current => ({ ...current, bloodGroup: item.value }))
+                                    setState(current => ({ ...current, bloodGroup: item.label }))
                                 }}
 
                             />
@@ -484,7 +484,9 @@ const AddRunners = ({ route, navigation }) => {
                                 placeholder="Run Category"
                                 value={state.runCategory}
                                 onChange={item => {
-                                    setState(current => ({ ...current, runCategory: item.value }))
+                                    setState(current => ({ ...current, runCategory: item.race_type_name }))
+                                    setState(current => ({ ...current, runCategoryId: item.race_type_id }))
+
                                 }}
 
                             />
@@ -503,7 +505,21 @@ const AddRunners = ({ route, navigation }) => {
                                 }
                             }} text={"Back"} alignSelf={'center'} marginTop={24} width='45%' />
                             <RectButton onClick={() => {
-                                if (current < data.total - 1) {
+                                if (
+                                    state.firstName ? state.firstName.trim().length == 0 : false
+                                        || state.lastName ? state.lastName.trim().length == 0 : false
+                                            || selectedDate.trim().length == 0
+                                            || state.gender ? state.gender.trim().length == 0 : false
+                                                || state.email ? state.email.trim().length == 0 : false
+                                                    || state.number ? state.number.trim().length == 0 : false
+                                                        || state.emergencyNumber ? state.emergencyNumber.trim().length == 0 : false
+                                ) {
+                                    Toast.show({
+                                        type: 'error',
+                                        text1: 'Missing Data'
+                                    });
+                                }
+                                else if (current < data.total - 1) {
                                     let _state = state
                                     _state["date"] = selectedDate
                                     _state['size'] = stackIndex
@@ -536,8 +552,11 @@ const AddRunners = ({ route, navigation }) => {
 
                     </ScrollView>
 
-                    <DatePickerModal modalVisible={open} setModalVisible={setOpen} setSelectedDate={setSelectedDate} />
-
+                    <DatePickerModal modalVisible={open} setModalVisible={setOpen} maxDate={currDate} setSelectedDate={setSelectedDate} />
+                    <Toast
+                        position='bottom'
+                        bottomOffset={40}
+                    />
                     {/* <DatePicker
                         modal
                         open={open}

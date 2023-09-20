@@ -6218,7 +6218,8 @@ const common = {
         {
             "label": "O-"
         }
-    ]
+    ],
+    sizes: ["s","m","l","xl","xxl","xxxl"]
 
 
 
