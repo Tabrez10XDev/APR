@@ -7,10 +7,8 @@ import { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import authContext from '../../../contants/authContext';
 import { PhonePe, Constants } from 'phonepesdk'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Linking } from 'react-native';
-import reactNativeUpiPayment from 'react-native-upi-payment';
-// import RNUpiPayment  from 'react-native-upi-payment';
 const Events = ({ navigation }) => {
 
     const [data, setData] = useState({ event_info: {}, percentage: "70", registrant_type: [] })
@@ -88,6 +86,48 @@ const Events = ({ navigation }) => {
         })
     }
 
+    async function fetchDashboardCorp() {
+        console.log("Fetching")
+        axios.get(`${CONST.baseUrlRegister}api/corporate/event/data/3`).then((response) => {
+            let _data = response.data
+            _data.registrant_type = [
+                {
+                    ...response.data.registrant_type["0"],
+                    run_category: response.data.registrant_type.run_category,
+                    age_category: response.data.registrant_type.age_category
+                }
+            ]
+            setData(_data)
+            console.log(data.event_info.event_name)
+            const combinedDateTimeStr = `${response.data.event_info.event_cut_off_date}T${response.data.event_info.event_cut_off_time}:00`;
+
+            const createdAt = new Date(response.data.event_info.created_at);
+            const eventCutOffDateTime = new Date(combinedDateTimeStr);
+            const timeDifferenceMs = eventCutOffDateTime - createdAt;
+
+            const totalDurationMs = eventCutOffDateTime - new Date()
+            const _percentage = (100 - (totalDurationMs / timeDifferenceMs) * 100)
+            const percent = _percentage <= 100 ? _percentage : "70"
+
+            const _eventDate = new Date(data.event_info.event_date)
+            const eventDate = _eventDate.getDay() + " " + monthMap[_eventDate.getMonth()] + " " + _eventDate.getFullYear()
+            let ageCategories = {}
+            let raceCategories = {}
+
+            response.data.overAllageCategory.map((ele, inx) => {
+                ageCategories[ele.age_type_id] = ele.age_type_name
+            })
+
+            response.data.raceCategory.map((ele, inx) => {
+                raceCategories[ele.race_type_id] = ele.race_type_name
+            })
+            setData(current => ({ ...current, percentage: percent, eventDate: eventDate, ageCategories: ageCategories, raceCategories: raceCategories }))
+
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
     useEffect(() => {
         const intervalId = setInterval(() => {
 
@@ -113,28 +153,25 @@ const Events = ({ navigation }) => {
     }, [data]);
 
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            fetchDashboard()
+        const unsubscribe = navigation.addListener('focus', async () => {
+
+
+            const result2 = await AsyncStorage.getItem('CorpState')
+            if (result2 != null && result2 == "1") fetchDashboardCorp()
+            else fetchDashboard()
+
+
+            // fetchDashboard()
         });
 
         return unsubscribe;
     }, [navigation]);
 
 
-    function successCallback(data) {
-        console.log(data)
-        // do whatever with the data
-    }
-
-    function failureCallback(data) {
-        console.error(data)
-        // do whatever with the data
-    }
-
     return (
 
         <authContext.Consumer>
-            {({ userId, setUserId }) => (
+            {({ userId, setUserId, corpCode }) => (
 
                 <View style={{ height: '100%', width: '100%', backgroundColor: 'white' }}>
                     {/* <ScrollView> */}
@@ -165,7 +202,6 @@ const Events = ({ navigation }) => {
                     </View>
 
                     <Text
-                        onPress={() => { initiatePayment() }}
                         style={{
                             fontSize: SIZES.medium,
                             fontFamily: FONTS.regular,

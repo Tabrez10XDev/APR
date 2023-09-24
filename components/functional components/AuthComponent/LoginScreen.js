@@ -11,6 +11,7 @@ import {
     Dimensions
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import { StatusBar } from "react-native";
 import { COLORS, SIZES, FONTS, assets, CONST, } from "../../../contants";
@@ -25,6 +26,7 @@ import { RectButton, GSignInButton } from "../../ui components/Buttons";
 const LoginScreen = ({ navigation, route }) => {
 
 
+    const [isChecked, setChecked] = useState(false)
 
     const [passIcon, setPassIcon] = useState(false)
     const [visibility, setVisibility] = useState(false)
@@ -35,16 +37,20 @@ const LoginScreen = ({ navigation, route }) => {
 
     const saveAuth = async (id) => {
         try {
-          await AsyncStorage.setItem('AuthState', id.toString())
-          route.params.finishAuth()
+            await AsyncStorage.setItem('AuthState', id.toString())
+            route.params.finishAuth()
         } catch (err) {
-          alert(err)
+            alert(err)
         }
-      }
+    }
 
 
 
 
+    function safeLogin() {
+        if (isChecked) corpLogin()
+        else login()
+    }
 
     async function login() {
         if (email.trim().length === 0 || pass.trim().length === 0) {
@@ -61,10 +67,51 @@ const LoginScreen = ({ navigation, route }) => {
         }
         console.log(`${CONST.baseUrlAuth}api/registrant/signin`)
         try {
-            axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then((response) => {
+            axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then(async (response) => {
                 console.log(response.data)
+                await AsyncStorage.setItem('CorpState', "0")
+
                 saveAuth(response.data.user_id)
-                
+
+            }).catch((err) => {
+                console.log(err.response.data)
+                Toast.show({
+                    type: 'error',
+                    text1: err.response.data
+                });
+            })
+            // route.params.finishAuth()
+
+        } catch (error) {
+            console.log(err.response.data)
+
+            Toast.show({
+                type: 'error',
+                text1: error.response.data
+            });
+            throw error
+        }
+    }
+
+    async function corpLogin() {
+        if (email.trim().length === 0 || pass.trim().length === 0) {
+            Toast.show({
+                type: 'error',
+                text1: 'Missing Data',
+                visibilityTime: 1000
+            });
+            return;
+        }
+        const payload = {
+            "email_id": email,
+            "password": pass
+        }
+        try {
+            axios.post(`${CONST.baseUrlAuth}api/registrant/corp/user/login`, payload).then(async (response) => {
+                console.log(response.data)
+                await AsyncStorage.setItem('CorpState', "1")
+                saveAuth(response.data.user_id)
+
             }).catch((err) => {
                 console.log(err.response.data)
                 Toast.show({
@@ -201,9 +248,34 @@ const LoginScreen = ({ navigation, route }) => {
                     </Text>
                 </View>
 
+                <View style={{ flexDirection: 'row', alignSelf: 'center', width: '90%', marginTop: 14, justifyContent: 'space-between', alignItems: 'center' }}>
+
+                    <BouncyCheckbox
+                        size={25}
+                        fillColor={COLORS.blue}
+                        unfillColor={COLORS.grey}
+                        iconStyle={{ borderColor: COLORS.grey }}
+                        innerIconStyle={{ borderWidth: 2 }}
+                        onPress={(isChecked) => { setChecked(isChecked) }}
+                    />
+
+                    <Text
+                        style={{
+                            fontSize: SIZES.font,
+                            fontFamily: FONTS.medium,
+                            color: COLORS.grey,
+                            width: '90%',
+                            textAlign: 'left',
+                        }}
+                    >
+                        Choose this for Corporate Login
+                    </Text>
+
+                </View>
+
 
                 <RectButton marginTop={24} text="Sign In" onClick={() => {
-                    login()
+                    safeLogin()
                     // route.params.finishAuth()
                 }} />
 

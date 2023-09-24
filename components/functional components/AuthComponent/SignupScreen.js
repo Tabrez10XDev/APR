@@ -40,6 +40,63 @@ const SignUpScreen = ({ navigation, route }) => {
         number: ""
     })
 
+    function safeSignUp(){
+        if(corpCode == null) signup()
+        else if(corpCode.trim().length == 0) signup()
+        else corpSignup()
+    }
+
+    async function corpSignup() {
+
+        if(!isChecked){
+            Toast.show({
+                type: 'error',
+                text1: 'Agree to Terms&Conditions',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
+        if (state.firstName.trim().length === 0 || state.lastName.trim().length === 0 || state.email.trim().length === 0 || state.password.trim().length === 0 || state.number.trim().length === 0) {
+            Toast.show({
+                type: 'error',
+                text1: 'Missing Data',
+                visibilityTime: 1000
+            });
+            return;
+        }
+        const payload = {
+            "first_name": state.firstName,
+            "middle_name": null,
+            "last_name": state.lastName,
+            "email_id": state.email,
+            "password": state.password,
+            "mobile_number": state.number,
+            corporate_code: state.corpCode
+        }
+
+        console.log(payload)
+        try {
+            axios.post(`${CONST.baseUrlAuth}api/registrant/corp/user/signup`, payload).then(async (response) => {
+                console.log(response.data)
+                await AsyncStorage.setItem('CorpState', "1")
+                navigation.navigate("OTPScreen",{number: state.number, email: state.email})
+            }).catch((err) => {
+                console.log(err.response.data)
+                Toast.show({
+                    type: 'error',
+                    text1: err.response.data
+                });
+            })
+
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: error.response.data
+            });
+            throw error
+        }
+    }
 
     async function signup() {
 
@@ -73,6 +130,8 @@ const SignUpScreen = ({ navigation, route }) => {
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/signup`, payload).then(async (response) => {
                 console.log(response.data)
+                await AsyncStorage.setItem('CorpState', "0")
+
                 navigation.navigate("OTPScreen",{number: state.number, email: state.email})
             }).catch((err) => {
                 console.log(err.response.data)
@@ -322,7 +381,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
 
                 <RectButton marginTop={24} text="Sign Up" onClick={() => {
-                    signup()
+                    safeSignUp()
 
                 }} />
 

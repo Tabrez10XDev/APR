@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddRunners from './components/functional components/EventsComponent/AddRunners';
 import authContext from './contants/authContext';
 import MasterList from './components/functional components/EventsComponent/MasterList';
+import ProfileScreen from './components/functional components/ProfileComponent/ProfileScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -39,28 +40,33 @@ export default function App() {
 
   const [auth, setAuth] = useState(false)
   const [userId, setUserId] = useState("-1")
+  const [corpCode, setCorpCode] = useState(false)
 
-  useEffect(()=>{
+  useEffect(() => {
     getData()
-  },[])
+  }, [])
 
 
   const getData = async () => {
     try {
-        
-            const result = await AsyncStorage.getItem('AuthState')
-            if (result !== null && result != "-1" && result != undefined) {
-                setAuth(true)
-                setUserId(result)
-            } else {
-                setUserId("-1")
-                setAuth(false)
-            }
-        
+
+      const result = await AsyncStorage.getItem('AuthState')
+      if (result !== null && result != "-1" && result != undefined) {
+        setAuth(true)
+        setUserId(result)
+      } else {
+        setUserId("-1")
+        setAuth(false)
+      }
+
+      const result2 = await AsyncStorage.getItem('CorpState')
+      if(result2 != null && result2 == "1") setCorpCode(true)
+
+
     } catch (e) {
-        console.error(e)
+      console.error(e)
     }
-}
+  }
 
 
   const [loaded] = useFonts({
@@ -81,6 +87,7 @@ export default function App() {
 
 
   const finishAuth = () => {
+    getData()
     setAuth(true)
   }
 
@@ -93,71 +100,37 @@ export default function App() {
     return null;
   }
 
-  const TabNav = ()=>{
-    return(
+  const TabNav = () => {
+    return (
       <Tab.Navigator theme={theme} screenOptions={{ headerShown: false, tabBarActiveTintColor: COLORS.blue, tabBarInactiveTintColor: COLORS.greenAccent, backgroundColor: "white" }}>
 
-      <Tab.Screen name={"Events"} component={Events} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='calendar' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
-      <Tab.Screen name={"My Schedule"} component={MySchedule} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='clock' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
-      <Tab.Screen name={"Settings"} initialParams={{logout: logout}} component={Trial} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='settings' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
+        <Tab.Screen name={"Events"} component={Events} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='calendar' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
+        <Tab.Screen name={"My Schedule"} component={MySchedule} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='clock' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
+        <Tab.Screen name={"Settings"} initialParams={{ logout: logout }} component={ProfileScreen} options={{ tabBarIcon: ({ focused, color }) => { return (<Feather name='settings' size={24} color={focused ? COLORS.blue : COLORS.greenAccent} />) } }} />
 
-    </Tab.Navigator>
+      </Tab.Navigator>
     )
-  } 
+  }
 
   return (
     <RootSiblingParent>
       <authContext.Provider
-      value={{userId, setUserId}}
+        value={{ userId, setUserId, corpCode }}
       >
+        <NavigationContainer>
+          {
+            auth ? (
 
-      
-      <NavigationContainer>
-        {
-          auth ? (
-
-            <Stack.Navigator theme={theme} screenOptions={{ headerShown: false }} initialRouteName="Dashboard">
-
-              <Stack.Group screenOptions={{ headerStyle: { backgroundColor: COLORS.white } }}  >
-
-                <Stack.Screen name="Home" component={TabNav } />
-
-                <Stack.Screen name="EventDescription" component={EventDescription} />
-                <Stack.Screen name="AddRegistrant" component={AddRegistrant} />
-                <Stack.Screen name="AddRunners" component={AddRunners} />
-                <Stack.Screen name="MasterList" component={MasterList} />
-
-
-
-
-              </Stack.Group>
-            </Stack.Navigator>
-
-          ) :
-            (
-              <Stack.Navigator theme={theme} screenOptions={{ headerShown: false }} initialRouteName="Landing">
+              <Stack.Navigator theme={theme} screenOptions={{ headerShown: false }} initialRouteName="Dashboard">
 
                 <Stack.Group screenOptions={{ headerStyle: { backgroundColor: COLORS.white } }}  >
 
+                  <Stack.Screen name="Home" component={TabNav} />
 
-
-
-                  <Stack.Screen name="LoginScreen" component={LoginScreen} initialParams={{ finishAuth: finishAuth }} />
-
-                  <Stack.Screen name="SignUpScreen" component={SignUpScreen} initialParams={{ finishAuth: finishAuth }} />
-
-
-                  {/* <Stack.Screen name="MobileVerificationScreen" component={MobileVerificationScreen} initialParams={{ finishAuth: finishAuth, setCurr: setCurr }} /> */}
-
-                  <Stack.Screen name="OTPScreen" component={OTPScreen} initialParams={{ finishAuth: finishAuth }} />
-
-                  {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} initialParams={{ finishAuth: finishAuth }} /> */}
-
-
-
-
-
-
+                  <Stack.Screen name="EventDescription" component={EventDescription} />
+                  <Stack.Screen name="AddRegistrant" component={AddRegistrant} />
+                  <Stack.Screen name="AddRunners" component={AddRunners} />
+                  <Stack.Screen name="MasterList" component={MasterList} />
 
 
 
@@ -165,9 +138,41 @@ export default function App() {
                 </Stack.Group>
               </Stack.Navigator>
 
-            )
-        }
-      </NavigationContainer>
+            ) :
+              (
+                <Stack.Navigator theme={theme} screenOptions={{ headerShown: false }} initialRouteName="Landing">
+
+                  <Stack.Group screenOptions={{ headerStyle: { backgroundColor: COLORS.white } }}  >
+
+
+
+
+                    <Stack.Screen name="LoginScreen" component={LoginScreen} initialParams={{ finishAuth: finishAuth }} />
+
+                    <Stack.Screen name="SignUpScreen" component={SignUpScreen} initialParams={{ finishAuth: finishAuth }} />
+
+
+                    {/* <Stack.Screen name="MobileVerificationScreen" component={MobileVerificationScreen} initialParams={{ finishAuth: finishAuth, setCurr: setCurr }} /> */}
+
+                    <Stack.Screen name="OTPScreen" component={OTPScreen} initialParams={{ finishAuth: finishAuth }} />
+
+                    {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} initialParams={{ finishAuth: finishAuth }} /> */}
+
+
+
+
+
+
+
+
+
+
+                  </Stack.Group>
+                </Stack.Navigator>
+
+              )
+          }
+        </NavigationContainer>
       </authContext.Provider>
     </RootSiblingParent>
   );

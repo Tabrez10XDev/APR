@@ -10,9 +10,14 @@ import { Dropdown } from 'react-native-element-dropdown';
 import common from '../../../contants/common';
 import authContext from '../../../contants/authContext';
 import Toast from 'react-native-toast-message';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 const AddRegistrant = ({ route, navigation }) => {
     const data = route.params
+
+
+    const isDonors = data.typeName.toLowerCase().includes("donors")
+    const isWithout = data.typeName.toLowerCase().includes("without")
 
 
     async function addRegistrant(userId) {
@@ -46,12 +51,13 @@ const AddRegistrant = ({ route, navigation }) => {
             "state": state.state,
             "country": state.country,
             "pin_code": state.zipCode,
-            "need_80G_certificate": false,
-            "pancard_number": null,
+            "need_80G_certificate": state.certificate,
+            "pancard_number": state.panCard,
             "registrant_source_ref": state.sourceRef,
             "registrant_class_ref": state.runnersClass,
             "event_id_ref": 3,
-            "role": "registrant"
+            "role": "registrant",
+            amount: state.amount
         }
 
         let _stateArray = []
@@ -92,6 +98,66 @@ const AddRegistrant = ({ route, navigation }) => {
         // }
     }
 
+
+    async function addRegistrantCorp(userId) {
+
+
+        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0) {
+            Toast.show({
+                type: 'error',
+                text1: 'Missing Data',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
+        let address = state.flatNo
+        if (state.residentType == "villa") address += ", " + state.phase + ", "
+        if (state.residentType == "tower") address += ", " + state.tower + ", "
+
+        address += state.address
+
+        let registrantOfAPR = false
+        if (state.residentType == "villa" || state.residentType == "tower") registrantOfAPR = true
+
+        const payload = {
+            "event_id": 3,
+            "registrant_id": userId,
+            "runner_first_name": state.firstName,
+            "runner_last_name": state.lastName,
+            "runner_dob": null,
+            "runner_gender": null,
+            "runner_email_id": state.email,
+            "runner_phone_number": state.number,
+            "runner_emergency_contact_name": null,
+            "runner_emergency_contact_number": null,
+            "runner_address_type": state.residentType,
+            "runner_address": address,
+            "runner_city": state.city,
+            "runner_state": state.state,
+            "runner_country": state.country,
+            "runner_pincode": state.zipCode,
+            "tshirt_size": null,
+            "runner_blood_group": null,
+            "registrant_source_ref": state.sourceRef,
+            "run_category_id_ref": null
+        }
+
+
+        console.log(JSON.stringify(payload))
+
+        axios.post(`${CONST.baseUrlRegister}api/corporate/add/corp/registrant`, payload).then((response) => {
+            console.log(response.data)
+        }).catch((err) => {
+            console.log(err.response.data)
+            Toast.show({
+                type: 'error',
+                text1: err.response.data
+            });
+        })
+
+    }
+
     const ResidentTypes = [
 
         {
@@ -125,13 +191,17 @@ const AddRegistrant = ({ route, navigation }) => {
         country: "",
         zipCode: "",
         runnersClass: null,
-        sourceRef: null
+        sourceRef: null,
+        certificate: false,
+        panCard: null,
+        amount: "",
+        runnerKits: false
     })
 
     return (
 
         <authContext.Consumer>
-            {({ userId, setUserId }) => (
+            {({ userId, setUserId, corpCode }) => (
                 <View style={{ width: '100%', height: '100%', backgroundColor: 'white' }}>
                     <StatusBar
                         background={COLORS.blue}
@@ -535,8 +605,111 @@ const AddRegistrant = ({ route, navigation }) => {
 
                         />
 
+                        {isWithout && <View>
+                            <Text
+                                style={{
+                                    fontSize: SIZES.font,
+                                    fontFamily: FONTS.bold,
+                                    color: COLORS.black,
+                                    textAlign: 'left',
+                                    marginTop: 16
+                                }}
+                            >
+                                Amount<Text style={{ color: COLORS.red }}>*</Text>
+                            </Text>
 
-                        <RectButton onClick={() => { addRegistrant(userId) }} text={"Add Runner Details"} alignSelf={'center'} marginTop={24} />
+                            <Input
+                                placeholder="5000₹"
+                                inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start' }}
+                                onChangeText={(value) => setState(current => ({ ...current, amount: value }))}
+                                value={data.amount}
+                                placeholderTextColor={COLORS.lightGray}
+                            />
+                        </View>}
+
+                        {isDonors &&
+                            <View>   <View style={{ flexDirection: 'row', alignSelf: 'center', width: '90%', marginTop: 14, justifyContent: 'space-between', alignItems: 'center' }}>
+
+                                <BouncyCheckbox
+                                    size={25}
+                                    fillColor={COLORS.blue}
+                                    unfillColor={COLORS.grey}
+                                    iconStyle={{ borderColor: COLORS.grey }}
+                                    innerIconStyle={{ borderWidth: 2 }}
+                                    onPress={(isChecked) => { setState(current => ({ ...current, certificate: isChecked })) }}
+                                />
+
+                                <Text
+                                    style={{
+                                        fontSize: SIZES.font,
+                                        fontFamily: FONTS.medium,
+                                        color: COLORS.grey,
+                                        width: '90%',
+                                        textAlign: 'left',
+                                    }}
+                                >
+                                    80G Certificate required<Text style={{ color: COLORS.red }}>*</Text>
+                                </Text>
+
+                            </View>
+
+                                <Text
+                                    style={{
+                                        fontSize: SIZES.font,
+                                        fontFamily: FONTS.bold,
+                                        color: COLORS.black,
+                                        textAlign: 'left',
+                                        marginTop: 16
+                                    }}
+                                >
+                                    PAN Card<Text style={{ color: COLORS.red }}>*</Text>
+                                </Text>
+
+                                <Input
+                                    placeholder="Enter Here"
+                                    inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start' }}
+                                    onChangeText={(value) => setState(current => ({ ...current, panCard: value }))}
+                                    value={data.panCard}
+                                    placeholderTextColor={COLORS.lightGray}
+                                />
+                            </View>
+                        }
+
+                        {isWithout &&
+                            <View style={{ flexDirection: 'row', alignSelf: 'center', width: '90%', marginTop: 14, justifyContent: 'space-between', alignItems: 'center' }}>
+
+                                <BouncyCheckbox
+                                    size={25}
+                                    fillColor={COLORS.blue}
+                                    unfillColor={COLORS.grey}
+                                    iconStyle={{ borderColor: COLORS.grey }}
+                                    innerIconStyle={{ borderWidth: 2 }}
+                                    onPress={(isChecked) => { setState(current => ({ ...current,runnerKits: isChecked })) }}
+                                />
+
+                                <Text
+                                    style={{
+                                        fontSize: SIZES.font,
+                                        fontFamily: FONTS.medium,
+                                        color: COLORS.grey,
+                                        width: '90%',
+                                        textAlign: 'left',
+                                    }}
+                                >
+                                    I opt for home-delivered (runners kit)
+                                </Text>
+
+                            </View>
+                        }
+
+
+                        <RectButton onClick={() => {
+                            if (isWithout) {
+
+                            }
+                            else if (corpCode) addRegistrantCorp(userId)
+                            else addRegistrant(userId)
+                        }} text={isWithout ? "Pay Now" : "Add Runner Details"} alignSelf={'center'} marginTop={24} />
 
 
 
