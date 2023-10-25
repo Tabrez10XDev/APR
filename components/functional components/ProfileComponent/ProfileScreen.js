@@ -14,7 +14,7 @@ import Toast from 'react-native-toast-message';
 
 const ProfileScreen = ({route,navigation})=>{
     return(
-        <View>
+        <View style={{backgroundColor:'white', width:'100%', height:'100%', alignItems:'center', justifyContent:'center'}}>
 
             <RectButton text={"Logout"} onClick={()=>route.params.logout()}/>
         </View>

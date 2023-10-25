@@ -14,10 +14,42 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 const AddRegistrant = ({ route, navigation }) => {
     const data = route.params
-
+    const [state, setState] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        number: "",
+        flatNo: null,
+        residentType: null,
+        address: "",
+        tower: null,
+        phase: null,
+        city: "",
+        state: "",
+        country: "",
+        zipCode: "",
+        runnersClass: null,
+        sourceRef: null,
+        certificate: false,
+        panCard: null,
+        amount: "",
+        runnerKits: false,
+        block: null
+    })
 
     const isDonors = data.typeName.toLowerCase().includes("donors")
     const isWithout = data.typeName.toLowerCase().includes("without")
+    const [blocks, setBlocks] = useState([])
+
+    useEffect(() => {
+        if (state.tower) {
+            data.towers.map((ele, inx) => {
+                if (ele.label == state.tower) {
+                    setBlocks(ele.blocks)
+                }
+            })
+        }
+    }, [state.tower])
 
 
     async function addRegistrant(userId) {
@@ -57,6 +89,12 @@ const AddRegistrant = ({ route, navigation }) => {
             "registrant_class_ref": state.runnersClass,
             "event_id_ref": 3,
             "role": "registrant",
+            addr_villa_number: state.residentType == "villa" ? state.phase : null,
+            addr_villa_lane_no: state.residentType == "villa" ? state.phase : null,
+            addr_villa_phase_no: state.residentType == "villa" ? state.phase : null,
+            addr_tower_no: state.residentType == "tower" ? state.tower : null,
+            addr_tower_block_no: state.residentType == "tower" ? state.block : null,
+            addr_tower_flat_no: state.flatNo,
             amount: state.amount
         }
 
@@ -176,27 +214,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
 
 
-    const [state, setState] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        number: "",
-        flatNo: null,
-        residentType: null,
-        address: "",
-        tower: null,
-        phase: null,
-        city: "",
-        state: "",
-        country: "",
-        zipCode: "",
-        runnersClass: null,
-        sourceRef: null,
-        certificate: false,
-        panCard: null,
-        amount: "",
-        runnerKits: false
-    })
+
 
     return (
 
@@ -459,6 +477,43 @@ const AddRegistrant = ({ route, navigation }) => {
 
                         }
 
+                        {
+                            state.residentType == "tower" &&
+                            <Dropdown
+                                style={{
+                                    height: 45,
+                                    borderColor: COLORS.lightGray,
+                                    borderRadius: 6,
+                                    borderWidth: 1,
+                                    width: '100%',
+                                    paddingHorizontal: 12,
+                                    alignSelf: 'flex-start',
+                                    marginTop: 10,
+                                    color: COLORS.black
+                                }}
+                                placeholderStyle={{ fontSize: 16, color: COLORS.black }}
+                                selectedTextStyle={{
+                                    fontSize: SIZES.smallFont,
+                                    fontFamily: FONTS.semiBold,
+                                    color: COLORS.black
+                                }}
+                                inputSearchStyle={{}}
+                                iconStyle={{}}
+                                data={blocks}
+                                maxHeight={300}
+                                labelField="block_number"
+                                valueField="block_number"
+                                placeholder="Choose the block"
+                                value={state.block}
+                                onChange={item => {
+                                    setState(current => ({ ...current, block: item.block_number }))
+
+                                }}
+
+                            />
+
+                        }
+
 
                         <Input
                             placeholder="Address"
@@ -684,7 +739,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                     unfillColor={COLORS.grey}
                                     iconStyle={{ borderColor: COLORS.grey }}
                                     innerIconStyle={{ borderWidth: 2 }}
-                                    onPress={(isChecked) => { setState(current => ({ ...current,runnerKits: isChecked })) }}
+                                    onPress={(isChecked) => { setState(current => ({ ...current, runnerKits: isChecked })) }}
                                 />
 
                                 <Text
@@ -709,7 +764,7 @@ const AddRegistrant = ({ route, navigation }) => {
                             }
                             else if (corpCode) addRegistrantCorp(userId)
                             else addRegistrant(userId)
-                        }} text={isWithout ? "Pay Now" : "Add Runner Details"} alignSelf={'center'} marginTop={24} />
+                        }} text={isWithout ? "Pay Now" : "Add Runner Details"} alignSelf={'center'} marginTop={48} />
 
 
 

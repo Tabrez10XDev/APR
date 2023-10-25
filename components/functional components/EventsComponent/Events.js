@@ -51,7 +51,10 @@ const Events = ({ navigation }) => {
 
     async function fetchDashboard() {
         console.log("Fetching")
-        axios.get(`${CONST.baseUrlRegister}api/registration/get/registrant/category/details/3`).then((response) => {
+        console.log(
+            `${CONST.baseUrlRegister}api/registration/get/registrant/category/details`
+        )
+        axios.get(`${CONST.baseUrlRegister}api/registration/get/registrant/category/details`).then((response) => {
             setData(response.data)
             console.log(data.event_info.event_name)
             const combinedDateTimeStr = `${response.data.event_info.event_cut_off_date}T${response.data.event_info.event_cut_off_time}:00`;
@@ -87,7 +90,7 @@ const Events = ({ navigation }) => {
     }
 
     async function fetchDashboardCorp() {
-        console.log("Fetching")
+
         axios.get(`${CONST.baseUrlRegister}api/corporate/event/data/3`).then((response) => {
             let _data = response.data
             _data.registrant_type = [

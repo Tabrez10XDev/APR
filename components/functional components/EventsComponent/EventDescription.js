@@ -18,14 +18,11 @@ const EventDescription = ({ route, navigation }) => {
             registrant_id: data.userId,
             registrant_type_id: data.type_id
         }).then((response) => {
-            console.log("hiii");
-            console.log(response.data)
             let towers = []
             let phases = []
-            response.data.registrant_source.map((ele, inx) => {
-                console.log(ele.source_name)
-                if (ele.source_name.toLowerCase().includes("tower")) towers.push({ label: ele.source_name, value: ele.source_id })
-                else phases.push({ label: ele.source_name, value: ele.source_id })
+            response.data.tower_details.map((ele, inx) => {
+                towers.push({ label: ele.tower_number, value: ele.tower_number, blocks: ele.block })
+                // else phases.push({ label: ele.source_name, value: ele.source_id })
 
             })
             let classes = []
@@ -37,9 +34,10 @@ const EventDescription = ({ route, navigation }) => {
             })
             navigation.navigate("AddRegistrant", { ...response.data, towers: towers, phases: phases, classes: classes, typeName: data.type_name })
 
-        }).catch((err) => {
+        })
+        .catch((err) => {
             console.error("Error")
-            console.log(err.response.data)
+            console.log(err.response)
         })
     }
 
