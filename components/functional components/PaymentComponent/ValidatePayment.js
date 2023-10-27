@@ -7,8 +7,7 @@ import {
 } from "react-native";
 
 import { Linking } from "react-native";
-
-import Lottie from 'lottie-react-native';
+// import Lottie from 'lottie-react-native'
 import authContext from '../../../contants/authContext';
 
 
@@ -22,9 +21,9 @@ import { CommonActions } from "@react-navigation/native";
 const ValidatePayment = ({ route, navigation }) => {
 
 
-    const [state, setState] = useState(true)
 
     const data = route.params
+    const [success, setSuccess] = useState(false)
 
     useEffect(() => {
         Linking.openURL(route.params.instrumentResponse.redirectInfo.url)
@@ -44,63 +43,63 @@ const ValidatePayment = ({ route, navigation }) => {
 
     const validatePayment = async () => {
 
-        console.log("Payment API")
-        const payload = {
-            "registrant_id": data.details.registrant_id,
-            "order_id": data.details.order_id,
-            "booking_id": data.details.booking_id,
-            "event_id": data.details.event_id,
-            "registrant_class": data.details.registrant_class,
-            "merchant_transaction_id": route.params.merchantTransactionId,
-            "provider_reference_id": "T2310182036074772367080"
-        }
+        console.log("Payment API", _shouldMakeRequests)
 
-        console.log(payload)
 
 
 
         try {
+            const payload = {
+                "order_id": "ACT00011",
+                "merchant_id": "PGTESTPAYUAT93",
+                "merchant_transaction_id": route.params.merchantTransactionId,
+            }
 
 
             const { instance, cancelSource } = createAxiosInstance();
 
-            const response = await instance.post(`${CONST.baseUrlRegister}api/payment/payment-status`,
+            const response = await instance.post(`${CONST.baseUrlRegister}api/payment/check/payment`,
                 payload,
             )
 
 
 
 
-            if (response.status === 200) {
+            if (response.status === 200 && response.data[0].payment_status == "PAYMENT_SUCCESS") {
                 console.log('Request successful! Cancelling all pending requests.');
                 setShouldMakeRequests(false)
                 _shouldMakeRequests = false
-                if (response.data.status == "error") {
-                    Toast.show({
-                        type: 'error',
-                        text1: "Booking Failed"
-                    });
-                    setState(false)
-                } else {
-                    navigation.dispatch(
-                        CommonActions.reset({
-                            index: 1,
-                            routes: [
-                                { name: 'FlightsScreen' },
-                                {
-                                    name: 'TicketInfo',
-                                    params: { ...response.data, showCancel: true }
-                                },
-                            ],
-                        })
-                    );
-                }
+                setSuccess(true)
+                // if (response.data.status == "error") {
+                //     Toast.show({
+                //         type: 'error',
+                //         text1: "Booking Failed"
+                //     });
+                //     setState(false)
+                // } else {
+
+                console.log("Payment Successful")
+                // navigation.dispatch(
+                //     CommonActions.reset({
+                //         index: 1,
+                //         routes: [
+                //             { name: 'Home' },
+                //             {
+                //                 name: 'EventDescription',
+                //                 params: { ...response.data, showCancel: true }
+                //             },
+                //         ],
+                //     })
+                // );
+
+
+                // }
 
                 axios.CancelToken.source().cancel('All pending requests cancelled.');
             }
         } catch (error) {
 
-            if (error.response ? error.response.status == 500 : false) {
+            if (error.response ? error.response.status == 501 : false) {
                 console.log("Error")
 
                 Toast.show({
@@ -115,7 +114,7 @@ const ValidatePayment = ({ route, navigation }) => {
                     type: 'error',
                     text1: error.message,
                 });
-                setState(false)
+                // setState(false)
                 console.log('Pending request cancelled:', error.message);
             } else {
                 Toast.show({
@@ -126,7 +125,7 @@ const ValidatePayment = ({ route, navigation }) => {
             }
         }
         finally {
-            if (_shouldMakeRequests) setTimeout(validatePayment, 2000); // 5 seconds
+            if (_shouldMakeRequests) setTimeout(validatePayment, 3000);
         }
 
 
@@ -142,6 +141,7 @@ const ValidatePayment = ({ route, navigation }) => {
 
         validatePayment()
         return () => {
+            console.log("ending");
             _shouldMakeRequests = false
         };
     }, []);
@@ -159,25 +159,35 @@ const ValidatePayment = ({ route, navigation }) => {
                         style={{ backgroundColor: COLORS.white, flex: 1 }}
                     ></StatusBar>
 
-                    {
+                    {/* {
                         shouldMakeRequests ?
                             <Lottie style={{ width: '60%', marginTop: '10%' }} source={require('../../../assets/paymentLoading.json')} autoPlay />
                             :
                             <Lottie style={{ width: '60%', marginTop: '10%' }} source={require('../../../assets/warning.json')} autoPlay />
 
+                    } */}
+
+                    {
+                        success &&
+                        <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
+                            Success
+                        </Text>
+
+
                     }
 
 
-
                     {
-                        shouldMakeRequests ?
+                        shouldMakeRequests && success == false ?
                             <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
                                 Once you have made the payment, wait for the validation
-                            </Text>
-                            :
-                            <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
-                                Error occured Please try again later, check My Schedule for more information
-                            </Text>
+                            </Text> : <Text></Text>
+                    }
+                    {shouldMakeRequests == false && success == false ?
+
+                        <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
+                            Error occured Please try again later, check My Schedule for more information
+                        </Text> : <Text></Text>
 
                     }
 

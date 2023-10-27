@@ -69,13 +69,12 @@ const LoginScreen = ({ navigation, route }) => {
             "notif_token":null,
             "google_id": ""
         }
-        console.log(`${CONST.baseUrlAuth}api/registrant/signin`)
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then(async (response) => {
                 console.log(response.data)
                 await AsyncStorage.setItem('CorpState', "0")
-
-                saveAuth(response.data.user_id)
+                if(response.data.registrant_id) saveAuth(response.data.registrant_id)
+                else saveAuth(response.data.user_id)
 
             }).catch((err) => {
                 console.log(err.response.data)

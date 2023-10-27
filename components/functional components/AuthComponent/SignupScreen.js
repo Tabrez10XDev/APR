@@ -11,7 +11,7 @@ import {
     Dimensions
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "react-native";
 import { COLORS, SIZES, FONTS, assets, CONST, } from "../../../contants";
 // import { TextInput } from "@react-native-material/core";
@@ -41,7 +41,7 @@ const SignUpScreen = ({ navigation, route }) => {
     })
 
     function safeSignUp(){
-        if(corpCode == null) signup()
+        if(state.corpCode == null) signup()
         else if(corpCode.trim().length == 0) signup()
         else corpSignup()
     }
@@ -138,10 +138,12 @@ const SignUpScreen = ({ navigation, route }) => {
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/signup`, payload).then(async (response) => {
                 console.log(response.data)
+                console.log("----")
                 await AsyncStorage.setItem('CorpState', "0")
 
                 navigation.navigate("OTPScreen",{number: state.number, email: state.email})
-            }).catch((err) => {
+            })
+            .catch((err) => {
                 console.log(err.response.data)
                 Toast.show({
                     type: 'error',

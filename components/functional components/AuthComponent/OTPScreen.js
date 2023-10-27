@@ -93,15 +93,6 @@ const OTPScreen = ({ route }) => {
                 text1: err.response.data
             });
         })
-
-        // } 
-        // catch (error) {
-        //     Toast.show({
-        //         type: 'error',
-        //         text1: error.response.data
-        //     });
-        //     throw error
-        // }
     }
 
 
@@ -173,8 +164,10 @@ const OTPScreen = ({ route }) => {
                         borderWidth: 1,
                         borderRadius: 12,
                         backgroundColor: COLORS.otpBg,
+                        color:'black'
                     }}
                     codeInputHighlightStyle={{ borderColor: COLORS.blue }}
+                    
                     onCodeFilled={(code => {
                         verifyOTP(code)
                         console.log(`Code is ${code}, you are good to go!`)
