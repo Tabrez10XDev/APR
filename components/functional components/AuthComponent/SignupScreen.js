@@ -72,7 +72,10 @@ const SignUpScreen = ({ navigation, route }) => {
             "email_id": state.email,
             "password": state.password,
             "mobile_number": state.number,
-            corporate_code: state.corpCode
+            corporate_code: state.corpCode,
+            corporate_user:true,
+            google_id:"",
+            notif_token: null
         }
 
         console.log(payload)
@@ -123,7 +126,12 @@ const SignUpScreen = ({ navigation, route }) => {
             "last_name": state.lastName,
             "email_id": state.email,
             "password": state.password,
-            "mobile_number": state.number
+            "mobile_number": state.number,
+            "google_id":"",
+            "corporate_user":false,
+            "corporate_code":null,
+            "notif_token": null
+
         }
 
         console.log(payload)

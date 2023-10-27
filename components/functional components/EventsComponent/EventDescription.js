@@ -85,7 +85,8 @@ const EventDescription = ({ route, navigation }) => {
     ]
 
     const _eventDate = new Date(data.event_info.event_date)
-    const eventDate = _eventDate.getDay() + ", " + monthMap[_eventDate.getMonth()] + " " + _eventDate.getDay() + " " + _eventDate.getFullYear() + " | at " + data.event_info.event_time.substring(0, 5)
+    const _eventTime = data.event_info.event_time ? data.event_info.event_time.substring(0, 5) : "NA"
+    const eventDate = _eventDate.getDay() + ", " + monthMap[_eventDate.getMonth()] + " " + _eventDate.getDay() + " " + _eventDate.getFullYear() + " | at " + _eventTime
 
     return (
         <authContext.Consumer>

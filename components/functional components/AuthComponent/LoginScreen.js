@@ -62,8 +62,12 @@ const LoginScreen = ({ navigation, route }) => {
             return;
         }
         const payload = {
+            "first_name": null,
+            "last_name": null,
             "email_id": email,
-            "password": pass
+            "password": pass,
+            "notif_token":null,
+            "google_id": ""
         }
         console.log(`${CONST.baseUrlAuth}api/registrant/signin`)
         try {

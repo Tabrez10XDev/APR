@@ -9,6 +9,7 @@ import {
 import { Linking } from "react-native";
 
 import Lottie from 'lottie-react-native';
+import authContext from '../../../contants/authContext';
 
 
 import { StatusBar } from "react-native";
@@ -22,6 +23,8 @@ const ValidatePayment = ({ route, navigation }) => {
 
 
     const [state, setState] = useState(true)
+
+    const data = route.params
 
     useEffect(() => {
         Linking.openURL(route.params.instrumentResponse.redirectInfo.url)
@@ -43,82 +46,88 @@ const ValidatePayment = ({ route, navigation }) => {
 
         console.log("Payment API")
         const payload = {
-            userId: route.params.userId,
-            docId: route.params.docId,
-            paymentOrderId: route.params.paymentOrderId
+            "registrant_id": data.details.registrant_id,
+            "order_id": data.details.order_id,
+            "booking_id": data.details.booking_id,
+            "event_id": data.details.event_id,
+            "registrant_class": data.details.registrant_class,
+            "merchant_transaction_id": route.params.merchantTransactionId,
+            "provider_reference_id": "T2310182036074772367080"
         }
 
-        // console.log(payload)
-
-        // try {
-        //     const { instance, cancelSource } = createAxiosInstance();
-
-        //     const response = await instance.post(`${CONST.baseUrl}/validatePayment`,
-        //         payload,
-        //     )
-
-        //     // console.log(response.status)
+        console.log(payload)
 
 
 
-        //     if (response.status === 200) {
-        //         console.log('Request successful! Cancelling all pending requests.');
-        //         setShouldMakeRequests(false)
-        //         _shouldMakeRequests = false
-        //         if (response.data.status == "error") {
-        //             Toast.show({
-        //                 type: 'error',
-        //                 text1: "Booking Failed"
-        //             });
-        //             setState(false)
-        //         } else {
-        //             navigation.dispatch(
-        //                 CommonActions.reset({
-        //                     index: 1,
-        //                     routes: [
-        //                         { name: 'FlightsScreen' },
-        //                         {
-        //                             name: 'TicketInfo',
-        //                             params: { ...response.data, showCancel: true }
-        //                         },
-        //                     ],
-        //                 })
-        //             );
-        //         }
+        try {
 
-        //         axios.CancelToken.source().cancel('All pending requests cancelled.');
-        //     }
-        // } catch (error) {
 
-        //     console.log("Error:")
-        //     console.log(error.response ? error.response.status : "na");
-        //     if (error.response ? error.response.status == 500 : false) {
-        //         Toast.show({
-        //             type: 'error',
-        //             text1: "Please try again later"
-        //         });
-        //         setShouldMakeRequests(false)
-        //         _shouldMakeRequests = false
-        //     }
-        //     if (axios.isCancel(error)) {
-        //         Toast.show({
-        //             type: 'error',
-        //             text1: error.message,
-        //         });
-        //         setState(false)
-        //         console.log('Pending request cancelled:', error.message);
-        //     } else {
-        //         Toast.show({
-        //             type: 'error',
-        //             text1: error.message
-        //         });
+            const { instance, cancelSource } = createAxiosInstance();
 
-        //     }
-        // }
-        // finally {
-        //     console.log(shouldMakeRequests)
-        //     if (_shouldMakeRequests) setTimeout(validatePayment, 2000); // 5 seconds
-        // }
+            const response = await instance.post(`${CONST.baseUrlRegister}api/payment/payment-status`,
+                payload,
+            )
+
+
+
+
+            if (response.status === 200) {
+                console.log('Request successful! Cancelling all pending requests.');
+                setShouldMakeRequests(false)
+                _shouldMakeRequests = false
+                if (response.data.status == "error") {
+                    Toast.show({
+                        type: 'error',
+                        text1: "Booking Failed"
+                    });
+                    setState(false)
+                } else {
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 1,
+                            routes: [
+                                { name: 'FlightsScreen' },
+                                {
+                                    name: 'TicketInfo',
+                                    params: { ...response.data, showCancel: true }
+                                },
+                            ],
+                        })
+                    );
+                }
+
+                axios.CancelToken.source().cancel('All pending requests cancelled.');
+            }
+        } catch (error) {
+
+            if (error.response ? error.response.status == 500 : false) {
+                console.log("Error")
+
+                Toast.show({
+                    type: 'error',
+                    text1: "Please try again later"
+                });
+                setShouldMakeRequests(false)
+                _shouldMakeRequests = false
+            }
+            if (axios.isCancel(error)) {
+                Toast.show({
+                    type: 'error',
+                    text1: error.message,
+                });
+                setState(false)
+                console.log('Pending request cancelled:', error.message);
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: error.message
+                });
+
+            }
+        }
+        finally {
+            if (_shouldMakeRequests) setTimeout(validatePayment, 2000); // 5 seconds
+        }
 
 
 
@@ -140,37 +149,39 @@ const ValidatePayment = ({ route, navigation }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
-            <StatusBar
-                background={COLORS.white}
-                backgroundColor={COLORS.white}
-                barStyle="dark-content"
-                style={{ backgroundColor: COLORS.white, flex: 1 }}
-            ></StatusBar>
+        <authContext.Consumer>
+            {({ userId, corpCode }) => (
+                <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
+                    <StatusBar
+                        background={COLORS.white}
+                        backgroundColor={COLORS.white}
+                        barStyle="dark-content"
+                        style={{ backgroundColor: COLORS.white, flex: 1 }}
+                    ></StatusBar>
 
-            {
-                shouldMakeRequests ?
-                    <Lottie style={{ width: '60%', marginTop: '10%' }} source={require('../../../assets/paymentLoading.json')} autoPlay />
-                    :
-                    <Lottie style={{ width: '60%', marginTop: '10%' }} source={require('../../../assets/warning.json')} autoPlay />
+                    {
+                        shouldMakeRequests ?
+                            <Lottie style={{ width: '60%', marginTop: '10%' }} source={require('../../../assets/paymentLoading.json')} autoPlay />
+                            :
+                            <Lottie style={{ width: '60%', marginTop: '10%' }} source={require('../../../assets/warning.json')} autoPlay />
 
-            }
+                    }
 
-         
 
-            {
-                shouldMakeRequests ?
-                    <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
-                        Once you have made the payment, wait for the validation
-                    </Text>
-                    :
-                    <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
-                        Error occured Please try again later, check My Schedule for more information
-                    </Text>
 
-            }
+                    {
+                        shouldMakeRequests ?
+                            <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
+                                Once you have made the payment, wait for the validation
+                            </Text>
+                            :
+                            <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
+                                Error occured Please try again later, check My Schedule for more information
+                            </Text>
 
-            {/* <Text style={{ fontFamily: FONTS.regular, textAlign: 'justify', width: '90%', marginTop: 64 }}>
+                    }
+
+                    {/* <Text style={{ fontFamily: FONTS.regular, textAlign: 'justify', width: '90%', marginTop: 64 }}>
                 <Text style={{fontFamily:FONTS.semiBold}}>The following? </Text> Once your reservation has been paid for and confirmed, check your email inbox: you will find your confirmation email containing all the information necessary to prepare your trip.
             </Text>
 
@@ -179,13 +190,17 @@ const ValidatePayment = ({ route, navigation }) => {
             </Text> */}
 
 
-            <Toast
-                position='bottom'
-                bottomOffset={20}
-            />
+                    <Toast
+                        position='bottom'
+                        bottomOffset={20}
+                    />
 
 
-        </SafeAreaView>
+                </SafeAreaView>
+            )
+
+            }
+        </authContext.Consumer>
     )
 
 }

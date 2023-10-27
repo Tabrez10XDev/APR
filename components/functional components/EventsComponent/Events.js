@@ -31,23 +31,7 @@ const Events = ({ navigation }) => {
         "December",
     ]
 
-    async function initiatePayment() {
 
-        let operatingSystem = Constants.OS.ios //or Constants.OS.android
-        let sdk = await PhonePe.build(Constants.Species.native, operatingSystem)
-        let merchantName = "DummyMerchant"
-        let imageURL = "https://image.dummymerchant.com"
-        //Any metadata to show on PhonePe's payment screen
-        let metadata = [{
-            "Movie": "Avengers"
-        }, { "Seats": "3E, 4E, 5E" }]
-
-        sdk.openPaymentsPage(merchantName, context, null, imageURL, metadata).then((response) => {
-            console.log("Payment was successful = " + response)
-        }).catch((err) => {
-            console.log("Payment failed with error = " + err)
-        })
-    }
 
     async function fetchDashboard() {
         console.log("Fetching")

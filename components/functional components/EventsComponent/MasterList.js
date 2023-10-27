@@ -104,7 +104,7 @@ const MasterList = ({ route, navigation }) => {
                 axios.request(config)
                     .then((response) => {
                         if(response.data.status.code == "PAYMENT_INITIATED"){
-                            navigation.navigate("ValidatePayment", response.data.status.data)
+                            navigation.navigate("ValidatePayment", {...response.data.status.data, details: response.data.details})
                         }
 
                     })

@@ -40,7 +40,9 @@ const OTPScreen = ({ route }) => {
 
         const payload = {
             "phone_number": route.params.number,
-            "otp": otp
+            "otp": otp,
+            "notif_token":"",
+            "email_id": route.params.email
         }
         console.log(`${CONST.baseUrlAuth}api/registrant/verify/otp`)
         try {
