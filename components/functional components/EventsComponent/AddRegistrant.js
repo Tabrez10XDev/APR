@@ -11,6 +11,7 @@ import common from '../../../contants/common';
 import authContext from '../../../contants/authContext';
 import Toast from 'react-native-toast-message';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const AddRegistrant = ({ route, navigation }) => {
     const data = route.params
@@ -34,7 +35,10 @@ const AddRegistrant = ({ route, navigation }) => {
         panCard: null,
         amount: "",
         runnerKits: false,
-        block: null
+        block: null,
+        residentOfAPR: false,
+        laneNumber: null,
+        villaNumber: ''
     })
 
     const isDonors = data.typeName.toLowerCase().includes("donors")
@@ -136,6 +140,23 @@ const AddRegistrant = ({ route, navigation }) => {
         // }
     }
 
+    async function verifyVilla() {
+        axios.post(`${CONST.baseUrlRegister}api/registration/verify/address`, 
+        {
+            "villa_number": state.villaNumber
+        }
+        ).then((response) => {
+            console.log(response.data)
+            setState(current=>(
+                {
+                    ...current,
+                    laneNumber: response.data.lane_no,
+                    phase: response.data.phase_no
+                }
+            ))
+            console.log(response.data)
+        })
+    }
 
     async function addRegistrantCorp(userId) {
 
@@ -208,7 +229,7 @@ const AddRegistrant = ({ route, navigation }) => {
         },
         {
             label: 'Others',
-            value: null
+            value: 'others'
         },
     ]
 
@@ -354,6 +375,34 @@ const AddRegistrant = ({ route, navigation }) => {
                             Address<Text style={{ color: COLORS.red }}>*</Text>
                         </Text>
 
+
+                        <View style={{ flexDirection: 'row', alignSelf: 'center', width: '95%', marginVertical: 14, justifyContent: 'space-between', alignItems: 'center' }}>
+
+
+
+                            <Text
+                                style={{
+                                    fontSize: SIZES.font,
+                                    fontFamily: FONTS.medium,
+                                    color: COLORS.grey,
+                                    width: '90%',
+                                    textAlign: 'left',
+                                }}
+                            >
+                                Are you a resident of APR
+                            </Text>
+
+                            <BouncyCheckbox
+                                size={25}
+                                fillColor={COLORS.blue}
+                                unfillColor={COLORS.grey}
+                                iconStyle={{ borderColor: COLORS.grey }}
+                                innerIconStyle={{ borderWidth: 2 }}
+                                onPress={(isChecked) => { setState(current => ({ ...current, residentOfAPR: isChecked })) }}
+                            />
+
+                        </View>
+
                         <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignSelf: 'center' }}>
 
 
@@ -379,7 +428,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                 }}
                                 inputSearchStyle={{}}
                                 iconStyle={{}}
-                                data={ResidentTypes}
+                                data={state.residentOfAPR ? ResidentTypes : [{ label: "Others", value: "others" }]}
                                 maxHeight={300}
                                 labelField="label"
                                 valueField="value"
@@ -390,18 +439,19 @@ const AddRegistrant = ({ route, navigation }) => {
                                 }}
 
                             />
+                            {state.residentType == 'others' &&
 
-                            <Input
-                                placeholder="Flat No"
-                                inputprops={{ width: '48%', marginTop: 8, alignSelf: 'flex-start', marginLeft: 8 }}
-                                onChangeText={(value) => setState(current => ({ ...current, flatNo: value }))}
-                                value={state.flatNo}
-                                placeholderTextColor={COLORS.lightGray}
-                            />
+                                <Input
+                                    placeholder="Flat No"
+                                    inputprops={{ width: '48%', marginTop: 8, alignSelf: 'flex-start', marginLeft: 8 }}
+                                    onChangeText={(value) => setState(current => ({ ...current, flatNo: value }))}
+                                    value={state.flatNo}
+                                    placeholderTextColor={COLORS.lightGray}
+                                />}
 
                         </View>
 
-                        {
+                        {/* {
                             state.residentType == "villa" &&
                             <Dropdown
                                 style={{
@@ -437,6 +487,60 @@ const AddRegistrant = ({ route, navigation }) => {
 
                             />
 
+                        } */}
+
+                        {
+                            state.residentType == "villa" &&
+                            <View style={{ width: '98%', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', alignSelf: 'center' }}>
+
+                                <View style={{ width: '45%' }}>
+
+                                    <Input
+                                        placeholder="Villa Number"
+                                        inputprops={{ width: '100%', marginTop: 8 }}
+                                        onChangeText={(value) => setState(current => ({ ...current, villaNumber: value }))}
+                                        value={state.villaNumber}
+                                        placeholderTextColor={COLORS.lightGray}
+                                    />
+                                </View>
+
+                                <RectButton
+                                    onClick={() => {
+                                        verifyVilla()
+                                    }}
+                                    width={'45%'}
+                                    text={"Verify"}
+                                />
+
+                            </View>
+
+
+                        }
+
+                        {
+                            state.residentType == 'villa' &&
+                            <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+                                <View style={{ width: '50%' }}>
+                                    <Input
+                                        editable={false}
+                                        placeholder="Lane No"
+                                        inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
+                                        onChangeText={(value) => setState(current => ({ ...current, laneNumber: value }))}
+                                        value={state.laneNumber}
+                                        placeholderTextColor={COLORS.lightGray}
+                                    />
+                                </View>
+                                <View style={{ width: '50%' }}>
+                                    <Input
+                                        editable={false}
+                                        placeholder="Phase No"
+                                        inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
+                                        onChangeText={(value) => setState(current => ({ ...current, phase: value }))}
+                                        value={state.phase}
+                                        placeholderTextColor={COLORS.lightGray}
+                                    />
+                                </View>
+                            </View>
                         }
 
                         {
@@ -513,22 +617,19 @@ const AddRegistrant = ({ route, navigation }) => {
                             />
 
                         }
+                        {state.residentType == 'others' &&
 
-
-                        <Input
-                            placeholder="Address"
-                            inputprops={{ width: '100%', marginTop: 12, alignSelf: 'center' }}
-                            onChangeText={(value) => setState(current => ({ ...current, address: value }))}
-                            value={state.address}
-                            placeholderTextColor={COLORS.lightGray}
-                        />
-
+                            <Input
+                                placeholder="Address"
+                                inputprops={{ width: '100%', marginTop: 12, alignSelf: 'center' }}
+                                onChangeText={(value) => setState(current => ({ ...current, address: value }))}
+                                value={state.address}
+                                placeholderTextColor={COLORS.lightGray}
+                            />
+                        }
                         <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignSelf: 'center', marginTop: 6 }}>
-
-
-
-
                             <Dropdown
+                                search={true}
                                 style={{
                                     height: 45,
                                     borderColor: COLORS.lightGray,
@@ -555,7 +656,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                 placeholder="City"
                                 value={state.city}
                                 onChange={item => {
-                                    setState(current => ({ ...current, city: item.name }))
+                                    setState(current => ({ ...current, city: item.name, state: item.state }))
                                 }}
 
                             />
@@ -629,6 +730,7 @@ const AddRegistrant = ({ route, navigation }) => {
                         </Text>
 
                         <Dropdown
+                            mode='modal'
                             style={{
                                 height: 45,
                                 borderColor: COLORS.lightGray,
@@ -637,7 +739,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                 width: '100%',
                                 paddingHorizontal: 12,
                                 alignSelf: 'flex-start',
-                                marginTop: 10,
+                                marginTop: 18,
                                 color: COLORS.black
                             }}
                             placeholderStyle={{ fontSize: 16, color: COLORS.black }}
@@ -764,7 +866,7 @@ const AddRegistrant = ({ route, navigation }) => {
                             }
                             else if (corpCode) addRegistrantCorp(userId)
                             else addRegistrant(userId)
-                        }} text={isWithout ? "Pay Now" : "Add Runner Details"} alignSelf={'center'} marginTop={48} />
+                        }} text={isWithout ? "Pay Now" : "Add Runner Details"} alignSelf={'center'} marginTop={24} />
 
 
 

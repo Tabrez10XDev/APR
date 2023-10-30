@@ -3,7 +3,8 @@ import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
 import { StyleSheet, Text, View, Image, ScrollView, Dimensions, Pressable, FlatList } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import Lottie from 'lottie-react-native';
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,16 +13,37 @@ const MySchedule = ({ navigation }) => {
 
 
     const [stackIndex, setStackIndex] = useState(1);
+    const [loaded, setLoaded] = useState(false)
     const [state, setState] = useState([])
     const [history, setHistory] = useState({ upcoming: [], completed: [] })
     const [userId, setUserId] = useState("-1")
 
+    const [animSpeed, setAnimSpeed] = useState(false)
+    const animRef = useRef()
+
+    function playAnimation() {
+        setAnimSpeed(true)
+    }
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            animRef.current?.play();
+        }, 100)
+    }, [animSpeed])
+
+
+    function pauseAnimation() {
+        setAnimSpeed(false)
+    }
+
     async function fetchHistory(userId) {
         console.log("Fetching My Schedule")
-        
+        playAnimation()
+
         axios.get(`${CONST.baseUrlRegister}api/registration/myschedule/data/${userId}`).then((response) => {
-            if(response.data == []) return
-            else if(response.data.runnerInfo === undefined) return
+            if (response.data == []) return
+            else if (response.data.runnerInfo === undefined) return
             const currDate = new Date()
             let _completed = []
             let _upcoming = []
@@ -40,27 +62,31 @@ const MySchedule = ({ navigation }) => {
             console.log(response.data.runnerInfo.length)
         }).catch((err) => {
             console.log(err)
+        }).finally(()=>{
+            setLoaded(true)
+            pauseAnimation()
         })
     }
 
     const getData = async () => {
         try {
-    
-          const result = await AsyncStorage.getItem('AuthState')
-          if (result !== null && result != "-1" && result != undefined) {
-            setUserId(result)
-            fetchHistory(userId)
-          } else {
-            setUserId("-1")
-          }
- 
+
+            const result = await AsyncStorage.getItem('AuthState')
+            if (result !== null && result != "-1" && result != undefined) {
+                setUserId(result)
+                fetchHistory(userId)
+            } else {
+                setUserId("-1")
+            }
+
         } catch (e) {
-          console.error(e)
+            console.error(e)
         }
-      }
+    }
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
+            setLoaded(false)
             getData()
         });
 
@@ -190,7 +216,7 @@ const MySchedule = ({ navigation }) => {
             />
 
             {
-                stackIndex == 1 && history.upcoming.length == 0 &&
+                stackIndex == 1 && history.upcoming.length == 0 && loaded &&
                 <Text
                     style={{
                         position: 'absolute',
@@ -205,10 +231,10 @@ const MySchedule = ({ navigation }) => {
             }
 
             {
-                stackIndex == 2 && history.completed.length == 0 &&
+                stackIndex == 2 && history.completed.length == 0 && loaded &&
                 <Text style={{
                     position: 'absolute',
-                    top: 50,
+                    top: "50%",
                     alignSelf: 'center',
                     fontSize: SIZES.font,
                     fontFamily: FONTS.semiBold,
@@ -337,6 +363,25 @@ const MySchedule = ({ navigation }) => {
 
             </View> */}
 
+
+
+            {animSpeed &&
+                <View style={{
+                    shadowColor: COLORS.homeCard,
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 2,
+                    elevation: 8,
+                    borderRadius: 16,
+                    position: 'absolute', height: 250, width: 250, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', alignSelf: 'center', padding: 24, top: '45%'
+                }}>
+
+                    <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                </View>
+            }
 
         </View>
     )

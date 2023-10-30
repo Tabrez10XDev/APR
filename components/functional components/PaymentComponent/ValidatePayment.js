@@ -7,7 +7,7 @@ import {
 } from "react-native";
 
 import { Linking } from "react-native";
-// import Lottie from 'lottie-react-native'
+import Lottie from 'lottie-react-native'
 import authContext from '../../../contants/authContext';
 
 
@@ -70,27 +70,21 @@ const ValidatePayment = ({ route, navigation }) => {
                 setShouldMakeRequests(false)
                 _shouldMakeRequests = false
                 setSuccess(true)
-                // if (response.data.status == "error") {
-                //     Toast.show({
-                //         type: 'error',
-                //         text1: "Booking Failed"
-                //     });
-                //     setState(false)
-                // } else {
+         
 
                 console.log("Payment Successful")
-                // navigation.dispatch(
-                //     CommonActions.reset({
-                //         index: 1,
-                //         routes: [
-                //             { name: 'Home' },
-                //             {
-                //                 name: 'EventDescription',
-                //                 params: { ...response.data, showCancel: true }
-                //             },
-                //         ],
-                //     })
-                // );
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 1,
+                        routes: [
+                            { name: 'Home' },
+                            {
+                                name: 'BookingConfirmed',
+                                params: { ...response.data, showCancel: true }
+                            },
+                        ],
+                    })
+                );
 
 
                 // }
@@ -159,13 +153,13 @@ const ValidatePayment = ({ route, navigation }) => {
                         style={{ backgroundColor: COLORS.white, flex: 1 }}
                     ></StatusBar>
 
-                    {/* {
+                    {
                         shouldMakeRequests ?
                             <Lottie style={{ width: '60%', marginTop: '10%' }} source={require('../../../assets/paymentLoading.json')} autoPlay />
                             :
                             <Lottie style={{ width: '60%', marginTop: '10%' }} source={require('../../../assets/warning.json')} autoPlay />
 
-                    } */}
+                    }
 
                     {
                         success &&

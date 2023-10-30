@@ -40,15 +40,15 @@ const OTPScreen = ({ route }) => {
 
         const payload = {
             "phone_number": route.params.number,
-            "otp": otp,
+            "otp": parseInt(otp),
             "notif_token":"",
             "email_id": route.params.email
         }
-        console.log(`${CONST.baseUrlAuth}api/registrant/verify/otp`)
+
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/verify/otp`, payload).then(async (response) => {
                 console.log(response.data)
-                if (response.data.success) {
+                if (response.data.mobile_no_verify_status) {
                     saveAuth(response.data.registrant_id)
                     
                 }else{

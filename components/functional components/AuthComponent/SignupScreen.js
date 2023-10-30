@@ -140,6 +140,7 @@ const SignUpScreen = ({ navigation, route }) => {
                 console.log(response.data)
                 console.log("----")
                 await AsyncStorage.setItem('CorpState', "0")
+                await AsyncStorage.setItem('firstName', state.firstName)
 
                 navigation.navigate("OTPScreen",{number: state.number, email: state.email})
             })

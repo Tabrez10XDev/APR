@@ -3,18 +3,38 @@ import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
 import { StyleSheet, Text, View, Image, ScrollView, Dimensions } from 'react-native';
 import axios from 'axios';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import authContext from '../../../contants/authContext';
 import { PhonePe, Constants } from 'phonepesdk'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Lottie from 'lottie-react-native';
 
 const Events = ({ navigation }) => {
 
     const [data, setData] = useState({ event_info: {}, percentage: "70", registrant_type: [] })
     const [cutoff, setCutoff] = useState({})
+    const [name, setName] = useState("")
 
 
+    const [animSpeed, setAnimSpeed] = useState(false)
+    const animRef = useRef()
+
+    function playAnimation() {
+        setAnimSpeed(true)
+    }
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            animRef.current?.play();
+        }, 100)
+    }, [animSpeed])
+
+
+    function pauseAnimation() {
+        setAnimSpeed(false)
+    }
 
     const monthMap = [
         "January",
@@ -35,6 +55,7 @@ const Events = ({ navigation }) => {
 
     async function fetchDashboard() {
         console.log("Fetching")
+        playAnimation()
         console.log(
             `${CONST.baseUrlRegister}api/registration/get/registrant/category/details`
         )
@@ -70,6 +91,8 @@ const Events = ({ navigation }) => {
 
         }).catch((err) => {
             console.log(err)
+        }).finally(()=>{
+            pauseAnimation()
         })
     }
 
@@ -139,20 +162,24 @@ const Events = ({ navigation }) => {
         return () => clearInterval(intervalId);
     }, [data]);
 
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', async () => {
+    useEffect(async () => {
+        // const unsubscribe = navigation.addListener('focus', async () => {
 
 
             const result2 = await AsyncStorage.getItem('CorpState')
+            const result = await AsyncStorage.getItem('firstName')
+            setName(result ?? "User")
+
             if (result2 != null && result2 == "1") fetchDashboardCorp()
             else fetchDashboard()
 
 
             // fetchDashboard()
-        });
+        // }
+        // );
 
-        return unsubscribe;
-    }, [navigation]);
+        // return unsubscribe;
+    }, []);
 
 
     return (
@@ -177,7 +204,7 @@ const Events = ({ navigation }) => {
                                     textAlign: 'left',
                                 }}
                             >
-                                Hello Jane
+                                Hello {name}!
                             </Text>
 
                             <Image source={assets.wavingHand} style={{ width: 32, height: 32, resizeMode: 'contain', marginLeft: 8 }} />
@@ -338,6 +365,24 @@ const Events = ({ navigation }) => {
 
 
                     {/* </ScrollView> */}
+
+                    {animSpeed &&
+                        <View style={{
+                            shadowColor: COLORS.homeCard,
+                            shadowOffset: {
+                                width: 0,
+                                height: 2,
+                            },
+                            shadowOpacity: 0.3,
+                            shadowRadius: 2,
+                            elevation: 8,
+                            borderRadius:16,
+                            position: 'absolute', height: 250, width: 250, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', alignSelf: 'center', padding: 24, top:'45%'
+                        }}>
+
+                            <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                        </View>
+                    }
 
                 </View>
             )

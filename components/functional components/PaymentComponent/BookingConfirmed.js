@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { StackActions } from '@react-navigation/native';
 
-// import Lottie from 'lottie-react-native';
+import Lottie from 'lottie-react-native';
 
 
 import { StatusBar } from "react-native";
@@ -51,7 +51,7 @@ const BookingConfirmed = ({ route, navigation }) => {
 
 
 
-      {/* <Lottie source={require('../../../assets/confirmed.json')} autoPlay /> */}
+      <Lottie source={require('../../../assets/confirmed.json')} autoPlay />
 
       <Text
         style={{
