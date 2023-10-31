@@ -1,10 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState, useEffect, useRef } from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import authContext from '../../../contants/authContext';
 import { PhonePe, Constants } from 'phonepesdk'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -56,12 +55,9 @@ const Events = ({ navigation }) => {
     async function fetchDashboard() {
         console.log("Fetching")
         playAnimation()
-        console.log(
-            `${CONST.baseUrlRegister}api/registration/get/registrant/category/details`
-        )
+       
         axios.get(`${CONST.baseUrlRegister}api/registration/get/registrant/category/details`).then((response) => {
             setData(response.data)
-            console.log(data.event_info.event_name)
             const combinedDateTimeStr = `${response.data.event_info.event_cut_off_date}T${response.data.event_info.event_cut_off_time}:00`;
 
             const createdAt = new Date(response.data.event_info.created_at);
@@ -74,9 +70,11 @@ const Events = ({ navigation }) => {
             const _percentage = (100 - (totalDurationMs / timeDifferenceMs) * 100)
             const percent = _percentage <= 100 ? _percentage : "70"
 
-            const _eventDate = new Date(data.event_info.event_date)
-            console.log(_eventDate)
-            const eventDate = _eventDate.getDay() + " " + monthMap[_eventDate.getMonth()] + " " + _eventDate.getFullYear()
+            const _eventDate = response.data.event_info.event_date
+            console.log("0000");
+            console.log(_eventDate.substring(5,7))
+            const eventDate = _eventDate.substring(8,10) + " " + monthMap[parseInt(_eventDate.substring(5,7) - 1)] + " " + _eventDate.substring(0,4)
+            console.log(eventDate);
             let ageCategories = {}
             let raceCategories = {}
 
@@ -108,7 +106,6 @@ const Events = ({ navigation }) => {
                 }
             ]
             setData(_data)
-            console.log(data.event_info.event_name)
             const combinedDateTimeStr = `${response.data.event_info.event_cut_off_date}T${response.data.event_info.event_cut_off_time}:00`;
 
             const createdAt = new Date(response.data.event_info.created_at);
@@ -141,8 +138,8 @@ const Events = ({ navigation }) => {
     useEffect(() => {
         const intervalId = setInterval(() => {
 
-            const eventCutOffDate = new Date(`${data.event_info.event_cut_off_date}T${data.event_info.event_cut_off_time}:00`);
-
+            const eventCutOffDate = new Date(`${data.event_info.event_cut_off_time}`);
+            console.log("---")
             const currentDate = new Date();
 
             const timeDifferenceMs = eventCutOffDate - currentDate;
@@ -151,7 +148,8 @@ const Events = ({ navigation }) => {
             const minutes = Math.floor((timeDifferenceMs % 3600000) / 60000);
             const seconds = Math.floor((timeDifferenceMs % 60000) / 1000);
             setCutoff({
-                hours: hours,
+                days: Math.floor(hours/24),
+                hours: hours%24,
                 minutes: minutes < 10 ? "0" + minutes : minutes,
                 seconds: seconds < 10 ? "0" + seconds : seconds
             })
@@ -270,7 +268,7 @@ const Events = ({ navigation }) => {
                                     textAlign: 'left',
                                 }}
                             >
-                                Event close in
+                                Registration closes in
                             </Text>
 
                             <Text
@@ -281,13 +279,13 @@ const Events = ({ navigation }) => {
                                     textAlign: 'right',
                                 }}
                             >
-                                {cutoff.hours}:{cutoff.minutes}:{cutoff.seconds}
+                                {cutoff.days} days, {cutoff.hours}:{cutoff.minutes}:{cutoff.seconds}
                             </Text>
                         </View>
 
                         <View style={{ marginTop: 12 }}>
                             <View style={{ borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: 4, height: 8, width: '100%', position: 'absolute' }}></View>
-                            <View style={{ backgroundColor: COLORS.red, borderRadius: 4, height: 8, width: `${data.percentage}%`, position: 'absolute' }}></View>
+                            <View style={{ backgroundColor: COLORS.red, borderRadius: 4, height: 8, width: `${data.percentage ?? "1"}%`, position: 'absolute' }}></View>
 
                         </View>
 
@@ -311,7 +309,9 @@ const Events = ({ navigation }) => {
                             {data.registrant_type.map((ele, inx) => {
                                 return (
                                     <TouchableOpacity
-                                        onPress={() => { navigation.navigate("EventDescription", { ...data, ...ele, userId: userId }) }}
+                                        onPress={() => {
+                                            console.log("jiii")
+                                            navigation.navigate("EventDescription", { ...data, ...ele, userId: userId }) }}
                                         style={{ flexDirection: 'row', width: '90%', alignSelf: 'center', marginTop: 16, alignItems: 'center' }}>
                                         <Image source={{ uri: ele.image_url }} style={{ height: Dimensions.get('window').width * 0.2, width: Dimensions.get('window').width * 0.25, resizeMode: 'cover', alignItems: 'center', borderRadius: 6 }} />
                                         <View style={{ justifyContent: 'center', alignItems: 'flex-start', marginLeft: 16 }}>
@@ -336,7 +336,7 @@ const Events = ({ navigation }) => {
                                                     marginTop: 2
                                                 }}
                                             >
-                                                {data.eventDate}
+                                                {data.eventDate ?? "NA"}
                                             </Text>
 
                                             <Text

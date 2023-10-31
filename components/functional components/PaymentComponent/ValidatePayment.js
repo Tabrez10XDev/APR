@@ -47,10 +47,9 @@ const ValidatePayment = ({ route, navigation }) => {
 
 
 
-
         try {
             const payload = {
-                "order_id": "ACT00011",
+                "order_id": route.params.orderDetails.order_id,
                 "merchant_id": "PGTESTPAYUAT93",
                 "merchant_transaction_id": route.params.merchantTransactionId,
             }
@@ -67,25 +66,47 @@ const ValidatePayment = ({ route, navigation }) => {
 
             if (response.status === 200 && response.data[0].payment_status == "PAYMENT_SUCCESS") {
                 console.log('Request successful! Cancelling all pending requests.');
-                setShouldMakeRequests(false)
-                _shouldMakeRequests = false
-                setSuccess(true)
-         
+                const payload = {
+                    "booking_id": route.params.details.booking_id,
+                    "event_id": route.params.details.event_id,
+                    "merchant_transaction_id": route.params.merchantTransactionId,
+                    "order_id": route.params.orderDetails.order_id,
+                    "provider_reference_id": null,
+                    "registrant_class": route.params.orderDetails.registrant_class,
+                    "registrant_id": parseInt(route.params.orderDetails.registrant_id)
+                  }
 
-                console.log("Payment Successful")
-                navigation.dispatch(
-                    CommonActions.reset({
-                        index: 1,
-                        routes: [
-                            { name: 'Home' },
-                            {
-                                name: 'BookingConfirmed',
-                                params: { ...response.data, showCancel: true }
-                            },
-                        ],
-                    })
-                );
+                  console.log(payload)
 
+                axios.post(`${CONST.baseUrlRegister}api/payment/payment-status`, payload).then((response)=>{
+                    setShouldMakeRequests(false)
+
+                    
+                    _shouldMakeRequests = false
+                    setSuccess(true)
+    
+    
+            
+                    console.log("Payment Successful")
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 1,
+                            routes: [
+                                { name: 'Home' },
+                                {
+                                    name: 'BookingConfirmed',
+                                    params: { ...response.data, showCancel: true }
+                                },
+                            ],
+                        })
+                    );
+    
+                }).catch((err)=>{
+                    throw err
+                })
+
+
+            
 
                 // }
 

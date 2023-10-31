@@ -38,19 +38,21 @@ const MySchedule = ({ navigation }) => {
     }
 
     async function fetchHistory(userId) {
-        console.log("Fetching My Schedule")
+        console.log("Fetching My Schedule", userId)
         playAnimation()
 
         axios.get(`${CONST.baseUrlRegister}api/registration/myschedule/data/${userId}`).then((response) => {
+            console.log(response.data)
             if (response.data == []) return
             else if (response.data.runnerInfo === undefined) return
             const currDate = new Date()
             let _completed = []
             let _upcoming = []
-            console.log(response.data)
             response.data.runnerInfo.map((ele, inx) => {
                 const eventDate = new Date(ele.event_date)
-                if (currDate.getTime() < eventDate.getTime())
+                console.log(eventDate.getMonth())
+                console.log(currDate.getMonth())
+                if (currDate.getTime() > eventDate.getTime())
                     _completed.push(ele)
                 else
                     _upcoming.push(ele)
@@ -62,7 +64,7 @@ const MySchedule = ({ navigation }) => {
             console.log(response.data.runnerInfo.length)
         }).catch((err) => {
             console.log(err)
-        }).finally(()=>{
+        }).finally(() => {
             setLoaded(true)
             pauseAnimation()
         })
@@ -74,7 +76,7 @@ const MySchedule = ({ navigation }) => {
             const result = await AsyncStorage.getItem('AuthState')
             if (result !== null && result != "-1" && result != undefined) {
                 setUserId(result)
-                fetchHistory(userId)
+                fetchHistory(result)
             } else {
                 setUserId("-1")
             }
@@ -83,6 +85,22 @@ const MySchedule = ({ navigation }) => {
             console.error(e)
         }
     }
+
+    const monthMap = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ]
+
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -166,7 +184,7 @@ const MySchedule = ({ navigation }) => {
                                         textAlign: 'left',
                                     }}
                                 >
-                                    Marathon Runners
+                                    {item.registrant_type}
                                 </Text>
                                 <Ionicons name="md-checkmark-circle" size={24} color="#23A26D" style={{ marginHorizontal: 8 }} />
                             </View>
@@ -179,8 +197,7 @@ const MySchedule = ({ navigation }) => {
                                     textAlign: 'left',
                                 }}
                             >
-                                Dec 11th 2023
-
+                                {item.event_date.substring(8,10)} {monthMap[parseInt(item.event_date.substring(5,7) - 1)]} {item.event_date.substring(0,4)}
                             </Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <Text
@@ -191,7 +208,7 @@ const MySchedule = ({ navigation }) => {
                                         textAlign: 'left',
                                     }}
                                 >
-                                    4 tickets
+                                    {item.runners.length} ticket(s)
                                 </Text>
                                 <View style={{ width: 6, height: 6, borderRadius: 4, backgroundColor: COLORS.grey, marginHorizontal: 8 }}></View>
                                 <Text
@@ -202,9 +219,30 @@ const MySchedule = ({ navigation }) => {
                                         textAlign: 'left',
                                     }}
                                 >
-                                    1k/5K/10k
+                                    {item.run_category}
                                 </Text>
+                                
+                                
                             </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                                    {
+                                        item.runners.map((ele,inx)=>{
+                                            return(
+                                                <Text
+                                                style={{
+                                                    fontSize: SIZES.font,
+                                                    fontFamily: FONTS.regular,
+                                                    color: COLORS.grey,
+                                                    textAlign: 'left',
+                                                }}
+                                            >
+                                                {ele.bib_number} {' '}
+                                            </Text>
+                                            )
+                                        })
+                                    }
+                            </View>
+                        
 
                         </View>
 

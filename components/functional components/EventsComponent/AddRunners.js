@@ -457,39 +457,41 @@ const AddRunners = ({ route, navigation }) => {
 
                             />
 
-                            <Dropdown
-                                style={{
-                                    height: 45,
-                                    borderColor: COLORS.lightGray,
-                                    borderRadius: 6,
-                                    borderWidth: 1,
-                                    width: '48%',
-                                    paddingHorizontal: 12,
-                                    alignSelf: 'flex-start',
-                                    marginTop: 10,
-                                    color: COLORS.black
-                                }}
-                                placeholderStyle={{ fontSize: 16, color: COLORS.black }}
-                                selectedTextStyle={{
-                                    fontSize: SIZES.smallFont,
-                                    fontFamily: FONTS.semiBold,
-                                    color: COLORS.black
-                                }}
-                                inputSearchStyle={{}}
-                                iconStyle={{}}
-                                data={data.param.run_category}
-                                maxHeight={300}
-                                labelField="race_type_name"
-                                valueField="race_type_id"
-                                placeholder="Run Category"
-                                value={state.runCategory}
-                                onChange={item => {
-                                    setState(current => ({ ...current, runCategory: item.race_type_name }))
-                                    setState(current => ({ ...current, runCategoryId: item.race_type_id }))
+                            {state.runCategory != "Never" &&
+                                <Dropdown
+                                    style={{
+                                        height: 45,
+                                        borderColor: COLORS.lightGray,
+                                        borderRadius: 6,
+                                        borderWidth: 1,
+                                        width: '48%',
+                                        paddingHorizontal: 12,
+                                        alignSelf: 'flex-start',
+                                        marginTop: 10,
+                                        color: COLORS.black
+                                    }}
+                                    placeholderStyle={{ fontSize: 16, color: COLORS.black }}
+                                    selectedTextStyle={{
+                                        fontSize: SIZES.smallFont,
+                                        fontFamily: FONTS.semiBold,
+                                        color: COLORS.black
+                                    }}
+                                    inputSearchStyle={{}}
+                                    iconStyle={{}}
+                                    data={data.param.run_category}
+                                    maxHeight={300}
+                                    labelField="race_type_name"
+                                    valueField="race_type_id"
+                                    placeholder="Run Category"
+                                    value={state.runCategory}
+                                    onChange={item => {
+                                        console.log(item)
+                                        setState(current => ({ ...current, runCategory: item.race_type_name }))
+                                        setState(current => ({ ...current, runCategoryId: item.race_type_id }))
 
-                                }}
+                                    }}
 
-                            />
+                                />}
 
                         </View>
 

@@ -5,19 +5,103 @@ import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
 import Input from '../../ui components/Input';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
+import Lottie from 'lottie-react-native';
+
 import common from '../../../contants/common';
 import authContext from '../../../contants/authContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
+import { CommonActions } from "@react-navigation/native";
 
 const MasterList = ({ route, navigation }) => {
 
+    const [animSpeed, setAnimSpeed] = useState(false)
+    const animRef = useRef()
+
+    function playAnimation() {
+        setAnimSpeed(true)
+    }
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            animRef.current?.play();
+        }, 100)
+    }, [animSpeed])
+
+
+    function pauseAnimation() {
+        setAnimSpeed(false)
+    }
+
     const data = route.params
+
+    async function createOrder(responseData) {
+
+        const payload = {
+            "registrant_id": responseData.registrant_id,
+            "registrant_class_ref": responseData.registrant_class_ref,
+            "booking_id_ref": responseData.booking_id_ref,
+            "event_id_ref": responseData.event_id_ref,
+            "runner_count": responseData.runner_count
+        }
+
+
+        axios.post(`${CONST.baseUrlRegister}api/registration/create/order`, payload).then((response) => {
+            console.log("order created");
+            const currDate = new Date()
+            const orderDetails = response.data.order_details
+            let data = JSON.stringify({
+                "registrant_id": orderDetails.registrant_id,
+                "order_id": orderDetails.order_id,
+                "amount": orderDetails.amount,
+                "registrant_class": orderDetails.registrant_class,
+                "payment_date": `${currDate.getFullYear()}-${currDate.getMonth() + 1}-${currDate.getDate()}`
+            });
+
+  
+
+
+
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://apr-marathon-registerticket-render.onrender.com/api/payment/initiate',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+
+            console.log(data)
+
+            axios.request(config)
+                .then((response) => {
+                    console.log("Iniaited");
+                    if (response.data.status.code == "PAYMENT_INITIATED") {
+                        navigation.navigate("ValidatePayment", { ...response.data.status.data, details: response.data.details, orderDetails: orderDetails })
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    Toast.show({
+                        type: 'error',
+                        text1: error.response.data
+                    });
+                }).finally(() => {
+                    pauseAnimation()
+                })
+
+        })
+    }
 
 
     async function register() {
+
+        playAnimation()
 
         let runnerDetails = []
         data.stateArray.map((ele, inx) => {
@@ -79,49 +163,13 @@ const MasterList = ({ route, navigation }) => {
         try {
             axios.put(`${CONST.baseUrlRegister}api/registration/add/registrant/web`, payload).then((response) => {
                 console.log("Success")
-
-                let data = JSON.stringify({
-                    "registrant_id": 53,
-                    "order_id": "ACT00011",
-                    "amount": 10000,
-                    "registrant_class": "silver",
-                    "payment_date": "2023-10-14"
-                });
-
-
-
-                let config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: 'https://apr-marathon-registerticket-render.onrender.com/api/payment/initiate',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: data
-                };
-
-
-                axios.request(config)
-                    .then((response) => {
-                        if(response.data.status.code == "PAYMENT_INITIATED"){
-                            navigation.navigate("ValidatePayment", {...response.data.status.data, details: response.data.details})
-                        }
-
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        Toast.show({
-                            type: 'error',
-                            text1: error.response.data
-                        });
-                    });
-
+                createOrder(response.data)
 
             })
         } catch (error) {
 
             console.log(err.response.data)
-
+            pauseAnimation()
             Toast.show({
                 type: 'error',
                 text1: error.response.data
@@ -222,6 +270,8 @@ const MasterList = ({ route, navigation }) => {
                     <ScrollView>
                         <View>
 
+                            {console.log(JSON.stringify(route.params))}
+
 
                             {
                                 data.stateArray.map((ele, inx) => {
@@ -304,6 +354,23 @@ const MasterList = ({ route, navigation }) => {
                         bottomOffset={20}
                     />
 
+                    {animSpeed &&
+                        <View style={{
+                            shadowColor: COLORS.homeCard,
+                            shadowOffset: {
+                                width: 0,
+                                height: 2,
+                            },
+                            shadowOpacity: 0.3,
+                            shadowRadius: 2,
+                            elevation: 8,
+                            borderRadius: 16,
+                            position: 'absolute', height: 250, width: 250, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', alignSelf: 'center', padding: 24, top: '45%'
+                        }}>
+
+                            <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                        </View>
+                    }
                 </View>
             )
             }

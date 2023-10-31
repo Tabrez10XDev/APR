@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Feather } from "@expo/vector-icons";
 import {
     Text,
@@ -15,13 +15,12 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import { StatusBar } from "react-native";
 import { COLORS, SIZES, FONTS, assets, CONST, } from "../../../contants";
-// import { TextInput } from "@react-native-material/core";
 import Toast from 'react-native-toast-message';
 import axios from "axios";
 import { ScrollView } from "react-native-gesture-handler";
-// import {Input} from "../../ui components";
 import Input from "../../ui components/Input";
 import { RectButton, GSignInButton } from "../../ui components/Buttons";
+import Lottie from 'lottie-react-native';
 
 const LoginScreen = ({ navigation, route }) => {
 
@@ -32,6 +31,27 @@ const LoginScreen = ({ navigation, route }) => {
     const [visibility, setVisibility] = useState(false)
     const [email, setEmail] = useState("")
     const [pass, setPass] = useState("")
+
+
+    const [animSpeed, setAnimSpeed] = useState(false)
+    const animRef = useRef()
+
+    function playAnimation() {
+        setAnimSpeed(true)
+    }
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            animRef.current?.play();
+        }, 100)
+    }, [animSpeed])
+
+
+    function pauseAnimation() {
+        setAnimSpeed(false)
+    }
+
 
 
 
@@ -61,19 +81,27 @@ const LoginScreen = ({ navigation, route }) => {
             });
             return;
         }
+
+        playAnimation()
         const payload = {
             "first_name": null,
             "last_name": null,
             "email_id": email,
             "password": pass,
-            "notif_token":null,
-            "google_id": ""
+            "notif_token": null,
+            "google_id": null
         }
+
+
+        console.log(payload)
+
+
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then(async (response) => {
                 console.log(response.data)
                 await AsyncStorage.setItem('CorpState', "0")
-                if(response.data.registrant_id) saveAuth(response.data.registrant_id)
+                await AsyncStorage.setItem('firstName', response.data.first_name)
+                if (response.data.registrant_id) saveAuth(response.data.registrant_id)
                 else saveAuth(response.data.user_id)
 
             }).catch((err) => {
@@ -81,7 +109,9 @@ const LoginScreen = ({ navigation, route }) => {
                 Toast.show({
                     type: 'error',
                     text1: err.response.data
-                });
+                }).fina;
+            }).finally(() => {
+                pauseAnimation()
             })
             // route.params.finishAuth()
 
@@ -339,11 +369,32 @@ const LoginScreen = ({ navigation, route }) => {
 
 
 
+
+
                 <Toast
                     position='bottom'
                     bottomOffset={20}
                 />
             </ScrollView>
+
+
+            {animSpeed &&
+                <View style={{
+                    shadowColor: COLORS.homeCard,
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 2,
+                    elevation: 8,
+                    borderRadius: 16,
+                    position: 'absolute', height: 250, width: 250, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', alignSelf: 'center', padding: 24, top: '45%'
+                }}>
+
+                    <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                </View>
+            }
 
         </View>
     )

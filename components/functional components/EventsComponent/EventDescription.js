@@ -1,13 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
 import authContext from '../../../contants/authContext';
+import { StackActions, useTheme } from '@react-navigation/native';
 
 const EventDescription = ({ route, navigation }) => {
     const data = route.params
+
+    console.log(data.registrant_type_id_ref)
 
     async function joinNow() {
         console.log(JSON.stringify({
@@ -35,10 +38,10 @@ const EventDescription = ({ route, navigation }) => {
             navigation.navigate("AddRegistrant", { ...response.data, towers: towers, phases: phases, classes: classes, typeName: data.type_name })
 
         })
-        .catch((err) => {
-            console.error("Error")
-            console.log(err.response)
-        })
+            .catch((err) => {
+                console.error("Error")
+                console.log(err.response)
+            })
     }
 
     async function corpJoinNow() {
@@ -92,13 +95,26 @@ const EventDescription = ({ route, navigation }) => {
         <authContext.Consumer>
             {({ userId, setUserId, corpCode }) => (
                 <View style={{ width: '100%', height: '100%', backgroundColor: 'white' }}>
+
+
                     <StatusBar
                         background={COLORS.blue}
                         backgroundColor={COLORS.blue}
                         barStyle="light-content"
                         style={{ backgroundColor: COLORS.blue, flex: 1 }}
                     ></StatusBar>
-                    <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center' }}>
+               
+  
+
+
+                    <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center', position:'relative' }}>
+
+                    <TouchableOpacity onPress={() => {
+                        navigation.dispatch(StackActions.pop(1))
+
+                    }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf:'flex-start'  }}>
+                        <Ionicons name="chevron-back" size={36} color="white" />
+                    </TouchableOpacity>
                         <Text
                             style={{
                                 fontSize: SIZES.large,
@@ -112,10 +128,12 @@ const EventDescription = ({ route, navigation }) => {
                         </Text>
                     </View>
 
-                    <ScrollView contentContainerStyle={{ minHeight: '100%', paddingBottom: 50 }}>
+                   
+
+                    <ScrollView contentContainerStyle={{ paddingBottom: '100%' }}>
 
 
-                        <View style={{ width: '95%', padding: 8, borderRadius: 16, borderWidth: 1, borderColor: '#D9D9D9', alignSelf: 'center', marginTop: 16, alignItems: 'center', height: '30%', justifyContent: 'space-evenly' }}>
+                        <View style={{ width: '95%', padding: 8, borderRadius: 16, borderWidth: 1, borderColor: '#D9D9D9', alignSelf: 'center', marginTop: 16, alignItems: 'center', height: '20%', justifyContent: 'space-evenly' }}>
                             <Image source={{ uri: data.image_url }} style={{ width: '100%', borderRadius: 8, height: '50%', resizeMode: 'cover' }} />
                             <Text
                                 style={{
@@ -254,7 +272,7 @@ const EventDescription = ({ route, navigation }) => {
                                                     marginTop: 6
                                                 }}
                                             >
-                                                {ele.race_time.substring(0, 5)}
+                                                {ele.race_time.substring(0, 10)}
                                             </Text> : ele.timing.map((item, inx) => {
                                                 return (
                                                     <Text
@@ -266,7 +284,7 @@ const EventDescription = ({ route, navigation }) => {
                                                             marginTop: 6
                                                         }}
                                                     >
-                                                        {item.race_time.substring(0, 5)}
+                                                        {item.race_time.substring(0, 10)}
                                                     </Text>
                                                 )
                                             })
@@ -278,6 +296,122 @@ const EventDescription = ({ route, navigation }) => {
 
 
                         </View>
+
+                        <View style={{ width: '90%', alignSelf: 'center' }}>
+                       
+
+                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', alignSelf: 'center', marginTop: 16 }}>
+                                <View>
+                                    <Text
+                                        style={{
+                                            fontSize: SIZES.font,
+                                            fontFamily: FONTS.bold,
+                                            color: COLORS.black,
+                                            textAlign: 'left',
+                                            marginBottom: 4
+                                        }}
+                                    >
+                                        Race Class
+                                    </Text>
+                                    {data.class_price.filter(curr => curr.registrant_type_id_ref == route.params.registrant_type_id_ref).map((ele, inx) => {
+                                        return (
+                                            <Text style={{
+                                                fontSize: SIZES.font,
+                                                fontFamily: FONTS.semiBold,
+                                                color: COLORS.black,
+                                                textAlign: 'left',
+                                                marginTop: 6
+                                            }}>
+                                                {ele.category_name}
+                                            </Text>
+                                        )
+                                    })}
+                                </View>
+
+                                <View>
+                                    <Text
+                                        style={{
+                                            fontSize: SIZES.font,
+                                            fontFamily: FONTS.bold,
+                                            color: COLORS.black,
+                                            textAlign: 'right',
+                                            marginBottom: 4
+
+                                        }}
+                                    >
+                                        Prize
+                                    </Text>
+                                    {data.class_price.filter(curr => curr.registrant_type_id_ref == route.params.registrant_type_id_ref).map((ele, inx) => {
+                                        return (
+
+                                            <Text style={{
+                                                fontSize: SIZES.font,
+                                                fontFamily: FONTS.semiBold,
+                                                color: COLORS.black,
+                                                textAlign: 'right',
+                                                marginTop: 6
+                                            }}>
+                                                {ele.category_price} ₹
+                                            </Text>
+                                        )
+                                    })}
+                                </View>
+
+
+
+                            </View>
+
+
+                            <Text
+                                style={{
+                                    fontSize: SIZES.font,
+                                    fontFamily: FONTS.bold,
+                                    color: COLORS.black,
+                                    textAlign: 'left',
+                                    marginTop: 12,
+
+                                }}
+                            >
+                                Race Instructions
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: SIZES.font,
+                                    fontFamily: FONTS.regular,
+                                    color: COLORS.black,
+                                    textAlign: 'justify',
+                                    marginTop: 8
+                                }}
+                            >
+                                {data.event_info.race_instruction}
+                            </Text>
+
+
+                            <Text
+                                style={{
+                                    fontSize: SIZES.font,
+                                    fontFamily: FONTS.bold,
+                                    color: COLORS.black,
+                                    textAlign: 'left',
+                                    marginTop: 12,
+
+                                }}
+                            >
+                                Parking Instructions
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: SIZES.font,
+                                    fontFamily: FONTS.regular,
+                                    color: COLORS.black,
+                                    textAlign: 'justify',
+                                    marginTop: 8
+                                }}
+                            >
+                                {data.event_info.parking_instruction}
+                            </Text>
+                        </View>
+
                         <View style={{ width: '90%', alignSelf: 'center' }}>
                             <Text
                                 style={{

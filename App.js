@@ -24,6 +24,9 @@ import MasterList from './components/functional components/EventsComponent/Maste
 import ProfileScreen from './components/functional components/ProfileComponent/ProfileScreen';
 import ValidatePayment from './components/functional components/PaymentComponent/ValidatePayment';
 import BookingConfirmed from './components/functional components/PaymentComponent/BookingConfirmed';
+import CreateOrder from './components/functional components/EventsComponent/CreateOrder';
+
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -131,9 +134,10 @@ export default function App() {
                   <Stack.Screen name="AddRegistrant" component={AddRegistrant} />
                   <Stack.Screen name="AddRunners" component={AddRunners} />
                   <Stack.Screen name="MasterList" component={MasterList} />
+                  <Stack.Screen name="CreateOrder" component={CreateOrder} />
                   <Stack.Screen name="ValidatePayment" component={ValidatePayment} />
                   <Stack.Screen name="BookingConfirmed" component={BookingConfirmed} />
-
+                  
                 </Stack.Group>
               </Stack.Navigator>
 

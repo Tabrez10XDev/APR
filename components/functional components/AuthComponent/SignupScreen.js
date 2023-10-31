@@ -127,7 +127,7 @@ const SignUpScreen = ({ navigation, route }) => {
             "email_id": state.email,
             "password": state.password,
             "mobile_number": state.number,
-            "google_id":"",
+            "google_id":null,
             "corporate_user":false,
             "corporate_code":null,
             "notif_token": null
