@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, Pressable, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton, WhiteButton } from '../../ui components/Buttons';
 import axios from 'axios';
@@ -9,7 +9,6 @@ import { useState, useEffect } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import common from '../../../contants/common';
 import authContext from '../../../contants/authContext';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import DatePickerModal from '../../ui components/DatePickerModal';
 import { StackActions } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -163,15 +162,12 @@ const AddRunners = ({ route, navigation }) => {
                                     DOB<Text style={{ color: COLORS.red }}>*</Text>
                                 </Text>
 
-                                <TouchableOpacity onPress={() => { setOpen(true) }}>
-                                    <Input
-                                        editable={false}
-                                        placeholder="Enter Here"
-                                        inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', disabled: true }}
-                                        // onChangeText={(value) => setState(current => ({ ...current, firstName: value }))}
-                                        value={selectedDate ? selectedDate : ""}
-                                        placeholderTextColor={COLORS.lightGray}
-                                    />
+                                <TouchableOpacity onPress={() => { setOpen(true) }} style={{ borderColor: COLORS.ash, borderWidth: 1, borderRadius: 6, marginTop: 8, width: '95%' }}>
+
+                                    <Text style={{ paddingVertical: 12, paddingHorizontal: 8 }}>
+                                        {selectedDate.length == 0 ? "Enter Here" : selectedDate}
+                                    </Text>
+
                                 </TouchableOpacity>
                             </View>
                             <View style={{ width: '50%' }}>
@@ -262,6 +258,7 @@ const AddRunners = ({ route, navigation }) => {
                                         inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', paddingLeft: 42 }}
                                         onChangeText={(value) => setState(current => ({ ...current, number: value }))}
                                         value={state.number}
+                                        maxLength={10}
                                         placeholderTextColor={COLORS.lightGray}
                                     />
                                 </View>
@@ -287,6 +284,7 @@ const AddRunners = ({ route, navigation }) => {
                                         onChangeText={(value) => setState(current => ({ ...current, emergencyNumber: value }))}
                                         value={state.emergencyNumber ?? data.param.phone_number}
                                         placeholderTextColor={COLORS.lightGray}
+                                        maxLength={10}
                                     />
                                 </View>
                             </View>

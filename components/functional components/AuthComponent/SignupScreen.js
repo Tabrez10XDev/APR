@@ -21,8 +21,29 @@ import { ScrollView } from "react-native-gesture-handler";
 // import {Input} from "../../ui components";
 import Input from "../../ui components/Input";
 import { RectButton, GSignInButton } from "../../ui components/Buttons";
-
+import { useRef } from "react";
 const SignUpScreen = ({ navigation, route }) => {
+
+
+    
+    const [animSpeed, setAnimSpeed] = useState(false)
+    const animRef = useRef()
+
+    function playAnimation() {
+        setAnimSpeed(true)
+    }
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            animRef.current?.play();
+        }, 100)
+    }, [animSpeed])
+
+
+    function pauseAnimation() {
+        setAnimSpeed(false)
+    }
 
 
     const [isChecked, setChecked] = useState(false)
@@ -120,6 +141,7 @@ const SignUpScreen = ({ navigation, route }) => {
             });
             return;
         }
+        playAnimation()
         const payload = {
             "first_name": state.firstName,
             "middle_name": null,
@@ -135,7 +157,6 @@ const SignUpScreen = ({ navigation, route }) => {
         }
 
         console.log(payload)
-        try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/signup`, payload).then(async (response) => {
                 console.log(response.data)
                 console.log("----")
@@ -150,15 +171,10 @@ const SignUpScreen = ({ navigation, route }) => {
                     type: 'error',
                     text1: err.response.data
                 });
+            }).finally(()=>{
+                pauseAnimation()
             })
 
-        } catch (error) {
-            Toast.show({
-                type: 'error',
-                text1: error.response.data
-            });
-            throw error
-        }
     }
 
 
@@ -354,6 +370,7 @@ const SignUpScreen = ({ navigation, route }) => {
                     placeholder="Enter Here"
                     onChangeText={(value) => setState(current=>({...current, number:value}))}
                     value={state.number}
+                    maxLength={10}
                     placeholderTextColor={COLORS.lightGray}
                     inputStyle={{ marginTop: 8 }}
 
@@ -437,6 +454,25 @@ const SignUpScreen = ({ navigation, route }) => {
                     bottomOffset={20}
                 />
             </ScrollView>
+
+            {animSpeed &&
+                <View style={{
+                    shadowColor: COLORS.homeCard,
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 2,
+                    elevation: 8,
+                    zIndex:5,
+                    borderRadius: 16,
+                    position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
+                }}>
+
+                    <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                </View>
+            }
 
         </View>
     )

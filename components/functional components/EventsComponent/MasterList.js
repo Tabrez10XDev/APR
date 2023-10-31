@@ -159,6 +159,8 @@ const MasterList = ({ route, navigation }) => {
             runner_details: runnerDetails
         }
 
+        console.log("---");
+        console.log(JSON.stringify(payload));
 
         try {
             axios.put(`${CONST.baseUrlRegister}api/registration/add/registrant/web`, payload).then((response) => {

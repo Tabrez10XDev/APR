@@ -25,7 +25,7 @@ import ProfileScreen from './components/functional components/ProfileComponent/P
 import ValidatePayment from './components/functional components/PaymentComponent/ValidatePayment';
 import BookingConfirmed from './components/functional components/PaymentComponent/BookingConfirmed';
 import CreateOrder from './components/functional components/EventsComponent/CreateOrder';
-
+import MobileVerification from './components/functional components/AuthComponent/MobileVerification';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -154,8 +154,8 @@ export default function App() {
 
                     <Stack.Screen name="SignUpScreen" component={SignUpScreen} initialParams={{ finishAuth: finishAuth }} />
 
+                    <Stack.Screen name="MobileVerification" component={MobileVerification} initialParams={{ finishAuth: finishAuth }} />
 
-                    {/* <Stack.Screen name="MobileVerificationScreen" component={MobileVerificationScreen} initialParams={{ finishAuth: finishAuth, setCurr: setCurr }} /> */}
 
                     <Stack.Screen name="OTPScreen" component={OTPScreen} initialParams={{ finishAuth: finishAuth }} />
 

@@ -6,17 +6,39 @@ import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
 import authContext from '../../../contants/authContext';
 import { StackActions, useTheme } from '@react-navigation/native';
+import { useEffect, useRef, useState } from 'react';
+import Lottie from 'lottie-react-native';
+
 
 const EventDescription = ({ route, navigation }) => {
     const data = route.params
 
+
+
+    const [animSpeed, setAnimSpeed] = useState(false)
+    const animRef = useRef()
+
+    function playAnimation() {
+        setAnimSpeed(true)
+    }
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            animRef.current?.play();
+        }, 100)
+    }, [animSpeed])
+
+
+    function pauseAnimation() {
+        setAnimSpeed(false)
+    }
+
     console.log(data.registrant_type_id_ref)
 
     async function joinNow() {
-        console.log(JSON.stringify({
-            registrant_id: data.userId,
-            registrant_type_id: data.type_id
-        }))
+
+        playAnimation()
         axios.post(`${CONST.baseUrlRegister}api/registration/registration/data`, {
             registrant_id: data.userId,
             registrant_type_id: data.type_id
@@ -37,11 +59,12 @@ const EventDescription = ({ route, navigation }) => {
             })
             navigation.navigate("AddRegistrant", { ...response.data, towers: towers, phases: phases, classes: classes, typeName: data.type_name })
 
+        }).catch((err) => {
+            console.error("Error")
+            console.log(err.response)
+        }).finally(()=>{
+            pauseAnimation()
         })
-            .catch((err) => {
-                console.error("Error")
-                console.log(err.response)
-            })
     }
 
     async function corpJoinNow() {
@@ -87,9 +110,9 @@ const EventDescription = ({ route, navigation }) => {
         "December",
     ]
 
-    const _eventDate = new Date(data.event_info.event_date)
-    const _eventTime = data.event_info.event_time ? data.event_info.event_time.substring(0, 5) : "NA"
-    const eventDate = _eventDate.getDay() + ", " + monthMap[_eventDate.getMonth()] + " " + _eventDate.getDay() + " " + _eventDate.getFullYear() + " | at " + _eventTime
+    const _eventDate = data.event_info.event_date
+    const _eventTime = data.event_info.event_time ? data.event_info.event_time.substring(11, 16) : ""
+    const eventDate = _eventDate.substring(8, 10) + ", " + monthMap[_eventDate.substring(5, 7) - 1] + " " + _eventDate.substring(0, 4) + " | at " + _eventTime
 
     return (
         <authContext.Consumer>
@@ -103,18 +126,18 @@ const EventDescription = ({ route, navigation }) => {
                         barStyle="light-content"
                         style={{ backgroundColor: COLORS.blue, flex: 1 }}
                     ></StatusBar>
-               
-  
 
 
-                    <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center', position:'relative' }}>
 
-                    <TouchableOpacity onPress={() => {
-                        navigation.dispatch(StackActions.pop(1))
 
-                    }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf:'flex-start'  }}>
-                        <Ionicons name="chevron-back" size={36} color="white" />
-                    </TouchableOpacity>
+                    <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center', position: 'relative' }}>
+
+                        <TouchableOpacity onPress={() => {
+                            navigation.dispatch(StackActions.pop(1))
+
+                        }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf: 'flex-start' }}>
+                            <Ionicons name="chevron-back" size={36} color="white" />
+                        </TouchableOpacity>
                         <Text
                             style={{
                                 fontSize: SIZES.large,
@@ -128,9 +151,9 @@ const EventDescription = ({ route, navigation }) => {
                         </Text>
                     </View>
 
-                   
 
-                    <ScrollView contentContainerStyle={{ paddingBottom: '100%' }}>
+
+                    <ScrollView contentContainerStyle={{ paddingBottom: '80%' }}>
 
 
                         <View style={{ width: '95%', padding: 8, borderRadius: 16, borderWidth: 1, borderColor: '#D9D9D9', alignSelf: 'center', marginTop: 16, alignItems: 'center', height: '20%', justifyContent: 'space-evenly' }}>
@@ -272,7 +295,7 @@ const EventDescription = ({ route, navigation }) => {
                                                     marginTop: 6
                                                 }}
                                             >
-                                                {ele.race_time.substring(0, 10)}
+                                                {ele.race_time.substring(11, 16)}
                                             </Text> : ele.timing.map((item, inx) => {
                                                 return (
                                                     <Text
@@ -284,7 +307,7 @@ const EventDescription = ({ route, navigation }) => {
                                                             marginTop: 6
                                                         }}
                                                     >
-                                                        {item.race_time.substring(0, 10)}
+                                                        {item.race_time.substring(11, 16)}
                                                     </Text>
                                                 )
                                             })
@@ -298,7 +321,7 @@ const EventDescription = ({ route, navigation }) => {
                         </View>
 
                         <View style={{ width: '90%', alignSelf: 'center' }}>
-                       
+
 
                             <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', alignSelf: 'center', marginTop: 16 }}>
                                 <View>
@@ -510,6 +533,24 @@ const EventDescription = ({ route, navigation }) => {
 
                     </ScrollView>
 
+                    {animSpeed &&
+                        <View style={{
+                            shadowColor: COLORS.homeCard,
+                            shadowOffset: {
+                                width: 0,
+                                height: 2,
+                            },
+                            shadowOpacity: 0.3,
+                            shadowRadius: 2,
+                            elevation: 8,
+                            zIndex: 5,
+                            borderRadius: 16,
+                            position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
+                        }}>
+
+                            <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                        </View>
+                    }
                 </View>
 
             )

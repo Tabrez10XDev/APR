@@ -55,7 +55,7 @@ const Events = ({ navigation }) => {
     async function fetchDashboard() {
         console.log("Fetching")
         playAnimation()
-       
+
         axios.get(`${CONST.baseUrlRegister}api/registration/get/registrant/category/details`).then((response) => {
             setData(response.data)
             const combinedDateTimeStr = `${response.data.event_info.event_cut_off_date}T${response.data.event_info.event_cut_off_time}:00`;
@@ -72,8 +72,8 @@ const Events = ({ navigation }) => {
 
             const _eventDate = response.data.event_info.event_date
             console.log("0000");
-            console.log(_eventDate.substring(5,7))
-            const eventDate = _eventDate.substring(8,10) + " " + monthMap[parseInt(_eventDate.substring(5,7) - 1)] + " " + _eventDate.substring(0,4)
+            console.log(_eventDate.substring(5, 7))
+            const eventDate = _eventDate.substring(8, 10) + " " + monthMap[parseInt(_eventDate.substring(5, 7) - 1)] + " " + _eventDate.substring(0, 4)
             console.log(eventDate);
             let ageCategories = {}
             let raceCategories = {}
@@ -89,7 +89,7 @@ const Events = ({ navigation }) => {
 
         }).catch((err) => {
             console.log(err)
-        }).finally(()=>{
+        }).finally(() => {
             pauseAnimation()
         })
     }
@@ -148,8 +148,8 @@ const Events = ({ navigation }) => {
             const minutes = Math.floor((timeDifferenceMs % 3600000) / 60000);
             const seconds = Math.floor((timeDifferenceMs % 60000) / 1000);
             setCutoff({
-                days: Math.floor(hours/24),
-                hours: hours%24,
+                days: Math.floor(hours / 24),
+                hours: hours % 24,
                 minutes: minutes < 10 ? "0" + minutes : minutes,
                 seconds: seconds < 10 ? "0" + seconds : seconds
             })
@@ -164,15 +164,15 @@ const Events = ({ navigation }) => {
         // const unsubscribe = navigation.addListener('focus', async () => {
 
 
-            const result2 = await AsyncStorage.getItem('CorpState')
-            const result = await AsyncStorage.getItem('firstName')
-            setName(result ?? "User")
+        const result2 = await AsyncStorage.getItem('CorpState')
+        const result = await AsyncStorage.getItem('firstName')
+        setName(result ?? "User")
 
-            if (result2 != null && result2 == "1") fetchDashboardCorp()
-            else fetchDashboard()
+        if (result2 != null && result2 == "1") fetchDashboardCorp()
+        else fetchDashboard()
 
 
-            // fetchDashboard()
+        // fetchDashboard()
         // }
         // );
 
@@ -311,7 +311,8 @@ const Events = ({ navigation }) => {
                                     <TouchableOpacity
                                         onPress={() => {
                                             console.log("jiii")
-                                            navigation.navigate("EventDescription", { ...data, ...ele, userId: userId }) }}
+                                            navigation.navigate("EventDescription", { ...data, ...ele, userId: userId })
+                                        }}
                                         style={{ flexDirection: 'row', width: '90%', alignSelf: 'center', marginTop: 16, alignItems: 'center' }}>
                                         <Image source={{ uri: ele.image_url }} style={{ height: Dimensions.get('window').width * 0.2, width: Dimensions.get('window').width * 0.25, resizeMode: 'cover', alignItems: 'center', borderRadius: 6 }} />
                                         <View style={{ justifyContent: 'center', alignItems: 'flex-start', marginLeft: 16 }}>
@@ -349,7 +350,7 @@ const Events = ({ navigation }) => {
                                                     marginTop: 2
                                                 }}
                                             >
-                                                {ele.run_category ?? "NA"}
+                                                {ele.run_category ?? ""}
                                             </Text>
 
                                         </View>
@@ -364,8 +365,6 @@ const Events = ({ navigation }) => {
                     </ScrollView>
 
 
-                    {/* </ScrollView> */}
-
                     {animSpeed &&
                         <View style={{
                             shadowColor: COLORS.homeCard,
@@ -376,8 +375,9 @@ const Events = ({ navigation }) => {
                             shadowOpacity: 0.3,
                             shadowRadius: 2,
                             elevation: 8,
-                            borderRadius:16,
-                            position: 'absolute', height: 250, width: 250, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', alignSelf: 'center', padding: 24, top:'45%'
+                            zIndex: 5,
+                            borderRadius: 16,
+                            position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
                         }}>
 
                             <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />

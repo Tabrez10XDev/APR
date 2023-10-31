@@ -197,7 +197,7 @@ const MySchedule = ({ navigation }) => {
                                     textAlign: 'left',
                                 }}
                             >
-                                {item.event_date.substring(8,10)} {monthMap[parseInt(item.event_date.substring(5,7) - 1)]} {item.event_date.substring(0,4)}
+                                {item.event_date.substring(8, 10)} {monthMap[parseInt(item.event_date.substring(5, 7) - 1)]} {item.event_date.substring(0, 4)}
                             </Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <Text
@@ -221,14 +221,14 @@ const MySchedule = ({ navigation }) => {
                                 >
                                     {item.run_category}
                                 </Text>
-                                
-                                
+
+
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                                    {
-                                        item.runners.map((ele,inx)=>{
-                                            return(
-                                                <Text
+                                {
+                                    item.runners.map((ele, inx) => {
+                                        return (
+                                            <Text
                                                 style={{
                                                     fontSize: SIZES.font,
                                                     fontFamily: FONTS.regular,
@@ -238,11 +238,11 @@ const MySchedule = ({ navigation }) => {
                                             >
                                                 {ele.bib_number} {' '}
                                             </Text>
-                                            )
-                                        })
-                                    }
+                                        )
+                                    })
+                                }
                             </View>
-                        
+
 
                         </View>
 
@@ -413,8 +413,9 @@ const MySchedule = ({ navigation }) => {
                     shadowOpacity: 0.3,
                     shadowRadius: 2,
                     elevation: 8,
+                    zIndex: 5,
                     borderRadius: 16,
-                    position: 'absolute', height: 250, width: 250, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', alignSelf: 'center', padding: 24, top: '45%'
+                    position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
                 }}>
 
                     <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />

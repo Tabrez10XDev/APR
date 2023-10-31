@@ -12,13 +12,34 @@ import { StatusBar } from "react-native";
 import { COLORS, SIZES, FONTS, assets, CONST } from "../../../contants";
 import { RectButton } from "../../ui components/Buttons";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Toast from 'react-native-toast-message';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Lottie from 'lottie-react-native';
 
 
 const OTPScreen = ({ route }) => {
+
+
+    const [animSpeed, setAnimSpeed] = useState(false)
+    const animRef = useRef()
+
+    function playAnimation() {
+        setAnimSpeed(true)
+    }
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            animRef.current?.play();
+        }, 100)
+    }, [animSpeed])
+
+
+    function pauseAnimation() {
+        setAnimSpeed(false)
+    }
 
 
     const [remainingTime, setRemainingTime] = useState(30);
@@ -41,38 +62,33 @@ const OTPScreen = ({ route }) => {
         const payload = {
             "phone_number": route.params.number,
             "otp": parseInt(otp),
-            "notif_token":"",
+            "notif_token": "",
             "email_id": route.params.email
         }
+        playAnimation()
 
-        try {
-            axios.post(`${CONST.baseUrlAuth}api/registrant/verify/otp`, payload).then(async (response) => {
-                console.log(response.data)
-                if (response.data.mobile_no_verify_status) {
-                    saveAuth(response.data.registrant_id)
-                    
-                }else{
-                    Toast.show({
-                        type: 'error',
-                        text1: response.data.message
+        axios.post(`${CONST.baseUrlAuth}api/registrant/verify/otp`, payload).then(async (response) => {
+            console.log(response.data)
+            if (response.data.mobile_no_verify_status) {
+                saveAuth(response.data.registrant_id)
 
-                    });
-                }
-            }).catch((err) => {
-                console.log(err.response.data)
+            } else {
                 Toast.show({
                     type: 'error',
-                    text1: err.response.data
-                });
-            })
+                    text1: response.data.message
 
-        } catch (error) {
+                });
+            }
+        }).catch((err) => {
+            console.log(err.response.data)
             Toast.show({
                 type: 'error',
-                text1: error.response.data
+                text1: err.response.data
             });
-            throw error
-        }
+        }).finally(() => {
+            pauseAnimation()
+        })
+
     }
 
 
@@ -164,10 +180,10 @@ const OTPScreen = ({ route }) => {
                         borderWidth: 1,
                         borderRadius: 12,
                         backgroundColor: COLORS.otpBg,
-                        color:'black'
+                        color: 'black'
                     }}
                     codeInputHighlightStyle={{ borderColor: COLORS.blue }}
-                    
+
                     onCodeFilled={(code => {
                         verifyOTP(code)
                         console.log(`Code is ${code}, you are good to go!`)
@@ -210,6 +226,25 @@ const OTPScreen = ({ route }) => {
 
                 {/* <RectButton text={"Verify Now"} onClick={route.params.finishAuth} /> */}
             </View>
+
+            {animSpeed &&
+                <View style={{
+                    shadowColor: COLORS.homeCard,
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 2,
+                    elevation: 8,
+                    zIndex: 5,
+                    borderRadius: 16,
+                    position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
+                }}>
+
+                    <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                </View>
+            }
 
             <Toast
                 position='bottom'

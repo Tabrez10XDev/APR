@@ -99,17 +99,26 @@ const LoginScreen = ({ navigation, route }) => {
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then(async (response) => {
                 console.log(response.data)
-                await AsyncStorage.setItem('CorpState', "0")
-                await AsyncStorage.setItem('firstName', response.data.first_name)
-                if (response.data.registrant_id) saveAuth(response.data.registrant_id)
-                else saveAuth(response.data.user_id)
+                if(response.status !== 200){
+                    Toast.show({
+                        type: 'error',
+                        text1: response.data
+                    });
+                }
+                else if (response.data.mobile_no_verify_status == false) navigation.navigate("MobileVerification", response.data)
+                else {
+                    await AsyncStorage.setItem('CorpState', "0")
+                    await AsyncStorage.setItem('firstName', response.data.first_name)
+                    if (response.data.registrant_id) saveAuth(response.data.registrant_id)
+                    else saveAuth(response.data.user_id)
+                }
 
             }).catch((err) => {
                 console.log(err.response.data)
                 Toast.show({
                     type: 'error',
                     text1: err.response.data
-                }).fina;
+                });
             }).finally(() => {
                 pauseAnimation()
             })
@@ -388,8 +397,9 @@ const LoginScreen = ({ navigation, route }) => {
                     shadowOpacity: 0.3,
                     shadowRadius: 2,
                     elevation: 8,
+                    zIndex:5,
                     borderRadius: 16,
-                    position: 'absolute', height: 250, width: 250, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', alignSelf: 'center', padding: 24, top: '45%'
+                    position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
                 }}>
 
                     <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />

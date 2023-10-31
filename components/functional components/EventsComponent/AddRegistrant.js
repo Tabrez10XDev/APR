@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
@@ -11,7 +11,6 @@ import common from '../../../contants/common';
 import authContext from '../../../contants/authContext';
 import Toast from 'react-native-toast-message';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const AddRegistrant = ({ route, navigation }) => {
     const data = route.params
@@ -141,13 +140,13 @@ const AddRegistrant = ({ route, navigation }) => {
     }
 
     async function verifyVilla() {
-        axios.post(`${CONST.baseUrlRegister}api/registration/verify/address`, 
-        {
-            "villa_number": state.villaNumber
-        }
+        axios.post(`${CONST.baseUrlRegister}api/registration/verify/address`,
+            {
+                "villa_number": state.villaNumber
+            }
         ).then((response) => {
             console.log(response.data)
-            setState(current=>(
+            setState(current => (
                 {
                     ...current,
                     laneNumber: response.data.lane_no,
@@ -249,6 +248,14 @@ const AddRegistrant = ({ route, navigation }) => {
                         style={{ backgroundColor: COLORS.blue, flex: 1 }}
                     ></StatusBar>
                     <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center' }}>
+
+                        <TouchableOpacity onPress={() => {
+                            navigation.dispatch(StackActions.pop(1))
+
+                        }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf: 'flex-start' }}>
+                            <Ionicons name="chevron-back" size={36} color="white" />
+                        </TouchableOpacity>
+
                         <Text
                             style={{
                                 fontSize: SIZES.large,
