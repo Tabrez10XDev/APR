@@ -279,7 +279,7 @@ const Events = ({ navigation }) => {
                                     textAlign: 'right',
                                 }}
                             >
-                                {cutoff.days} days, {cutoff.hours}:{cutoff.minutes}:{cutoff.seconds}
+                                {cutoff.days ?? 0} days, {cutoff.hours ?? "00"}:{cutoff.minutes ?? "00"}:{cutoff.seconds ?? "00"}
                             </Text>
                         </View>
 

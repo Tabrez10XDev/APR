@@ -53,48 +53,19 @@ const MasterList = ({ route, navigation }) => {
             console.log("order created");
             const currDate = new Date()
             const orderDetails = response.data.order_details
-            let data = JSON.stringify({
-                "registrant_id": orderDetails.registrant_id,
+            let data = {
+                "registrant_id": parseInt(orderDetails.registrant_id),
                 "order_id": orderDetails.order_id,
                 "amount": orderDetails.amount,
                 "registrant_class": orderDetails.registrant_class,
-                "payment_date": `${currDate.getFullYear()}-${currDate.getMonth() + 1}-${currDate.getDate()}`
-            });
-
-  
-
-
-
-            let config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: 'https://apr-marathon-registerticket-render.onrender.com/api/payment/initiate',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: data
+                "payment_date": `${currDate.getFullYear()}-${currDate.getMonth() + 1}-${currDate.getDate() < 10 ? "0" + currDate.getDate() : currDate.getDate()}`
             };
 
+            navigation.navigate("CreateOrder", { payload: data, orderDetails: orderDetails, billingAddress: response.data.billing_address })
 
-            console.log(data)
 
-            axios.request(config)
-                .then((response) => {
-                    console.log("Iniaited");
-                    if (response.data.status.code == "PAYMENT_INITIATED") {
-                        navigation.navigate("ValidatePayment", { ...response.data.status.data, details: response.data.details, orderDetails: orderDetails })
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    Toast.show({
-                        type: 'error',
-                        text1: error.response.data
-                    });
-                }).finally(() => {
-                    pauseAnimation()
-                })
-
+        }).finally(() => {
+            pauseAnimation()
         })
     }
 
@@ -355,7 +326,6 @@ const MasterList = ({ route, navigation }) => {
                         position='bottom'
                         bottomOffset={20}
                     />
-
                     {animSpeed &&
                         <View style={{
                             shadowColor: COLORS.homeCard,
@@ -366,8 +336,9 @@ const MasterList = ({ route, navigation }) => {
                             shadowOpacity: 0.3,
                             shadowRadius: 2,
                             elevation: 8,
+                            zIndex: 5,
                             borderRadius: 16,
-                            position: 'absolute', height: 250, width: 250, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', alignSelf: 'center', padding: 24, top: '45%'
+                            position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
                         }}>
 
                             <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />

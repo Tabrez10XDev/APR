@@ -74,19 +74,19 @@ const ValidatePayment = ({ route, navigation }) => {
                     "provider_reference_id": null,
                     "registrant_class": route.params.orderDetails.registrant_class,
                     "registrant_id": parseInt(route.params.orderDetails.registrant_id)
-                  }
+                }
 
-                  console.log(payload)
+                console.log(payload)
 
-                axios.post(`${CONST.baseUrlRegister}api/payment/payment-status`, payload).then((response)=>{
+                axios.post(`${CONST.baseUrlRegister}api/payment/payment-status`, payload).then((response) => {
                     setShouldMakeRequests(false)
 
-                    
+
                     _shouldMakeRequests = false
                     setSuccess(true)
-    
-    
-            
+
+
+
                     console.log("Payment Successful")
                     navigation.dispatch(
                         CommonActions.reset({
@@ -100,13 +100,18 @@ const ValidatePayment = ({ route, navigation }) => {
                             ],
                         })
                     );
-    
-                }).catch((err)=>{
-                    throw err
+
+                }).catch((err) => {
+                    console.log(err.response);
+
+                    Toast.show({
+                        type: 'error',
+                        text1: "Please try again later"
+                    });
                 })
 
 
-            
+
 
                 // }
 

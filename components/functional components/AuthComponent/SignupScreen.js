@@ -22,6 +22,9 @@ import { ScrollView } from "react-native-gesture-handler";
 import Input from "../../ui components/Input";
 import { RectButton, GSignInButton } from "../../ui components/Buttons";
 import { useRef } from "react";
+import Lottie from 'lottie-react-native';
+
+
 const SignUpScreen = ({ navigation, route }) => {
 
 
@@ -146,7 +149,7 @@ const SignUpScreen = ({ navigation, route }) => {
             "first_name": state.firstName,
             "middle_name": null,
             "last_name": state.lastName,
-            "email_id": state.email,
+            "email_id": state.email.toLowerCase(),
             "password": state.password,
             "mobile_number": state.number,
             "google_id":null,
@@ -159,11 +162,18 @@ const SignUpScreen = ({ navigation, route }) => {
         console.log(payload)
             axios.post(`${CONST.baseUrlAuth}api/registrant/signup`, payload).then(async (response) => {
                 console.log(response.data)
+                if(response.status != 200){
                 console.log("----")
                 await AsyncStorage.setItem('CorpState', "0")
                 await AsyncStorage.setItem('firstName', state.firstName)
 
                 navigation.navigate("OTPScreen",{number: state.number, email: state.email})
+                }else{
+                    Toast.show({
+                        type: 'error',
+                        text1: response.data
+                    });
+                }
             })
             .catch((err) => {
                 console.log(err.response.data)
@@ -185,7 +195,7 @@ const SignUpScreen = ({ navigation, route }) => {
     return (
 
         <View style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
-            <ScrollView contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom: 100 }}>
+            <ScrollView contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom: 300 }}>
 
 
 
@@ -449,11 +459,13 @@ const SignUpScreen = ({ navigation, route }) => {
 
 
 
-                <Toast
-                    position='bottom'
-                    bottomOffset={20}
-                />
+               
             </ScrollView>
+
+            <Toast
+                    position='bottom'
+                    bottomOffset={40}
+                />
 
             {animSpeed &&
                 <View style={{

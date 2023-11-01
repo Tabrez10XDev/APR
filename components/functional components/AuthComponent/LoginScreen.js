@@ -86,7 +86,7 @@ const LoginScreen = ({ navigation, route }) => {
         const payload = {
             "first_name": null,
             "last_name": null,
-            "email_id": email,
+            "email_id": email.toLowerCase(),
             "password": pass,
             "notif_token": null,
             "google_id": null
