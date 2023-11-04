@@ -173,7 +173,7 @@ const OTPScreen = ({ route }) => {
                 <OTPInputView
                     style={{ width: '100%', height: 100 }}
                     pinCount={6}
-                    autoFocusOnLoad
+                    autoFocusOnLoad={false}
                     codeInputFieldStyle={{
                         width: 54,
                         height: 54,

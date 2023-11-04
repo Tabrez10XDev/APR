@@ -23,7 +23,7 @@ import Lottie from 'lottie-react-native';
 import { StatusBar } from "react-native";
 
 import { COLORS, SIZES, FONTS, assets } from "../../../contants";
-import { RectButton } from "react-native-gesture-handler";
+import { RectButton } from "../../ui components/Buttons";
 
 const BookingConfirmed = ({ route, navigation }) => {
 
@@ -66,7 +66,7 @@ const BookingConfirmed = ({ route, navigation }) => {
         Your Order has been placed,{'\n'} Please check My Schedule for more information
       </Text>
       <RectButton text={"Navigate to Dashboard"} position='absolute'
-        bottom={100} onClick={() => {
+        bottom={60} onClick={() => {
           navigation.dispatch(StackActions.pop(1))
         }} />
 

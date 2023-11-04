@@ -171,10 +171,10 @@ const MySchedule = ({ navigation }) => {
                 contentContainerStyle={{ alignItems: 'center', width: '100%', justifyContent: 'center', alignItems: 'center', alignSelf: 'center' }}
                 data={stackIndex == 1 ? history.upcoming : history.completed}
                 renderItem={({ item, index }) =>
-                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '80%', alignSelf: 'center', marginTop: 12 }}>
+                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '90%', alignSelf: 'center', marginTop: 12 }}>
 
-                        <View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                        <View style={{alignItems:'flex-start', width:'80%', justifyContent:'flex-start'}}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',  width:'100%' }}>
 
                                 <Text
                                     style={{
@@ -246,7 +246,7 @@ const MySchedule = ({ navigation }) => {
 
                         </View>
 
-                        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={{ marginLeft: 16 }} />
+                        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={{ marginLeft: 16}} />
 
                     </TouchableOpacity>
 

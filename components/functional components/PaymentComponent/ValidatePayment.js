@@ -78,13 +78,14 @@ const ValidatePayment = ({ route, navigation }) => {
 
                 console.log(payload)
 
-                axios.post(`${CONST.baseUrlRegister}api/payment/payment-status`, payload).then((response) => {
+
+                const checkResp = await axios.post(`${CONST.baseUrlRegister}api/payment/payment-status`, payload)
+
+                if (response){
+
                     setShouldMakeRequests(false)
-
-
                     _shouldMakeRequests = false
                     setSuccess(true)
-
 
 
                     console.log("Payment Successful")
@@ -101,20 +102,10 @@ const ValidatePayment = ({ route, navigation }) => {
                         })
                     );
 
-                }).catch((err) => {
-                    console.log(err.response);
 
-                    Toast.show({
-                        type: 'error',
-                        text1: "Please try again later"
-                    });
-                })
-
-
-
+                }
 
                 // }
-
                 axios.CancelToken.source().cancel('All pending requests cancelled.');
             }
         } catch (error) {
@@ -145,7 +136,7 @@ const ValidatePayment = ({ route, navigation }) => {
             }
         }
         finally {
-            if (_shouldMakeRequests) setTimeout(validatePayment, 3000);
+            if (_shouldMakeRequests) setTimeout(validatePayment, 5000);
         }
 
 
@@ -187,23 +178,16 @@ const ValidatePayment = ({ route, navigation }) => {
 
                     }
 
-                    {
-                        success &&
-                        <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
-                            Success
-                        </Text>
 
-
-                    }
 
 
                     {
-                        shouldMakeRequests && success == false ?
+                        shouldMakeRequests ?
                             <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
                                 Once you have made the payment, wait for the validation
                             </Text> : <Text></Text>
                     }
-                    {shouldMakeRequests == false && success == false ?
+                    {shouldMakeRequests == false ?
 
                         <Text style={{ fontFamily: FONTS.medium, textAlign: 'center', width: '80%', marginTop: "55%" }}>
                             Error occured Please try again later, check My Schedule for more information

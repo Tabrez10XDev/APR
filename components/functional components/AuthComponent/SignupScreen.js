@@ -162,7 +162,8 @@ const SignUpScreen = ({ navigation, route }) => {
         console.log(payload)
             axios.post(`${CONST.baseUrlAuth}api/registrant/signup`, payload).then(async (response) => {
                 console.log(response.data)
-                if(response.status != 200){
+                console.log(response.status);
+                if(response.status == 200){
                 console.log("----")
                 await AsyncStorage.setItem('CorpState', "0")
                 await AsyncStorage.setItem('firstName', state.firstName)
@@ -425,7 +426,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
 
 
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: SIZES.medium }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: SIZES.medium, paddingBottom:12 }}>
                     <Text
                         style={{
                             textAlign: 'center',
