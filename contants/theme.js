@@ -25,7 +25,7 @@ export const COLORS = {
     almostWhite: "#F3F3F3",
     blackAccent3: "#DCDEE3",
     orange: "#FF9A3E",
-    green: "#1DAD3C",
+    green: "#38983C",
     unAvailable: "#B8DAFF",
     red: "#EC1C24",
     black_25: "#C7C7C7"

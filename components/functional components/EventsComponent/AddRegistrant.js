@@ -66,6 +66,13 @@ const AddRegistrant = ({ route, navigation }) => {
         laneNumber: null,
         villaNumber: ''
     })
+    
+        useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            verifyVilla()
+        }, 500)
+        return () => clearTimeout(delayDebounceFn)
+    }, [state.villaNumber])
 
     const isDonors = data.typeName.toLowerCase().includes("donat")
     const isWithout = data.typeName.toLowerCase().includes("with")
@@ -638,7 +645,7 @@ const AddRegistrant = ({ route, navigation }) => {
                             state.residentType == "villa" &&
                             <View style={{ width: '98%', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', alignSelf: 'center' }}>
 
-                                <View style={{ width: '45%' }}>
+                                <View style={{ width: '100%' }}>
 
                                     <Input
                                         placeholder="Villa Number"
@@ -649,13 +656,13 @@ const AddRegistrant = ({ route, navigation }) => {
                                     />
                                 </View>
 
-                                <RectButton
+                                {/* <RectButton
                                     onClick={() => {
                                         verifyVilla()
                                     }}
                                     width={'45%'}
                                     text={"Verify"}
-                                />
+                                /> */}
 
                             </View>
 

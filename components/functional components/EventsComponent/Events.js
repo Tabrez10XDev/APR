@@ -5,7 +5,6 @@ import axios from 'axios';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState, useEffect, useRef } from 'react';
 import authContext from '../../../contants/authContext';
-import { PhonePe, Constants } from 'phonepesdk'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Lottie from 'lottie-react-native';
 
@@ -271,7 +270,7 @@ const Events = ({ navigation }) => {
                                 Registration closes in
                             </Text>
 
-                            <Text
+                           {cutoff.days != NaN && <Text
                                 style={{
                                     fontSize: SIZES.medium,
                                     fontFamily: FONTS.semiBold,
@@ -280,7 +279,7 @@ const Events = ({ navigation }) => {
                                 }}
                             >
                                 {cutoff.days ?? 0} days, {cutoff.hours ?? "00"}:{cutoff.minutes ?? "00"}:{cutoff.seconds ?? "00"}
-                            </Text>
+                            </Text>}
                         </View>
 
                         <View style={{ marginTop: 12 }}>
@@ -325,7 +324,7 @@ const Events = ({ navigation }) => {
                                                     marginLeft: 8,
                                                 }}
                                             >
-                                                {ele.type_name}
+                                                {ele.type_name.substring(0,1).toUpperCase()}{ele.type_name.substring(1,ele.type_name.length)}
                                             </Text>
                                             <Text
                                                 style={{

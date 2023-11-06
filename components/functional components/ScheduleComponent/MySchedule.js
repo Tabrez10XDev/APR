@@ -17,6 +17,7 @@ const MySchedule = ({ navigation }) => {
     const [state, setState] = useState([])
     const [history, setHistory] = useState({ upcoming: [], completed: [] })
     const [userId, setUserId] = useState("-1")
+    const [registerantInfo, setRegisterantInfo] = useState({})
 
     const [animSpeed, setAnimSpeed] = useState(false)
     const animRef = useRef()
@@ -58,7 +59,7 @@ const MySchedule = ({ navigation }) => {
                     _upcoming.push(ele)
             })
 
-
+            setRegisterantInfo(response.data.registerant_info)
             setHistory(current => ({ ...current, completed: _completed, upcoming: _upcoming }))
             setState(response.data.runnerInfo)
             console.log(response.data.runnerInfo.length)
@@ -171,7 +172,9 @@ const MySchedule = ({ navigation }) => {
                 contentContainerStyle={{ alignItems: 'center', width: '100%', justifyContent: 'center', alignItems: 'center', alignSelf: 'center' }}
                 data={stackIndex == 1 ? history.upcoming : history.completed}
                 renderItem={({ item, index }) =>
-                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '90%', alignSelf: 'center', marginTop: 12 }}>
+                    <TouchableOpacity
+                    onPress={()=>{navigation.navigate("BookingInfo", {...item, registerantInfo: registerantInfo})}}
+                    style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '90%', alignSelf: 'center', marginTop: 12 }}>
 
                         <View style={{alignItems:'flex-start', width:'80%', justifyContent:'flex-start'}}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',  width:'100%' }}>
