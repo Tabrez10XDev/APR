@@ -28,6 +28,7 @@ import CreateOrder from './components/functional components/EventsComponent/Crea
 import MobileVerification from './components/functional components/AuthComponent/MobileVerification';
 import BookingInfo from './components/functional components/ScheduleComponent/BookingInfo'
 import PaymentHistory from './components/functional components/ProfileComponent/PaymentHistory';
+import EditProfile from './components/functional components/ProfileComponent/EditProfile';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -141,6 +142,7 @@ export default function App() {
                   <Stack.Screen name="BookingConfirmed" component={BookingConfirmed} />
                   <Stack.Screen name="BookingInfo" component={BookingInfo} />
                   <Stack.Screen name="PaymentHistory" component={PaymentHistory} />
+                  <Stack.Screen name="EditProfile" component={EditProfile} />
 
                   
                 </Stack.Group>

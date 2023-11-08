@@ -12,6 +12,8 @@ import authContext from '../../../contants/authContext';
 import Toast from 'react-native-toast-message';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Lottie from 'lottie-react-native';
+import { StackActions, useTheme } from '@react-navigation/native';
+
 
 const AddRegistrant = ({ route, navigation }) => {
 
@@ -256,7 +258,6 @@ const AddRegistrant = ({ route, navigation }) => {
         })
 
         console.log(JSON.stringify(payload))
-
 
         navigation.navigate("AddRunners", { ...payload, current: 0, total: _stateArray.length, stateArray: _stateArray, param: data })
 

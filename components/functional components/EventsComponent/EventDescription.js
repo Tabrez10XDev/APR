@@ -59,7 +59,16 @@ const EventDescription = ({ route, navigation }) => {
                 temp['value'] = ele.category_id
                 classes.push(temp)
             })
-            navigation.navigate("AddRegistrant", { ...response.data, towers: towers, phases: phases, classes: classes, typeName: data.type_name })
+
+            let _run_category = []
+            response.data.run_category.map((ele)=>{
+            _run_category.push({
+                label: ele.race_type_name,
+                value: ele.race_type_id
+            })
+        })  
+
+            navigation.navigate("AddRegistrant", { ...response.data, run_category: _run_category, towers: towers, phases: phases, classes: classes, typeName: data.type_name })
 
         }).catch((err) => {
             console.error("Error")

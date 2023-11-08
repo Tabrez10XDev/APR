@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
@@ -8,10 +8,10 @@ import Input from '../../ui components/Input';
 import { useState, useEffect, useRef } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import Lottie from 'lottie-react-native';
+import { StackActions, useTheme } from '@react-navigation/native';
 
 import common from '../../../contants/common';
 import authContext from '../../../contants/authContext';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 import { CommonActions } from "@react-navigation/native";
 
@@ -53,6 +53,7 @@ const MasterList = ({ route, navigation }) => {
             console.log("order created");
             const currDate = new Date()
             const orderDetails = response.data.order_details
+
             let data = {
                 "registrant_id": parseInt(orderDetails.registrant_id),
                 "order_id": orderDetails.order_id,
@@ -227,6 +228,14 @@ const MasterList = ({ route, navigation }) => {
                         style={{ backgroundColor: COLORS.blue, flex: 1 }}
                     ></StatusBar>
                     <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 12 }}>
+
+                        <TouchableOpacity onPress={() => {
+                            navigation.dispatch(StackActions.pop(1))
+
+                        }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf: 'flex-start' }}>
+                            <Ionicons name="chevron-back" size={36} color="white" />
+                        </TouchableOpacity>
+
                         <Text
                             style={{
                                 fontSize: SIZES.large,

@@ -24,9 +24,7 @@ export default DatePickerModal = ({ modalVisible, setModalVisible, setSelectedDa
             
             onRequestClose={() => {
                   setModalVisible(!modalVisible);
-            }}
-            
-                
+            }}      
         >
             
             <View style={{
@@ -50,6 +48,7 @@ export default DatePickerModal = ({ modalVisible, setModalVisible, setSelectedDa
                         borderTopLeftRadius: 10,
                         borderTopRightRadius:10
                      }}
+                    current={maxDate}
                     onSelectedChange={date => setSelectedDate(date)}
 
 

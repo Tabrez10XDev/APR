@@ -1335,7 +1335,21 @@ const common = {
             "label": "O-"
         }
     ],
-    sizes: ["s", "m", "l", "xl", "xxl", "xxxl"]
+    sizes: ["s", "m", "l", "xl", "xxl", "xxxl"],
+    isEmpty: function isEmpty (value) {
+        return (
+        
+            (value == undefined) ||
+          // null or undefined
+          (value == null) ||
+      
+          // has length and it's zero
+          (value.hasOwnProperty('length') && value.trim().length === 0) ||
+      
+          // is an Object and has no keys
+          (value.constructor === Object && Object.keys(value).length === 0)
+        )
+      }
 
 
 

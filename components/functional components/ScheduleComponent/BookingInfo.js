@@ -92,7 +92,7 @@ const BookingInfo = ({ route, navigation }) => {
                                 maxWidth: '95%'
                             }}
                         >
-                            Transaction/Booking ID: #123123 (MOCK)
+                            Transaction/Booking ID: {data.order_id}
                         </Text>
 
 
@@ -106,7 +106,7 @@ const BookingInfo = ({ route, navigation }) => {
                                 maxWidth: '95%'
                             }}
                         >
-                            Booked On: 13/07/2023 (MOCK)
+                            Booked On: {data.payment_date}
                         </Text>
 
                         <View style={{ width: '90%', alignSelf: 'center' }}>
@@ -167,7 +167,7 @@ const BookingInfo = ({ route, navigation }) => {
                                         textAlign: 'left',
                                     }}
                                 >
-                                    NA
+                                    {data.registerantInfo.email_id}
                                 </Text>
                             </View>
 

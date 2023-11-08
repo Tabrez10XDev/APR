@@ -36,25 +36,27 @@ const AddRunners = ({ route, navigation }) => {
 
     const newDate = new Date()
     const currDate = moment().format("YYYY-MM-DD")
+    const sevenYearsAgo = moment().subtract(7, 'years').format("YYYY-MM-DD"); // Date 7 years ago
+
     const [stateArray, setStateArray] = useState(data.stateArray)
 
     const [current, setCurrent] = useState(data.current)
 
     const [state, setState] = useState(stateArray[current])
 
-    const [selectedDate, setSelectedDate] = useState(state.date ?? "")
+    const [selectedDate, setSelectedDate] = useState(stateArray[current].date ?? "")
     const [stackIndex, setStackIndex] = useState(state.size ?? 1);
 
     useEffect(() => {
         setState(stateArray[current])
         setStackIndex(stateArray[current].size ?? 1)
+        setSelectedDate(stateArray[current].date ?? "")
     }, [current])
 
 
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            console.log(data.current)
             setCurrent(data.current)
         });
 
@@ -163,7 +165,6 @@ const AddRunners = ({ route, navigation }) => {
                                 </Text>
 
                                 <TouchableOpacity onPress={() => { setOpen(true) }} style={{ borderColor: COLORS.ash, borderWidth: 1, borderRadius: 6, marginTop: 8, width: '95%' }}>
-
                                     <Text style={{ paddingVertical: 12, paddingHorizontal: 8 }}>
                                         {selectedDate.length == 0 ? "Enter Here" : selectedDate}
                                     </Text>
@@ -422,7 +423,6 @@ const AddRunners = ({ route, navigation }) => {
 
 
 
-
                             <Dropdown
                                 style={{
                                     height: 45,
@@ -455,7 +455,6 @@ const AddRunners = ({ route, navigation }) => {
 
                             />
 
-                            {state.runCategory != "Never" &&
                                 <Dropdown
                                     style={{
                                         height: 45,
@@ -478,18 +477,18 @@ const AddRunners = ({ route, navigation }) => {
                                     iconStyle={{}}
                                     data={data.param.run_category}
                                     maxHeight={300}
-                                    labelField="race_type_name"
-                                    valueField="race_type_id"
+                                    labelField="label"
+                                    valueField="label"
                                     placeholder="Run Category"
                                     value={state.runCategory}
                                     onChange={item => {
-                                        console.log(item)
-                                        setState(current => ({ ...current, runCategory: item.race_type_name }))
-                                        setState(current => ({ ...current, runCategoryId: item.race_type_id }))
+                                        setState(current => ({ ...current, runCategory: item.label }))
+                                        setState(current => ({ ...current, runCategoryId: item.value }))
 
                                     }}
 
-                                />}
+                                />
+                                
 
                         </View>
 
@@ -498,6 +497,8 @@ const AddRunners = ({ route, navigation }) => {
                                 if (current > 0) {
                                     let temp = stateArray
                                     temp[current] = state
+                                    temp[current]['size'] = stackIndex
+                                    temp[current]['date'] = selectedDate
                                     setStateArray(temp)
                                     setCurrent(current - 1)
                                 } else {
@@ -506,17 +507,18 @@ const AddRunners = ({ route, navigation }) => {
                             }} text={"Back"} alignSelf={'center'} marginTop={24} width='45%' />
                             <RectButton onClick={() => {
                                 if (
-                                    state.firstName ? state.firstName.trim().length == 0 : false
-                                        || state.lastName ? state.lastName.trim().length == 0 : false
-                                            || selectedDate.trim().length == 0
-                                            || state.gender ? state.gender.trim().length == 0 : false
-                                                || state.email ? state.email.trim().length == 0 : false
-                                                    || state.number ? state.number.trim().length == 0 : false
-                                                        || state.emergencyNumber ? state.emergencyNumber.trim().length == 0 : false
+                                    common.isEmpty(state.firstName) ||
+                                    common.isEmpty(state.lastName) ||
+                                    common.isEmpty(state.gender) ||
+                                    common.isEmpty(state.email) ||
+                                    common.isEmpty(state.number) ||
+                                    common.isEmpty(state.emergencyNumber ?? data.param.phone_number) ||
+                                    common.isEmpty(selectedDate)
                                 ) {
                                     Toast.show({
                                         type: 'error',
-                                        text1: 'Missing Data'
+                                        text1: 'Missing Data',
+                                        visibilityTime: 500
                                     });
                                 }
                                 else if (current < data.total - 1) {
@@ -552,7 +554,7 @@ const AddRunners = ({ route, navigation }) => {
 
                     </ScrollView>
 
-                    <DatePickerModal modalVisible={open} setModalVisible={setOpen} maxDate={currDate} setSelectedDate={setSelectedDate} />
+                    <DatePickerModal modalVisible={open} setModalVisible={setOpen} maxDate={sevenYearsAgo} setSelectedDate={setSelectedDate} />
                     <Toast
                         position='bottom'
                         bottomOffset={40}

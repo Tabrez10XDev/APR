@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
 import Lottie from 'lottie-react-native';
+import { StackActions, useTheme } from '@react-navigation/native';
 
 const PaymentHistory = ({ route, navigation }) => {
 
@@ -86,6 +87,14 @@ const PaymentHistory = ({ route, navigation }) => {
 
 
             <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center', position: 'relative' }}>
+
+
+            <TouchableOpacity onPress={() => {
+                            navigation.dispatch(StackActions.pop(1))
+
+                        }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf: 'flex-start' }}>
+                            <Ionicons name="chevron-back" size={36} color="white" />
+                        </TouchableOpacity>
 
                 <Text
                     style={{
@@ -188,7 +197,9 @@ const PaymentHistory = ({ route, navigation }) => {
 
 
 
-                {animSpeed &&
+           
+            </View>
+            {animSpeed &&
                     <View style={{
                         shadowColor: COLORS.homeCard,
                         shadowOffset: {
@@ -206,8 +217,6 @@ const PaymentHistory = ({ route, navigation }) => {
                         <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
                     </View>
                 }
-            </View>
-
         </View>
     )
 }
