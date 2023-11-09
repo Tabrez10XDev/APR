@@ -107,24 +107,39 @@ const EditProfile = ({ route, navigation }) => {
     async function updateUser() {
         playAnimation()
 
-        let address = ""
+        // let address = ""
 
-        if(state.address_type == "tower") address += `Tower ${state.addr_tower_no}, Block ${state.addr_tower_block_no}`
-        if(state.address_type == "villa") address += `Villa ${state.addr_villa_number}, Lane ${state.addr_villa_lane_no}, Phase ${addr_villa_phase_no}`
-        if(state.address_type == "others") address += `${state.external_address}`
+        // if (state.address_type == "tower") address += `Tower ${state.addr_tower_no}, Block ${state.addr_tower_block_no}`
+        // if (state.address_type == "villa") address += `Villa ${state.addr_villa_number}, Lane ${state.addr_villa_lane_no}, Phase ${addr_villa_phase_no}`
+        // if (state.address_type == "others") address += `${state.external_address}`
 
-        axios.put(`${CONST.baseUrlRegister}api/registration/update/registrant`, {
+     
+        axios.put(`${CONST.baseUrlRegister}api/registration/update/user/profile`, {
             "registrant_id": route.params.userId,
+            "first_name": state.first_name,
+            "middle_name": null,
+            "last_name": state.last_name,
+            "email_id": state.email_id,
+            "mobile_number": state.mobile_number,
+
+            "password": "Nasa@0123",
+
+            "resident_of_apr": state.resident_of_apr,
             "address_type": state.address_type,
-            "address": address,
+            "addr_villa_number": state.address_type == "villa" ? `${state.addr_villa_number}` : null,
+            "addr_villa_lane_no": state.address_type == "villa" ? `${state.addr_villa_lane_no}` : null,
+            "addr_villa_phase_no": state.address_type == "villa" ? `${state.addr_villa_phase_no}` : null,
+            "addr_tower_no": state.address_type == "tower" ? `Tower ${state.addr_tower_no}` : null,
+            "addr_tower_block_no": state.address_type == "tower" ? `${state.addr_tower_block_no}` : null,
+            "addr_tower_flat_no": state.address_type == "tower" ? `${state.addr_tower_flat_no}` : null,
+            "external_address": null,
+            // "address": address,
             "city": state.city,
             "state": state.state,
             "country": state.country,
             "pin_code": state.pin_code,
-            "need_80G_certificate": null,
-            "pancard_number": null,
-            "registrant_source_ref": null,
-            "registrant_class_ref": null
+            "registrant_profile_image": null
+
         }).then((response) => {
             console.log(response.data);
             Toast.show({
@@ -216,7 +231,7 @@ const EditProfile = ({ route, navigation }) => {
                         <Input
                             placeholder="Enter Here"
                             inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
-                            // onChangeText={(value) => setState(current => ({ ...current, firstName: value }))}
+                            onChangeText={(value) => setState(current => ({ ...current, first_name: value }))}
                             value={state.first_name}
                             placeholderTextColor={COLORS.lightGray}
                         />
@@ -237,7 +252,7 @@ const EditProfile = ({ route, navigation }) => {
                         <Input
                             placeholder="Enter Here"
                             inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
-                            // onChangeText={(value) => setState(current => ({ ...current, lastName: value }))}
+                            onChangeText={(value) => setState(current => ({ ...current, last_name: value }))}
                             value={state.last_name}
                             placeholderTextColor={COLORS.lightGray}
                         />
@@ -259,7 +274,7 @@ const EditProfile = ({ route, navigation }) => {
                 <Input
                     placeholder="Enter Here"
                     inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start' }}
-                    // onChangeText={(value) => setState(current => ({ ...current, email: value }))}
+                    onChangeText={(value) => setState(current => ({ ...current, email_id: value }))}
                     value={state.email_id}
                     placeholderTextColor={COLORS.lightGray}
                 />
@@ -280,6 +295,7 @@ const EditProfile = ({ route, navigation }) => {
                     <Input
                         placeholder="Enter Here"
                         inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start', paddingLeft: 42 }}
+                        onChangeText={(value) => setState(current => ({ ...current, mobile_number: value }))}
                         value={state.mobile_number}
                         placeholderTextColor={COLORS.lightGray}
                     />
@@ -363,13 +379,13 @@ const EditProfile = ({ route, navigation }) => {
                         }}
 
                     />
-                    {state.residentType == 'others' &&
+                    {state.address_type == 'tower' &&
 
                         <Input
                             placeholder="Flat No"
                             inputprops={{ width: '48%', marginTop: 8, alignSelf: 'flex-start', marginLeft: 8 }}
-                            onChangeText={(value) => setState(current => ({ ...current, flatNo: value }))}
-                            value={state.flatNo}
+                            onChangeText={(value) => setState(current => ({ ...current, addr_tower_flat_no: value }))}
+                            value={state.addr_tower_flat_no}
                             placeholderTextColor={COLORS.lightGray}
                         />}
 
