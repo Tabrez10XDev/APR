@@ -47,7 +47,6 @@ const EventDescription = ({ route, navigation }) => {
             let phases = []
             response.data.tower_details.map((ele, inx) => {
                 towers.push({ label: ele.tower_number, value: ele.tower_number, blocks: ele.block })
-                // else phases.push({ label: ele.source_name, value: ele.source_id })
 
             })
             let classes = []

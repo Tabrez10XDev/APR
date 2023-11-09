@@ -92,7 +92,7 @@ const BookingInfo = ({ route, navigation }) => {
                                 maxWidth: '95%'
                             }}
                         >
-                            Transaction/Booking ID: {data.order_id}
+                            Transaction/Booking ID: {data.order_id_ref}
                         </Text>
 
 
@@ -391,8 +391,8 @@ const BookingInfo = ({ route, navigation }) => {
                         </View>
 
                         <RectButton text={"Go to Home"} alignSelf={'center'} marginTop={48} onClick={() => {
-                                navigation.dispatch(StackActions.pop(1))
-                            }} />
+                            navigation.dispatch(StackActions.pop(1))
+                        }} />
 
 
                     </ScrollView>

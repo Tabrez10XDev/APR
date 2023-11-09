@@ -79,9 +79,17 @@ const ValidatePayment = ({ route, navigation }) => {
                 console.log(payload)
 
 
-                const checkResp = await axios.post(`${CONST.baseUrlRegister}api/payment/payment-status`, payload)
+                const checkResponse = await axios.post(`${CONST.baseUrlRegister}api/payment/payment-status`, payload)
 
-                if (response){
+                
+
+                if (checkResponse) {
+
+                    const response = await axios.post(`${CONST.baseUrlRegister}api/payment/confirmation/booking`, {
+                        "registrant_id": parseInt(route.params.orderDetails.registrant_id),
+                        "order_id": route.params.orderDetails.order_id,
+                        "booking_id": parseInt(route.params.details.booking_id)
+                    })
 
                     setShouldMakeRequests(false)
                     _shouldMakeRequests = false
@@ -95,8 +103,8 @@ const ValidatePayment = ({ route, navigation }) => {
                             routes: [
                                 { name: 'Home' },
                                 {
-                                    name: 'BookingConfirmed',
-                                    params: { ...response.data, showCancel: true }
+                                    name: 'BookingInfo',
+                                    params: { ...response.data.runnerInfo[0], registerantInfo: response.data.registrantInfo }
                                 },
                             ],
                         })

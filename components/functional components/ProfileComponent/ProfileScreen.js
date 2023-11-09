@@ -79,7 +79,7 @@ const ProfileScreen = ({ route, navigation }) => {
                         </Text>
 
                         <TouchableOpacity
-                            // onPress={() => { navigation.navigate("EditProfile", { userId: userId }) }}
+                            onPress={() => { navigation.navigate("EditProfile", { userId: userId }) }}
                             style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 

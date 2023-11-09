@@ -187,7 +187,7 @@ const MySchedule = ({ navigation }) => {
                                         textAlign: 'left',
                                     }}
                                 >
-                                    {item.registrant_type}
+                                    {item.type_name}
                                 </Text>
                                 <Ionicons name="md-checkmark-circle" size={24} color="#23A26D" style={{ marginHorizontal: 8 }} />
                             </View>

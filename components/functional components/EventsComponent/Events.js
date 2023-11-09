@@ -309,7 +309,7 @@ const Events = ({ navigation }) => {
                                 return (
                                     <TouchableOpacity
                                         onPress={() => {
-                                            navigation.navigate("BookingConfirmed", { ...data, ...ele, userId: userId })
+                                            navigation.navigate("EventDescription", { ...data, ...ele, userId: userId })
                                         }}
                                         style={{ flexDirection: 'row', width: '90%', alignSelf: 'center', marginTop: 16, alignItems: 'center' }}>
                                         <Image source={{ uri: ele.image_url }} style={{ height: Dimensions.get('window').width * 0.2, width: Dimensions.get('window').width * 0.25, resizeMode: 'cover', alignItems: 'center', borderRadius: 6 }} />

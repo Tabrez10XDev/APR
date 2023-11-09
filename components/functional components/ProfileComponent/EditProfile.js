@@ -25,6 +25,25 @@ const EditProfile = ({ route, navigation }) => {
         setAnimSpeed(true)
     }
 
+    const ResidentTypes = [
+
+        {
+            label: 'Villa',
+            value: 'villa'
+        },
+        {
+            label: "Tower",
+            value: "tower"
+        },
+        {
+            label: 'Others',
+            value: 'others'
+        },
+    ]
+
+    const [blocks, setBlocks] = useState([])
+
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -38,17 +57,18 @@ const EditProfile = ({ route, navigation }) => {
     }
 
     async function verifyVilla() {
+        console.log(state.addr_villa_number);
         axios.post(`${CONST.baseUrlRegister}api/registration/verify/address`,
             {
-                "villa_number": state.villaNumber
+                "villa_number": state.addr_villa_number
             }
         ).then((response) => {
             console.log(response.data)
             setState(current => (
                 {
                     ...current,
-                    laneNumber: response.data.lane_no,
-                    phase: response.data.phase_no
+                    addr_villa_lane_no: response.data.lane_no,
+                    addr_villa_phase_no: response.data.phase_no
                 }
             ))
             console.log(response.data)
@@ -68,10 +88,54 @@ const EditProfile = ({ route, navigation }) => {
     async function fetchUser() {
         playAnimation()
         axios.get(`${CONST.baseUrlRegister}api/registration/registrant/details/${route.params.userId}`).then((response) => {
-            setState(response.data[0])
-            console.log(JSON.stringify(response.data[0]));
-        }).catch((err) => {
+            let towers = []
+            response.data.towerData.map((ele, inx) => {
+                towers.push({ label: ele.tower_number, value: ele.tower_number, blocks: ele.block })
 
+            })
+            setState({ ...response.data.registrantDetail, towers: towers })
+        }).catch((err) => {
+            Toast.show({
+                type: 'error',
+                text1: err.message
+            });
+        }).finally(() => {
+            pauseAnimation()
+        })
+    }
+
+    async function updateUser() {
+        playAnimation()
+
+        let address = ""
+
+        if(state.address_type == "tower") address += `Tower ${state.addr_tower_no}, Block ${state.addr_tower_block_no}`
+        if(state.address_type == "villa") address += `Villa ${state.addr_villa_number}, Lane ${state.addr_villa_lane_no}, Phase ${addr_villa_phase_no}`
+        if(state.address_type == "others") address += `${state.external_address}`
+
+        axios.put(`${CONST.baseUrlRegister}api/registration/update/registrant`, {
+            "registrant_id": route.params.userId,
+            "address_type": state.address_type,
+            "address": address,
+            "city": state.city,
+            "state": state.state,
+            "country": state.country,
+            "pin_code": state.pin_code,
+            "need_80G_certificate": null,
+            "pancard_number": null,
+            "registrant_source_ref": null,
+            "registrant_class_ref": null
+        }).then((response) => {
+            console.log(response.data);
+            Toast.show({
+                type: 'success',
+                text1: "Success"
+            });
+        }).catch((err) => {
+            Toast.show({
+                type: 'error',
+                text1: err.message
+            });
         }).finally(() => {
             pauseAnimation()
         })
@@ -86,8 +150,19 @@ const EditProfile = ({ route, navigation }) => {
     }, [navigation]);
 
 
+    useEffect(() => {
+        if (state.addr_tower_no) {
+            state.towers.map((ele, inx) => {
+                if (ele.label == state.addr_tower_no) {
+                    setBlocks(ele.blocks)
+                }
+            })
+        }
+    }, [state.addr_tower_no])
+
+
     return (
-        <View style={{ backgroundColor: 'white', width: '100%', height: '100%'}}>
+        <View style={{ backgroundColor: 'white', width: '100%', height: '100%' }}>
 
 
             <StatusBar
@@ -247,7 +322,7 @@ const EditProfile = ({ route, navigation }) => {
                         innerIconStyle={{ borderWidth: 2 }}
                         disableBuiltInState
                         isChecked={state.resident_of_apr}
-                        onPress={(isChecked) => { setState(current => ({ ...current, resident_of_apr: isChecked })) }}
+                        onPress={(isChecked) => { setState(current => ({ ...current, resident_of_apr: !current.resident_of_apr })) }}
                     />
 
                 </View>
@@ -277,7 +352,7 @@ const EditProfile = ({ route, navigation }) => {
                         }}
                         inputSearchStyle={{}}
                         iconStyle={{}}
-                        data={state.residentOfAPR ? ResidentTypes : [{ label: "Others", value: "others" }]}
+                        data={state.resident_of_apr ? ResidentTypes : [{ label: "Others", value: "others" }]}
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
@@ -376,7 +451,7 @@ const EditProfile = ({ route, navigation }) => {
                         }}
                         inputSearchStyle={{}}
                         iconStyle={{}}
-                        data={data.towers}
+                        data={state.towers}
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
@@ -529,8 +604,10 @@ const EditProfile = ({ route, navigation }) => {
                 </View>
 
 
-<RectButton text={"Save Changes"} onClick={()=>{}} alignSelf="center" marginTop={48}/>
-        
+                <RectButton text={"Save Changes"} onClick={() => {
+                    updateUser()
+                }} alignSelf="center" marginTop={48} />
+
 
             </ScrollView>
             <Toast
