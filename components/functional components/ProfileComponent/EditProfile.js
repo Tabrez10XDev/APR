@@ -121,9 +121,6 @@ const EditProfile = ({ route, navigation }) => {
             "last_name": state.last_name,
             "email_id": state.email_id,
             "mobile_number": state.mobile_number,
-
-            "password": "Nasa@0123",
-
             "resident_of_apr": state.resident_of_apr,
             "address_type": state.address_type,
             "addr_villa_number": state.address_type == "villa" ? `${state.addr_villa_number}` : null,
