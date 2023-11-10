@@ -50,6 +50,11 @@ const MobileVerification = ({ route, navigation }) => {
         axios.post(`${CONST.baseUrlAuth}api/registrant/verify/mobile`, payload).then(async (response) => {
             console.log(response.data)
 
+            // await axios.post(`${CONST.baseUrlAuth}api/registrant/resend/otp`, {
+            //     "email_id": route.params.email_id.toLowerCase(),
+            //     "mobile_number": number
+            // })
+
             navigation.navigate("OTPScreen", { number: number, email: route.params.email_id })
 
         }).catch((err) => {

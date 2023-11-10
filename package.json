@@ -37,8 +37,8 @@
     "react-native-svg": "13.9.0",
     "react-native-toast-message": "^2.1.5",
     "react-native-upi-payment": "^1.0.4",
-    "react-native-raw-bottom-sheet": "^2.2.0"
-
+    "react-native-raw-bottom-sheet": "^2.2.0",
+    "expo-build-properties": "~0.8.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

@@ -67,10 +67,10 @@ const LoginScreen = ({ navigation, route }) => {
 
 
 
-    function safeLogin() {
-        if (isChecked) corpLogin()
-        else login()
-    }
+    // function safeLogin() {
+    //     if (isChecked) corpLogin()
+    //     else login()
+    // }
 
     async function login() {
         if (email.trim().length === 0 || pass.trim().length === 0) {
@@ -93,7 +93,6 @@ const LoginScreen = ({ navigation, route }) => {
         }
 
 
-        console.log(payload)
 
 
         try {
@@ -107,10 +106,10 @@ const LoginScreen = ({ navigation, route }) => {
                 }
                 else if (response.data.mobile_no_verify_status == false) navigation.navigate("MobileVerification", response.data)
                 else {
-                    await AsyncStorage.setItem('CorpState', "0")
+                    await AsyncStorage.setItem('CorpState', response.data.corporate_id.toString())
                     await AsyncStorage.setItem('firstName', response.data.first_name)
-                    if (response.data.registrant_id) saveAuth(response.data.registrant_id)
-                    else saveAuth(response.data.user_id)
+                    if (response.data.registrant_id) saveAuth(response.data.registrant_id.toString())
+                    else saveAuth(response.data.user_id.toString())
                 }
 
             }).catch((err) => {
@@ -180,7 +179,7 @@ const LoginScreen = ({ navigation, route }) => {
     return (
 
         <View style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
-            <ScrollView contentContainerStyle={{ alignItems: 'center', alignItems: 'center' }}>
+            <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ alignItems: 'center', alignItems: 'center' }}>
 
 
 
@@ -290,7 +289,7 @@ const LoginScreen = ({ navigation, route }) => {
                     </Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', alignSelf: 'center', width: '90%', marginTop: 14, justifyContent: 'space-between', alignItems: 'center' }}>
+                {/* <View style={{ flexDirection: 'row', alignSelf: 'center', width: '90%', marginTop: 14, justifyContent: 'space-between', alignItems: 'center' }}>
 
                     <BouncyCheckbox
                         size={25}
@@ -313,11 +312,11 @@ const LoginScreen = ({ navigation, route }) => {
                         Choose this for Corporate Login
                     </Text>
 
-                </View>
+                </View> */}
 
 
                 <RectButton marginTop={24} text="Sign In" onClick={() => {
-                    safeLogin()
+                    login()
                     // route.params.finishAuth()
                 }} />
 

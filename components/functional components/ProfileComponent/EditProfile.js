@@ -15,6 +15,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Lottie from 'lottie-react-native';
 import { StackActions, useTheme } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditProfile = ({ route, navigation }) => {
 
@@ -137,12 +138,16 @@ const EditProfile = ({ route, navigation }) => {
             "pin_code": state.pin_code,
             "registrant_profile_image": null
 
-        }).then((response) => {
+        }).then(async (response) => {
             console.log(response.data);
+
             Toast.show({
                 type: 'success',
                 text1: "Success"
             });
+
+            await AsyncStorage.setItem('firstName', state.first_name)
+
         }).catch((err) => {
             Toast.show({
                 type: 'error',

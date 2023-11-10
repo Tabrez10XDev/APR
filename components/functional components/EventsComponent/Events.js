@@ -95,7 +95,7 @@ const Events = ({ navigation }) => {
 
     async function fetchDashboardCorp() {
 
-        axios.get(`${CONST.baseUrlRegister}api/corporate/event/data/3`).then((response) => {
+        axios.get(`${CONST.baseUrlRegister}api/corporate/event/data`).then((response) => {
             let _data = response.data
             _data.registrant_type = [
                 {
@@ -137,8 +137,7 @@ const Events = ({ navigation }) => {
     useEffect(() => {
         const intervalId = setInterval(() => {
 
-            const eventCutOffDate = new Date(`${data.event_info.event_cut_off_time}`);
-            console.log("---")
+            const eventCutOffDate = data.event_info.event_cut_off_time ? new Date(`${data.event_info.event_cut_off_time}`) : new Date()
             const currentDate = new Date();
 
             const timeDifferenceMs = eventCutOffDate - currentDate;
@@ -160,22 +159,22 @@ const Events = ({ navigation }) => {
     }, [data]);
 
     useEffect(async () => {
-        // const unsubscribe = navigation.addListener('focus', async () => {
+        const unsubscribe = navigation.addListener('focus', async () => {
 
 
-        const result2 = await AsyncStorage.getItem('CorpState')
-        const result = await AsyncStorage.getItem('firstName')
-        setName(result ?? "User")
+            const result2 = await AsyncStorage.getItem('CorpState')
+            const result = await AsyncStorage.getItem('firstName')
+            setName(result ?? "User")
 
-        if (result2 != null && result2 == "1") fetchDashboardCorp()
-        else fetchDashboard()
+            if (result2 != null && result2 == "1") fetchDashboardCorp()
+            else fetchDashboard()
 
 
-        // fetchDashboard()
-        // }
-        // );
+            // fetchDashboard()
+        }
+        );
 
-        // return unsubscribe;
+        return unsubscribe;
     }, []);
 
 
@@ -270,7 +269,8 @@ const Events = ({ navigation }) => {
                                 Registration closes in
                             </Text>
 
-                           {cutoff.days != NaN && <Text
+
+                            {cutoff.days != NaN && <Text
                                 style={{
                                     fontSize: SIZES.medium,
                                     fontFamily: FONTS.semiBold,
@@ -323,7 +323,7 @@ const Events = ({ navigation }) => {
                                                     marginLeft: 8,
                                                 }}
                                             >
-                                                {ele.type_name.substring(0,1).toUpperCase()}{ele.type_name.substring(1,ele.type_name.length)}
+                                                {ele.type_name.substring(0, 1).toUpperCase()}{ele.type_name.substring(1, ele.type_name.length)}
                                             </Text>
                                             <Text
                                                 style={{

@@ -17,11 +17,14 @@ const ProfileScreen = ({ route, navigation }) => {
 
     const [name, setName] = useState("")
 
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', async () => {
+            const result = await AsyncStorage.getItem('firstName')
+            setName(result ?? "User")
+        });
 
-    useEffect(async () => {
-        const result = await AsyncStorage.getItem('firstName')
-        setName(result ?? "User")
-    }, [])
+        return unsubscribe;
+    }, [navigation]);
 
     return (
         <authContext.Consumer>

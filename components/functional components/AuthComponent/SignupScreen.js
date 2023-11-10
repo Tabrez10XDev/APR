@@ -28,7 +28,7 @@ import Lottie from 'lottie-react-native';
 const SignUpScreen = ({ navigation, route }) => {
 
 
-    
+
     const [animSpeed, setAnimSpeed] = useState(false)
     const animRef = useRef()
 
@@ -64,15 +64,15 @@ const SignUpScreen = ({ navigation, route }) => {
         number: ""
     })
 
-    function safeSignUp(){
-        if(state.corpCode == null) signup()
-        else if(corpCode.trim().length == 0) signup()
+    function safeSignUp() {
+        if (state.corpCode == null) signup()
+        else if (corpCode.trim().length == 0) signup()
         else corpSignup()
     }
 
     async function corpSignup() {
 
-        if(!isChecked){
+        if (!isChecked) {
             Toast.show({
                 type: 'error',
                 text1: 'Agree to Terms&Conditions',
@@ -97,8 +97,8 @@ const SignUpScreen = ({ navigation, route }) => {
             "password": state.password,
             "mobile_number": state.number,
             corporate_code: state.corpCode,
-            corporate_user:true,
-            google_id:"",
+            corporate_user: true,
+            google_id: null,
             notif_token: null
         }
 
@@ -107,7 +107,7 @@ const SignUpScreen = ({ navigation, route }) => {
             axios.post(`${CONST.baseUrlAuth}api/registrant/corp/user/signup`, payload).then(async (response) => {
                 console.log(response.data)
                 await AsyncStorage.setItem('CorpState', "1")
-                navigation.navigate("OTPScreen",{number: state.number, email: state.email})
+                navigation.navigate("OTPScreen", { number: state.number, email: state.email })
             }).catch((err) => {
                 console.log(err.response.data)
                 Toast.show({
@@ -127,7 +127,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
     async function signup() {
 
-        if(!isChecked){
+        if (!isChecked) {
             Toast.show({
                 type: 'error',
                 text1: 'Agree to Terms&Conditions',
@@ -152,37 +152,41 @@ const SignUpScreen = ({ navigation, route }) => {
             "email_id": state.email.toLowerCase(),
             "password": state.password,
             "mobile_number": state.number,
-            "google_id":null,
-            "corporate_user":false,
-            "corporate_code":null,
+            "google_id": null,
+            "corporate_user": false,
+            "corporate_code": null,
             "notif_token": null
 
         }
 
         console.log(payload)
-            axios.post(`${CONST.baseUrlAuth}api/registrant/signup`, payload).then(async (response) => {
-                console.log(response.data)
-                console.log(response.status);
-                if(response.status == 200){
+        axios.post(`${CONST.baseUrlAuth}api/registrant/signup`, payload).then(async (response) => {
+            console.log(response.data)
+            console.log(response.status);
+            if (response.status == 200) {
                 console.log("----")
                 await AsyncStorage.setItem('CorpState', "0")
                 await AsyncStorage.setItem('firstName', state.firstName)
+                // await axios.post(`${CONST.baseUrlAuth}api/registrant/resend/otp`, {
+                //     "email_id": state.email.toLowerCase(),
+                //     "mobile_number": state.number
+                // })
 
-                navigation.navigate("OTPScreen",{number: state.number, email: state.email})
-                }else{
-                    Toast.show({
-                        type: 'error',
-                        text1: response.data
-                    });
-                }
-            })
+                navigation.navigate("OTPScreen", { number: state.number, email: state.email })
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: response.data
+                });
+            }
+        })
             .catch((err) => {
                 console.log(err.response.data)
                 Toast.show({
                     type: 'error',
                     text1: err.response.data
                 });
-            }).finally(()=>{
+            }).finally(() => {
                 pauseAnimation()
             })
 
@@ -196,7 +200,7 @@ const SignUpScreen = ({ navigation, route }) => {
     return (
 
         <View style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
-            <ScrollView contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom: 300 }}>
+            <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom: 300 }}>
 
 
 
@@ -247,10 +251,10 @@ const SignUpScreen = ({ navigation, route }) => {
 
                         <Input
                             placeholder="Enter Here"
-                            onChangeText={(value) => setState(current=>({...current, firstName:value}))}
+                            onChangeText={(value) => setState(current => ({ ...current, firstName: value }))}
                             value={state.firstName}
                             placeholderTextColor={COLORS.lightGray}
-                            inputprops={{width:"100%", alignSelf:'flex-start'}}
+                            inputprops={{ width: "100%", alignSelf: 'flex-start' }}
 
                         />
 
@@ -266,24 +270,24 @@ const SignUpScreen = ({ navigation, route }) => {
                                 marginTop: 14
                             }}
                         >
-                           Last Name
+                            Last Name
                         </Text>
 
                         <Input
                             placeholder="Enter Here"
-                            onChangeText={(value) => setState(current=>({...current, lastName:value}))}
+                            onChangeText={(value) => setState(current => ({ ...current, lastName: value }))}
                             value={state.lastName}
                             placeholderTextColor={COLORS.lightGray}
-                            inputprops={{width:"100%", alignSelf:'flex-start'}}
+                            inputprops={{ width: "100%", alignSelf: 'flex-start' }}
 
                         />
 
                     </View>
 
-                    
+
                 </View>
 
-           
+
                 <Text
                     style={{
                         fontSize: SIZES.medium,
@@ -299,7 +303,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
                 <Input
                     placeholder="Enter Here"
-                    onChangeText={(value) => setState(current=>({...current, email:value}))}
+                    onChangeText={(value) => setState(current => ({ ...current, email: value }))}
                     value={state.email}
                     placeholderTextColor={COLORS.lightGray}
                     inputStyle={{ marginTop: 8 }}
@@ -322,7 +326,7 @@ const SignUpScreen = ({ navigation, route }) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                     <Input
                         placeholder="Enter Here"
-                        onChangeText={(value) => setState(current=>({...current, password:value}))}
+                        onChangeText={(value) => setState(current => ({ ...current, password: value }))}
                         value={state.password}
                         placeholderTextColor={COLORS.lightGray}
                         inputprops={{ secureTextEntry: !visibility }}
@@ -357,7 +361,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
                 <Input
                     placeholder="Enter Here"
-                    onChangeText={(value) => setState(current=>({...current, corpCode:value}))}
+                    onChangeText={(value) => setState(current => ({ ...current, corpCode: value }))}
                     value={state.corpCode}
                     placeholderTextColor={COLORS.lightGray}
                     inputStyle={{ marginTop: 8 }}
@@ -379,7 +383,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
                 <Input
                     placeholder="Enter Here"
-                    onChangeText={(value) => setState(current=>({...current, number:value}))}
+                    onChangeText={(value) => setState(current => ({ ...current, number: value }))}
                     value={state.number}
                     maxLength={10}
                     placeholderTextColor={COLORS.lightGray}
@@ -426,7 +430,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
 
 
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: SIZES.medium, paddingBottom:12 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: SIZES.medium, paddingBottom: 12 }}>
                     <Text
                         style={{
                             textAlign: 'center',
@@ -460,13 +464,13 @@ const SignUpScreen = ({ navigation, route }) => {
 
 
 
-               
+
             </ScrollView>
 
             <Toast
-                    position='bottom'
-                    bottomOffset={40}
-                />
+                position='bottom'
+                bottomOffset={40}
+            />
 
             {animSpeed &&
                 <View style={{
@@ -478,7 +482,7 @@ const SignUpScreen = ({ navigation, route }) => {
                     shadowOpacity: 0.3,
                     shadowRadius: 2,
                     elevation: 8,
-                    zIndex:5,
+                    zIndex: 5,
                     borderRadius: 16,
                     position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
                 }}>

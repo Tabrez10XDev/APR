@@ -315,7 +315,7 @@ const BookingInfo = ({ route, navigation }) => {
                             </Text>
 
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+                            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
                                 <Text
                                     style={{
                                         fontSize: SIZES.font,
@@ -337,9 +337,9 @@ const BookingInfo = ({ route, navigation }) => {
                                 >
                                     ₹ 20,000
                                 </Text>
-                            </View>
+                            </View> */}
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+                            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
                                 <Text
                                     style={{
                                         fontSize: SIZES.font,
@@ -361,7 +361,7 @@ const BookingInfo = ({ route, navigation }) => {
                                 >
                                     ₹ 1,800
                                 </Text>
-                            </View>
+                            </View> */}
 
 
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
@@ -384,7 +384,7 @@ const BookingInfo = ({ route, navigation }) => {
                                         textAlign: 'left',
                                     }}
                                 >
-                                    ₹ 21,800
+                                    ₹ {data.payment_amount}
                                 </Text>
                             </View>
 
