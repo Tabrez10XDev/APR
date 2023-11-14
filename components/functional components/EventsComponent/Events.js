@@ -51,7 +51,7 @@ const Events = ({ navigation }) => {
 
 
 
-    async function fetchDashboard() {
+    async function fetchDashboard(result2) {
         console.log("Fetching")
         playAnimation()
 
@@ -70,7 +70,6 @@ const Events = ({ navigation }) => {
             const percent = _percentage <= 100 ? _percentage : "70"
 
             const _eventDate = response.data.event_info.event_date
-            console.log("0000");
             console.log(_eventDate.substring(5, 7))
             const eventDate = _eventDate.substring(8, 10) + " " + monthMap[parseInt(_eventDate.substring(5, 7) - 1)] + " " + _eventDate.substring(0, 4)
             console.log(eventDate);
@@ -84,7 +83,16 @@ const Events = ({ navigation }) => {
             response.data.raceCategory.map((ele, inx) => {
                 raceCategories[ele.race_type_id] = ele.race_type_name
             })
-            setData(current => ({ ...current, percentage: percent, eventDate: eventDate, ageCategories: ageCategories, raceCategories: raceCategories }))
+            
+            let registrant_type = response.data.registrant_type
+
+            if (result2 != null && result2 == "1"){
+                registrant_type = response.data.registrant_type.filter(current=>current.type_name.toLowerCase().includes("marathon"))
+            }
+
+            
+
+            setData(current => ({ ...current, percentage: percent, eventDate: eventDate, ageCategories: ageCategories, raceCategories: raceCategories, registrant_type: registrant_type }))
 
         }).catch((err) => {
             console.log(err)
@@ -93,46 +101,6 @@ const Events = ({ navigation }) => {
         })
     }
 
-    async function fetchDashboardCorp() {
-
-        axios.get(`${CONST.baseUrlRegister}api/corporate/event/data`).then((response) => {
-            let _data = response.data
-            _data.registrant_type = [
-                {
-                    ...response.data.registrant_type["0"],
-                    run_category: response.data.registrant_type.run_category,
-                    age_category: response.data.registrant_type.age_category
-                }
-            ]
-            setData(_data)
-            const combinedDateTimeStr = `${response.data.event_info.event_cut_off_date}T${response.data.event_info.event_cut_off_time}:00`;
-
-            const createdAt = new Date(response.data.event_info.created_at);
-            const eventCutOffDateTime = new Date(combinedDateTimeStr);
-            const timeDifferenceMs = eventCutOffDateTime - createdAt;
-
-            const totalDurationMs = eventCutOffDateTime - new Date()
-            const _percentage = (100 - (totalDurationMs / timeDifferenceMs) * 100)
-            const percent = _percentage <= 100 ? _percentage : "70"
-
-            const _eventDate = new Date(data.event_info.event_date)
-            const eventDate = _eventDate.getDay() + " " + monthMap[_eventDate.getMonth()] + " " + _eventDate.getFullYear()
-            let ageCategories = {}
-            let raceCategories = {}
-
-            response.data.overAllageCategory.map((ele, inx) => {
-                ageCategories[ele.age_type_id] = ele.age_type_name
-            })
-
-            response.data.raceCategory.map((ele, inx) => {
-                raceCategories[ele.race_type_id] = ele.race_type_name
-            })
-            setData(current => ({ ...current, percentage: percent, eventDate: eventDate, ageCategories: ageCategories, raceCategories: raceCategories }))
-
-        }).catch((err) => {
-            console.log(err)
-        })
-    }
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -166,8 +134,9 @@ const Events = ({ navigation }) => {
             const result = await AsyncStorage.getItem('firstName')
             setName(result ?? "User")
 
-            if (result2 != null && result2 == "1") fetchDashboardCorp()
-            else fetchDashboard()
+            // if (result2 != null && result2 == "1") fetchDashboard()
+            // else
+         fetchDashboard(result2)
 
 
             // fetchDashboard()

@@ -261,28 +261,6 @@ const AddRegistrant = ({ route, navigation }) => {
 
         navigation.navigate("AddRunners", { ...payload, current: 0, total: _stateArray.length, stateArray: _stateArray, param: data })
 
-        // try {
-        //     axios.post(`${CONST.baseUrlAuth}api/registration/add/registrant`, payload).then((response) => {
-        //         console.log(response.data)
-
-        //     }).catch((err) => {
-        //         console.log(err.response.data)
-        //         Toast.show({
-        //             type: 'error',
-        //             text1: err.response.data
-        //         });
-        //     })
-        //     // route.params.finishAuth()
-
-        // } catch (error) {
-        //     console.log(err.response.data)
-
-        //     Toast.show({
-        //         type: 'error',
-        //         text1: error.response.data
-        //     });
-        //     throw error
-        // }
     }
 
     async function verifyVilla() {
@@ -306,6 +284,7 @@ const AddRegistrant = ({ route, navigation }) => {
     async function addRegistrantCorp(userId) {
 
 
+
         if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0) {
             Toast.show({
                 type: 'error',
@@ -316,49 +295,62 @@ const AddRegistrant = ({ route, navigation }) => {
         }
 
         let address = state.flatNo
-        if (state.residentType == "villa") address += ", " + state.phase + ", "
-        if (state.residentType == "tower") address += ", " + state.tower + ", "
+        if (state.residentType == "villa") address = null
+        if (state.residentType == "tower") address = null
+        else address += state.address
 
-        address += state.address
 
         let registrantOfAPR = false
         if (state.residentType == "villa" || state.residentType == "tower") registrantOfAPR = true
 
         const payload = {
-            "event_id": 3,
-            "registrant_id": userId,
-            "runner_first_name": state.firstName,
-            "runner_last_name": state.lastName,
-            "runner_dob": null,
-            "runner_gender": null,
-            "runner_email_id": state.email,
-            "runner_phone_number": state.number,
-            "runner_emergency_contact_name": null,
-            "runner_emergency_contact_number": null,
-            "runner_address_type": state.residentType,
-            "runner_address": address,
-            "runner_city": state.city,
-            "runner_state": state.state,
-            "runner_country": state.country,
-            "runner_pincode": state.zipCode,
-            "tshirt_size": null,
-            "runner_blood_group": null,
-            "registrant_source_ref": state.sourceRef,
-            "run_category_id_ref": null
+            "event_id": 3, //Event ID
+            "registrant_id": parseInt(userId),
+            "registrant_type_ref": data.registrant_class[0].registrant_type_id_ref,
+            "resident_of_apr": registrantOfAPR,
+            "address_type": state.residentType,
+            "external_address": address,
+            "city": state.city,
+            "state": state.state,
+            "country": state.country,
+            "pin_code": state.zipCode,
+            "need_80G_certificate": state.certificate,
+            "pancard_number": state.panCard,
+            "registrant_class_ref": state.runnersClass,
+            "event_id_ref": 3,
+            "role": "registrant",
+            addr_villa_number: state.residentType == "villa" ? state.villaNumber : null,
+            addr_villa_lane_no: state.residentType == "villa" ? state.laneNumber : null,
+            addr_villa_phase_no: state.residentType == "villa" ? state.phase : null,
+            addr_tower_no: state.residentType == "tower" ? state.tower : null,
+            addr_tower_block_no: state.residentType == "tower" ? state.block : null,
+            addr_tower_flat_no: state.flatNo,
         }
 
 
-        console.log(JSON.stringify(payload))
 
-        axios.post(`${CONST.baseUrlRegister}api/corporate/add/corp/registrant`, payload).then((response) => {
-            console.log(response.data)
-        }).catch((err) => {
+        playAnimation()
+
+     
+
+
+
+        try {
+            axios.put(`${CONST.baseUrlRegister}api/registration/add/registrant/web`, payload).then((response) => {
+                console.log("Success")
+                navigation.navigate("BookingConfirmed", response.data)
+
+            })
+        } catch (error) {
+
             console.log(err.response.data)
             Toast.show({
                 type: 'error',
-                text1: err.response.data
+                text1: error.response.data
             });
-        })
+        }
+
+
 
     }
 
@@ -604,44 +596,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
                         </View>
 
-                        {/* {
-                            state.residentType == "villa" &&
-                            <Dropdown
-                                style={{
-                                    height: 45,
-                                    borderColor: COLORS.lightGray,
-                                    borderRadius: 6,
-                                    borderWidth: 1,
-                                    width: '100%',
-                                    paddingHorizontal: 12,
-                                    alignSelf: 'flex-start',
-                                    marginTop: 10,
-                                    color: COLORS.black
-                                }}
-                                placeholderStyle={{ fontSize: 16, color: COLORS.black }}
-                                selectedTextStyle={{
-                                    fontSize: SIZES.smallFont,
-                                    fontFamily: FONTS.semiBold,
-                                    color: COLORS.black
-                                }}
-                                inputSearchStyle={{}}
-                                iconStyle={{}}
-                                data={data.phases}
-                                maxHeight={300}
-                                labelField="label"
-                                valueField="label"
-                                placeholder="Choose the villa"
-                                value={state.phase}
-                                onChange={item => {
-                                    setState(current => ({ ...current, sourceRef: item.value }))
-                                    setState(current => ({ ...current, phase: item.label }))
-
-                                }}
-
-                            />
-
-                        } */}
-
+                     
                         {
                             state.residentType == "villa" &&
                             <View style={{ width: '98%', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', alignSelf: 'center' }}>
@@ -657,13 +612,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                     />
                                 </View>
 
-                                {/* <RectButton
-                                    onClick={() => {
-                                        verifyVilla()
-                                    }}
-                                    width={'45%'}
-                                    text={"Verify"}
-                                /> */}
+                              
 
                             </View>
 

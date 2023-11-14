@@ -29,6 +29,7 @@ import MobileVerification from './components/functional components/AuthComponent
 import BookingInfo from './components/functional components/ScheduleComponent/BookingInfo'
 import PaymentHistory from './components/functional components/ProfileComponent/PaymentHistory';
 import EditProfile from './components/functional components/ProfileComponent/EditProfile';
+import AddCorpRunner from './components/functional components/EventsComponent/AddCorpRunner';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -136,6 +137,7 @@ export default function App() {
                   <Stack.Screen name="EventDescription" component={EventDescription} />
                   <Stack.Screen name="AddRegistrant" component={AddRegistrant} />
                   <Stack.Screen name="AddRunners" component={AddRunners} />
+                  <Stack.Screen name="AddCorpRunner" component={AddCorpRunner} />
                   <Stack.Screen name="MasterList" component={MasterList} />
                   <Stack.Screen name="CreateOrder" component={CreateOrder} />
                   <Stack.Screen name="ValidatePayment" component={ValidatePayment} />

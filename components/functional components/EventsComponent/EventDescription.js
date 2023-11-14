@@ -40,7 +40,7 @@ const EventDescription = ({ route, navigation }) => {
 
         playAnimation()
         axios.post(`${CONST.baseUrlRegister}api/registration/registration/data`, {
-            registrant_id: data.userId,
+            registrant_id: parseInt(data.userId),
             registrant_type_id: data.type_id
         }).then((response) => {
             let towers = []
@@ -60,12 +60,12 @@ const EventDescription = ({ route, navigation }) => {
             })
 
             let _run_category = []
-            response.data.run_category.map((ele)=>{
-            _run_category.push({
-                label: ele.race_type_name,
-                value: ele.race_type_id
+            response.data.run_category.map((ele) => {
+                _run_category.push({
+                    label: ele.race_type_name,
+                    value: ele.race_type_id
+                })
             })
-        })  
 
             navigation.navigate("AddRegistrant", { ...response.data, run_category: _run_category, towers: towers, phases: phases, classes: classes, typeName: data.type_name })
 
@@ -78,30 +78,52 @@ const EventDescription = ({ route, navigation }) => {
     }
 
     async function corpJoinNow() {
+
+        console.log({
+            registrant_id: parseInt(data.userId),
+            registrant_type_id: data.type_id 
+        });
+        playAnimation()
         axios.post(`${CONST.baseUrlRegister}api/corporate/registration/data/runner`, {
             registrant_id: data.userId,
             registrant_type_id: data.type_id
         }).then((response) => {
-            // console.log(response.data)
+            pauseAnimation()
             let towers = []
             let phases = []
-            response.data.registrant_source.map((ele, inx) => {
-                console.log(ele.source_name)
-                if (ele.source_name.toLowerCase().includes("tower")) towers.push({ label: ele.source_name, value: ele.source_id })
-                else phases.push({ label: ele.source_name, value: ele.source_id })
+            response.data.tower_details.map((ele, inx) => {
+                towers.push({ label: ele.tower_number, value: ele.tower_number, blocks: ele.block })
 
             })
             let classes = []
             response.data.registrant_class.map((ele, inx) => {
                 let temp = {}
-                temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
+                if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
+                else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
+
                 temp['value'] = ele.category_id
                 classes.push(temp)
             })
-            navigation.navigate("AddRegistrant", { ...response.data, towers: towers, phases: phases, classes: classes })
 
-        }).catch((err) => {
-            console.log(err.response.data)
+            let _run_category = []
+            response.data.run_category.map((ele) => {
+                _run_category.push({
+                    label: ele.race_type_name,
+                    value: ele.race_type_id
+                })
+            })
+
+            const _data = { ...response.data, run_category: _run_category, towers: towers, phases: phases, classes: classes, typeName: data.type_name }
+
+            let _stateArray = [{}]
+        
+            navigation.navigate("AddCorpRunner", {
+                current: 0, total: _stateArray.length, stateArray: _stateArray, param: _data
+            })
+
+        }).catch((err)=>{
+            console.log(err);
+            pauseAnimation()
         })
     }
 
@@ -163,7 +185,7 @@ const EventDescription = ({ route, navigation }) => {
 
 
 
-                    <ScrollView contentContainerStyle={{ paddingBottom: '80%' }}>
+                    <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ paddingBottom: '80%' }}>
 
 
                         <View style={{ width: '95%', padding: 8, borderRadius: 16, borderWidth: 1, borderColor: '#D9D9D9', alignSelf: 'center', marginTop: 16, alignItems: 'center', height: '20%', justifyContent: 'space-evenly' }}>

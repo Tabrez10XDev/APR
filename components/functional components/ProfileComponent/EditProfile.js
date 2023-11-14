@@ -15,7 +15,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Lottie from 'lottie-react-native';
 import { StackActions, useTheme } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditProfile = ({ route, navigation }) => {
 
