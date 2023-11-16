@@ -122,7 +122,7 @@ export default function App() {
   return (
     <RootSiblingParent>
       <authContext.Provider
-        value={{ userId, setUserId, corpCode }}
+        value={{ userId, setUserId, corpCode, setCorpCode }}
       >
         <NavigationContainer>
           {
