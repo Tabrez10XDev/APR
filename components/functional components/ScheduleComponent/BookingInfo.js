@@ -8,9 +8,24 @@ import authContext from '../../../contants/authContext';
 import { StackActions, useTheme } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
 import Lottie from 'lottie-react-native';
+import * as FileSystem from 'expo-file-system';
 
 const BookingInfo = ({ route, navigation }) => {
 
+
+    async function downloadInvoice() {
+        // FileSystem.downloadAsync(
+        //     `${CONST.baseUrlRegister}/fetchInvoice?orderId=${route.params.display.orderId}`,
+        //     FileSystem.documentDirectory + 'ticket.pdf'
+        // )
+        //     .then(({ uri }) => {
+        //         console.log('Finished downloading to ', uri);
+        //         share(uri);
+        //     })
+        //     .catch(error => {
+        //         console.error(error);
+        //     });
+    }
 
     const data = route.params
 
@@ -49,6 +64,16 @@ const BookingInfo = ({ route, navigation }) => {
                         >
                             Booking Confirmed
                         </Text>
+
+                        <TouchableOpacity
+                            onPress={
+                                downloadInvoice
+                            }
+                            style={{ width: 36, height: 36, position: 'absolute', right: 12, top: 60, alignSelf: 'flex-start' }}>
+                            <Ionicons name="download-outline" size={28} color="white" />
+
+
+                        </TouchableOpacity>
                     </View>
 
                     <ScrollView>

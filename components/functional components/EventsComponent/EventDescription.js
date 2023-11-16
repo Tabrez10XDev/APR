@@ -38,7 +38,6 @@ const EventDescription = ({ route, navigation }) => {
         setAnimSpeed(false)
     }
 
-    console.log(data.registrant_type_id_ref)
 
     async function joinNow() {
 
@@ -386,6 +385,33 @@ const EventDescription = ({ route, navigation }) => {
                                         )
                                     })}
                                 </View>
+
+                            {!data.type_name.toLowerCase().includes("donate") &&    <View>
+                                    <Text
+                                        style={{
+                                            fontSize: SIZES.font,
+                                            fontFamily: FONTS.bold,
+                                            color: COLORS.black,
+                                            textAlign: 'left',
+                                            marginBottom: 4
+                                        }}
+                                    >
+                                        Person(s)
+                                    </Text>
+                                    {data.class_price.filter(curr => curr.registrant_type_id_ref == route.params.registrant_type_id_ref).map((ele, inx) => {
+                                        return (
+                                            <Text style={{
+                                                fontSize: SIZES.font,
+                                                fontFamily: FONTS.semiBold,
+                                                color: COLORS.black,
+                                                textAlign: 'center',
+                                                marginTop: 6
+                                            }}>
+                                                {ele.runners_allowed_count}
+                                            </Text>
+                                        )
+                                    })}
+                                </View>}
 
                                 <View>
                                     <Text

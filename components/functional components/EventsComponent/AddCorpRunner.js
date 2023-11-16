@@ -79,7 +79,10 @@ const AddCorpRunner = ({ route, navigation }) => {
 
     const [current, setCurrent] = useState(data.current)
 
-    const [state, setState] = useState({})
+    const [state, setState] = useState({
+        state: "Karnataka",
+        country: "India",
+    })
 
     const [selectedDate, setSelectedDate] = useState(stateArray[current].date ?? "")
     const [stackIndex, setStackIndex] = useState(state.size ?? 1);

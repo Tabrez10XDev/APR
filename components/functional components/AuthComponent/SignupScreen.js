@@ -109,10 +109,10 @@ const SignUpScreen = ({ navigation, route }) => {
                 await AsyncStorage.setItem('CorpState', "1")
                 navigation.navigate("OTPScreen", { number: state.number, email: state.email })
             }).catch((err) => {
-                console.log(err.response.data)
+                console.log(err.response)
                 Toast.show({
                     type: 'error',
-                    text1: err.response.data
+                    text1: err.response.data ?? "Please try again later"
                 });
             })
 
@@ -176,15 +176,15 @@ const SignUpScreen = ({ navigation, route }) => {
             } else {
                 Toast.show({
                     type: 'error',
-                    text1: response.data
+                    text1: response.data ?? "Please try again later"
                 });
             }
         })
             .catch((err) => {
-                console.log(err.response.data)
+                console.log(err.response)
                 Toast.show({
                     type: 'error',
-                    text1: err.response.data
+                    text1: err.response ?? "Please try again later"
                 });
             }).finally(() => {
                 pauseAnimation()

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
@@ -13,9 +13,20 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
 
+
 const ProfileScreen = ({ route, navigation }) => {
 
     const [name, setName] = useState("")
+
+    const deleteAccount = () =>
+    Alert.alert('Are you sure you want to delete your account', 'Once deleted it cannot be recovered', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
@@ -144,6 +155,29 @@ const ProfileScreen = ({ route, navigation }) => {
                                     }}
                                 >
                                     Logout
+                                </Text>
+                            </View>
+
+
+                        </TouchableOpacity>
+
+
+                        <TouchableOpacity
+                            onPress={deleteAccount}
+                            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                                <AntDesign name="deleteuser" size={24} color={COLORS.blue} />
+                                <Text
+                                    style={{
+                                        fontSize: SIZES.font,
+                                        fontFamily: FONTS.regular,
+                                        color: COLORS.black,
+                                        textAlign: 'left',
+                                        marginLeft: 12
+                                    }}
+                                >
+                                    Delete Account
                                 </Text>
                             </View>
 

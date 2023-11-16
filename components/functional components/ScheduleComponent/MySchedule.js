@@ -227,7 +227,7 @@ const MySchedule = ({ navigation }) => {
 
 
                             </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            {/* <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 {
                                     item.runners.map((ele, inx) => {
                                         return (
@@ -244,7 +244,7 @@ const MySchedule = ({ navigation }) => {
                                         )
                                     })
                                 }
-                            </View>
+                            </View> */}
 
 
                         </View>

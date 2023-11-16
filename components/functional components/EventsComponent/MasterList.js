@@ -229,12 +229,12 @@ const MasterList = ({ route, navigation }) => {
                     ></StatusBar>
                     <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 12 }}>
 
-                        <TouchableOpacity onPress={() => {
+                        {/* <TouchableOpacity onPress={() => {
                             navigation.dispatch(StackActions.pop(1))
 
                         }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf: 'flex-start' }}>
                             <Ionicons name="chevron-back" size={36} color="white" />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
                         <Text
                             style={{

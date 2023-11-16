@@ -54,8 +54,8 @@ const AddRegistrant = ({ route, navigation }) => {
         tower: null,
         phase: null,
         city: "",
-        state: "",
-        country: "",
+        state: "Karnataka",
+        country: "India",
         zipCode: "",
         runnersClass: null,
         sourceRef: null,
@@ -118,7 +118,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
 
 
-        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0) {
+        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0  || state.runnersClass == undefined || state.runnersClass == null) {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -205,7 +205,7 @@ const AddRegistrant = ({ route, navigation }) => {
     async function addRegistrant(userId) {
 
 
-        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0) {
+        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0 || state.runnersClass == undefined || state.runnersClass == null) {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -285,7 +285,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
 
 
-        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0) {
+        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0  || state.runnersClass == undefined || state.runnersClass == null) {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',

@@ -8,10 +8,13 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    Dimensions
+    Dimensions,
+    StyleSheet,
+    Platform
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import * as AppleAuthentication from 'expo-apple-authentication';
 
 import { StatusBar } from "react-native";
 import { COLORS, SIZES, FONTS, assets, CONST, } from "../../../contants";
@@ -108,7 +111,7 @@ const LoginScreen = ({ navigation, route }) => {
                 else if (response.data.mobile_no_verify_status == false) navigation.navigate("MobileVerification", response.data)
                 else {
 
-                    if(response.data.corporate_id) setCorpCode(true)
+                    if (response.data.corporate_id) setCorpCode(true)
                     else setCorpCode(false)
 
                     await AsyncStorage.setItem('CorpState', response.data.corporate_id ? response.data.corporate_id.toString() : "-1")
@@ -133,14 +136,14 @@ const LoginScreen = ({ navigation, route }) => {
         }
     }
 
-  
+
 
 
 
 
     return (
         <authContext.Consumer>
-            {({ userId, setUserId, setCorpCode  }) => (
+            {({ userId, setUserId, setCorpCode }) => (
                 <View style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
                     <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ alignItems: 'center', alignItems: 'center' }}>
 
@@ -305,6 +308,35 @@ const LoginScreen = ({ navigation, route }) => {
 
                         }} />
 
+                        {Platform.OS == "ios" &&
+                            <AppleAuthentication.AppleAuthenticationButton
+                                buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+                                buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+                                cornerRadius={5}
+                                style={styles.button}
+                                onPress={async () => {
+                                    try {
+                                        const credential = await AppleAuthentication.signInAsync({
+                                            requestedScopes: [
+                                                AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                                                AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                                            ],
+                                        });
+                                        console.log("SUccess");
+                                        route.params.finishAuth()
+
+                                        // signed in
+                                    } catch (e) {
+                                        console.error(e);
+                                        if (e.code === 'ERR_REQUEST_CANCELED') {
+                                            // handle that the user canceled the sign-in flow
+                                        } else {
+                                            // handle other errors
+                                        }
+                                    }
+                                }}
+                            />}
+
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: SIZES.medium }}>
                             <Text
                                 style={{
@@ -337,6 +369,7 @@ const LoginScreen = ({ navigation, route }) => {
 
 
                         </View>
+
 
 
 
@@ -377,3 +410,17 @@ const LoginScreen = ({ navigation, route }) => {
 }
 
 export default LoginScreen;
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    button: {
+        width: '90%',
+        marginTop: 16,
+        height: 44,
+    },
+});
