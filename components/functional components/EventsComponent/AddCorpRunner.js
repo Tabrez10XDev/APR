@@ -149,14 +149,13 @@ const AddCorpRunner = ({ route, navigation }) => {
             navigation.navigate("BookingConfirmed", response.data)
 
         }).catch((err) => {
+            console.error(err);
             pauseAnimation()
             Toast.show({
                 type: 'error',
                 text1: 'Please try again later',
                 visibilityTime: 1500
             });
-        }).finally(() => {
-            pauseAnimation()
         })
     }
 

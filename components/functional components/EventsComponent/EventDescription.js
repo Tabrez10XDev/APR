@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
@@ -12,15 +12,19 @@ import Lottie from 'lottie-react-native';
 
 const EventDescription = ({ route, navigation }) => {
     const data = route.params
+    const [modalVisible, setModalVisible] = useState(false);
 
 
 
     const [animSpeed, setAnimSpeed] = useState(false)
     const animRef = useRef()
 
+    const ROUTE_IMAGES = ["https://res.cloudinary.com/dkmzwubep/image/upload/v1698330296/apr-website-images-frontend/2022_1kroute_1_zhwpaa.jpg", "https://res.cloudinary.com/dkmzwubep/image/upload/v1698330297/apr-website-images-frontend/2022_5kroute_1_pv1qrf.jpg", "https://res.cloudinary.com/dkmzwubep/image/upload/v1698330297/apr-website-images-frontend/2022_10kroute_1_hfffze.jpg"]
+    const [currentImg, setCurrentImg] = useState(ROUTE_IMAGES[0])
+
     function playAnimation() {
         setAnimSpeed(true)
-    }
+    } https://res.cloudinary.com/dkmzwubep/image/upload/v1698330297/apr-website-images-frontend/2022_10kroute_1_hfffze.jpg
 
 
     useEffect(() => {
@@ -81,7 +85,7 @@ const EventDescription = ({ route, navigation }) => {
 
         console.log({
             registrant_id: parseInt(data.userId),
-            registrant_type_id: data.type_id 
+            registrant_type_id: data.type_id
         });
         playAnimation()
         axios.post(`${CONST.baseUrlRegister}api/corporate/registration/data/runner`, {
@@ -116,12 +120,12 @@ const EventDescription = ({ route, navigation }) => {
             const _data = { ...response.data, run_category: _run_category, towers: towers, phases: phases, classes: classes, typeName: data.type_name }
 
             let _stateArray = [{}]
-        
+
             navigation.navigate("AddCorpRunner", {
                 current: 0, total: _stateArray.length, stateArray: _stateArray, param: _data
             })
 
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err);
             pauseAnimation()
         })
@@ -510,7 +514,15 @@ const EventDescription = ({ route, navigation }) => {
                                 {
                                     data.raceCategory.map((ele) => {
                                         return (
-                                            <View style={{ height: 45, width: '30%', borderRadius: 25, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FCB0B0', marginTop: 6 }}>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    if (ele.race_type_name.toLowerCase() == "1k") setCurrentImg(ROUTE_IMAGES[0])
+                                                    else if (ele.race_type_name.toLowerCase() == "5k") setCurrentImg(ROUTE_IMAGES[1])
+                                                    else if (ele.race_type_name.toLowerCase() == "10k") setCurrentImg(ROUTE_IMAGES[2])
+
+                                                    setModalVisible(!modalVisible)
+                                                }}
+                                                style={{ height: 45, width: '30%', borderRadius: 25, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FCB0B0', marginTop: 6 }}>
                                                 <Text
                                                     style={{
                                                         fontSize: SIZES.medium,
@@ -521,7 +533,7 @@ const EventDescription = ({ route, navigation }) => {
                                                 >
                                                     {ele.race_type_name.toUpperCase()} Route
                                                 </Text>
-                                            </View>
+                                            </TouchableOpacity>
                                         )
                                     })
                                 }
@@ -564,6 +576,26 @@ const EventDescription = ({ route, navigation }) => {
                         </View>
 
                     </ScrollView>
+
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={modalVisible}
+                    
+                        onRequestClose={() => {
+                            setModalVisible(!modalVisible);
+                        }}>
+                        <View style={{ width: '100%', position: 'absolute', top: '0%', alignSelf: 'center', alignItems:'center', justifyContent:'center'
+                     }}>
+                            <Image source={{ uri: currentImg }} style={{ height: Dimensions.get('window').height * 0.9, width: Dimensions.get('window').width * 1, resizeMode: 'contain', alignSelf: 'center', borderRadius: 6 }} />
+
+                            <Pressable
+                                style={{ position: 'absolute', top: 48, right: 24 }}
+                                onPress={() => setModalVisible(!modalVisible)}>
+                                <AntDesign name="close" size={24} color="black" />
+                            </Pressable>
+                        </View>
+                    </Modal>
 
                     {animSpeed &&
                         <View style={{
