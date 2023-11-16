@@ -39,11 +39,14 @@ const PaymentHistory = ({ route, navigation }) => {
 
     const [filterText, setFilterText] = useState("")
     const [state, setState] = useState([])
+    const [staticState, setStaticState] = useState([])
 
     async function getPaymentHistory() {
         playAnimation()
-        axios.get(`${CONST.baseUrlRegister}api/payment/details/${route.params.userId}`).then((response) => {
+        axios.get(`${CONST.baseUrlRegister}api/payment/details/3`).then((response) => {
             setState(response.data)
+            setStaticState(response.data)
+
             console.log(response.data);
         }).catch((err) => {
 
@@ -60,17 +63,22 @@ const PaymentHistory = ({ route, navigation }) => {
         return unsubscribe;
     }, [navigation]);
 
+    
 
 
-    // useEffect(() => {
-    //     const delayDebounceFn = setTimeout(() => {
-    //         setFromList([])
-    //         if (searchTerm != '') {
-    //             fetchAirports(searchTerm)
-    //         }
-    //     }, 500)
-    //     return () => clearTimeout(delayDebounceFn)
-    // }, [searchTerm])
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            if(filterText.trim() == ""){
+                setState(staticState)
+            }else{
+                const _filterText = filterText.toLowerCase()
+                let temp = staticState.filter(current=>(current.order_id.toLowerCase().includes(_filterText) || current.email_id.toLowerCase().includes(_filterText) || current.type_name.toLowerCase().includes(_filterText) ))
+                setState(temp)
+            }
+        }, 500)
+        return () => clearTimeout(delayDebounceFn)
+    }, [filterText])
 
     return (
         <View style={{ backgroundColor: 'white', width: '100%', height: '100%', alignItems: 'flex-start' }}>
@@ -89,12 +97,12 @@ const PaymentHistory = ({ route, navigation }) => {
             <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center', position: 'relative' }}>
 
 
-            <TouchableOpacity onPress={() => {
-                            navigation.dispatch(StackActions.pop(1))
+                <TouchableOpacity onPress={() => {
+                    navigation.dispatch(StackActions.pop(1))
 
-                        }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf: 'flex-start' }}>
-                            <Ionicons name="chevron-back" size={36} color="white" />
-                        </TouchableOpacity>
+                }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf: 'flex-start' }}>
+                    <Ionicons name="chevron-back" size={36} color="white" />
+                </TouchableOpacity>
 
                 <Text
                     style={{
@@ -109,14 +117,14 @@ const PaymentHistory = ({ route, navigation }) => {
                 </Text>
             </View>
 
-            <View style={{ width: '90%', alignSelf:'center' }}>
+            <View style={{ width: '90%', alignSelf: 'center' }}>
 
-                <TextInput value={filterText} onChangeText={(text) => { setFilterText(text) }} placeholder='Filter' style={{ width: '100%', height:45, borderColor:'#656565',  borderWidth:1, marginTop:10, padding:6, borderRadius:6, marginBottom:18 }} color={COLORS.black} />
+                <TextInput value={filterText} onChangeText={(text) => { setFilterText(text) }} placeholder='Filter' style={{ width: '100%', height: 45, borderColor: '#656565', borderWidth: 1, marginTop: 10, padding: 6, borderRadius: 6, marginBottom: 18 }} color={COLORS.black} />
 
-                <ScrollView contentContainerStyle={{minHeight:'100%'}} showsVerticalScrollIndicator={false}>
+                <ScrollView contentContainerStyle={{ minHeight: '100%' }} showsVerticalScrollIndicator={false}>
                     {state.map((ele, inx) => {
                         return (
-                            <View style={{ width: '100%', backgroundColor: '#EBF0F9', borderRadius: 10, padding: 10, marginVertical: 8, alignSelf:'center' }}>
+                            <View style={{ width: '100%', backgroundColor: '#EBF0F9', borderRadius: 10, padding: 10, marginVertical: 8, alignSelf: 'center' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Text
                                         style={{
@@ -141,7 +149,7 @@ const PaymentHistory = ({ route, navigation }) => {
                                     </Text>
                                 </View>
 
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop:6 }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 }}>
                                     <Text
                                         style={{
                                             fontSize: SIZES.font,
@@ -161,11 +169,11 @@ const PaymentHistory = ({ route, navigation }) => {
                                             textAlign: 'right',
                                         }}
                                     >
-                                        {ele.created_at.substring(0,10)}
+                                        {ele.created_at.substring(0, 10)}
                                     </Text>
                                 </View>
 
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop:6 }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 }}>
                                     <Text
                                         style={{
                                             fontSize: SIZES.font,
@@ -194,29 +202,39 @@ const PaymentHistory = ({ route, navigation }) => {
                     })}
                 </ScrollView>
 
+                {state.length == 0 &&
+                    <Text style={{
+                        top: '30%', alignSelf: 'center', position: 'absolute',
+                        fontSize: SIZES.font,
+                        fontFamily: FONTS.semiBold,
+                    }}>
+                        No results to show
+                    </Text>
+                }
 
 
 
-           
+
+
             </View>
             {animSpeed &&
-                    <View style={{
-                        shadowColor: COLORS.homeCard,
-                        shadowOffset: {
-                            width: 0,
-                            height: 2,
-                        },
-                        shadowOpacity: 0.3,
-                        shadowRadius: 2,
-                        elevation: 8,
-                        zIndex: 5,
-                        borderRadius: 16,
-                        position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
-                    }}>
+                <View style={{
+                    shadowColor: COLORS.homeCard,
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 2,
+                    elevation: 8,
+                    zIndex: 5,
+                    borderRadius: 16,
+                    position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
+                }}>
 
-                        <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
-                    </View>
-                }
+                    <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                </View>
+            }
         </View>
     )
 }

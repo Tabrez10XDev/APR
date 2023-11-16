@@ -55,10 +55,7 @@ const AddCorpRunner = ({ route, navigation }) => {
             label: "Tower",
             value: "tower"
         },
-        {
-            label: 'Others',
-            value: 'others'
-        },
+
     ]
 
 

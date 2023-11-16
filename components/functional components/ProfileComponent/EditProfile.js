@@ -275,7 +275,7 @@ const EditProfile = ({ route, navigation }) => {
                 <Input
                     placeholder="Enter Here"
                     inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start' }}
-                    onChangeText={(value) => setState(current => ({ ...current, email_id: value }))}
+                    editable={false}
                     value={state.email_id}
                     placeholderTextColor={COLORS.lightGray}
                 />

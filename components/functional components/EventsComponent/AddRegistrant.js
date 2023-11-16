@@ -364,10 +364,6 @@ const AddRegistrant = ({ route, navigation }) => {
             label: "Tower",
             value: "tower"
         },
-        {
-            label: 'Others',
-            value: 'others'
-        },
     ]
 
 
@@ -864,27 +860,6 @@ const AddRegistrant = ({ route, navigation }) => {
 
                         />
 
-                        {/* {isWithout && <View>
-                            <Text
-                                style={{
-                                    fontSize: SIZES.font,
-                                    fontFamily: FONTS.bold,
-                                    color: COLORS.black,
-                                    textAlign: 'left',
-                                    marginTop: 16
-                                }}
-                            >
-                                Amount<Text style={{ color: COLORS.red }}>*</Text>
-                            </Text>
-
-                            <Input
-                                placeholder="5000₹"
-                                inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start' }}
-                                onChangeText={(value) => setState(current => ({ ...current, amount: value }))}
-                                value={data.amount}
-                                placeholderTextColor={COLORS.lightGray}
-                            />
-                        </View>} */}
 
                         {isDonors &&
                             <View>
