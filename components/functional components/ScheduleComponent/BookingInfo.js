@@ -311,7 +311,7 @@ const BookingInfo = ({ route, navigation }) => {
                                     marginTop: 16,
                                 }}
                             >
-                                Terms and Conditions
+                                Instructions
                             </Text>
 
                             <Text
@@ -324,7 +324,7 @@ const BookingInfo = ({ route, navigation }) => {
                                     maxWidth: '100%'
                                 }}
                             >
-                                No refund or cancellation of tickets not applicable. If you need further assistance regarding your booking process. Kindly contact apr marathon volunteer team.
+                                No refund or cancellation of tickets. If you need further assistance regarding your booking, kindly contact Puma Nitro Apr marathon volunteer team.
                             </Text>
 
                             <Text

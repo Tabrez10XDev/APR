@@ -3,6 +3,7 @@
     "name": "APR",
     "slug": "APR",
     "version": "1.0.9",
+    "scheme": "nitroapr",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
     "userInterfaceStyle": "light",

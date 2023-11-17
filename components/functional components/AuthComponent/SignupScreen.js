@@ -105,9 +105,11 @@ const SignUpScreen = ({ navigation, route }) => {
         console.log(payload)
         playAnimation()
         try {
-            axios.post(`${CONST.baseUrlAuth}api/registrant/corp/user/signup`, payload).then(async (response) => {
+            axios.post(`${CONST.baseUrlAuth}api/registrant/signup`, payload).then(async (response) => {
                 console.log(response.data)
+                console.log("----")
                 await AsyncStorage.setItem('CorpState', "1")
+                await AsyncStorage.setItem('firstName', state.firstName)
                 pauseAnimation()
                 navigation.navigate("OTPScreen", { number: state.number, email: state.email })
             }).catch((err) => {

@@ -1,11 +1,9 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Feather } from "@expo/vector-icons";
-// import {
-//     GoogleSignin,
-//     GoogleSigninButton,
-//     statusCodes,
-//   } from '@react-native-google-signin/google-signin';
+import * as AuthSession from "expo-auth-session";
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from "expo-web-browser";
 import {
     Text,
     View,
@@ -29,8 +27,29 @@ import Input from "../../ui components/Input";
 import { RectButton, GSignInButton } from "../../ui components/Buttons";
 import Lottie from 'lottie-react-native';
 import authContext from '../../../contants/authContext';
+import Constants from 'expo-constants';
+import { makeRedirectUri } from 'expo-auth-session';
+import { Linking } from 'react-native';
+
 
 const LoginScreen = ({ navigation, route }) => {
+
+let scheme;
+    useEffect(async ()=>{
+     scheme = await Linking.getInitialURL();
+     console.log(scheme);
+
+    },[])
+
+
+
+    const googleConfig = {
+        iosClientId: "268422767928-p9clv3cve0oivpbicse6cpdp315466kq.apps.googleusercontent.com",
+        androidClientId: "268422767928-ri09ptpm76mlhh46tavtov9gka82vpj4.apps.googleusercontent.com",
+        expoClientId: '268422767928-c6cum37jvg5sk6aprm92hd4fg7kfgunn.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+
+    }
 
 
     const [isChecked, setChecked] = useState(false)
@@ -39,6 +58,42 @@ const LoginScreen = ({ navigation, route }) => {
     const [visibility, setVisibility] = useState(false)
     const [email, setEmail] = useState("")
     const [pass, setPass] = useState("")
+
+    const EXPO_REDIRECT_PARAMS = {
+        useProxy: true,
+        projectNameForProxy: scheme,
+      };
+      
+      const NATIVE_REDIRECT_PARAMS = { native: scheme };
+      
+      const REDIRECT_PARAMS =
+        Constants.appOwnership === 'expo'
+          ? EXPO_REDIRECT_PARAMS
+          : NATIVE_REDIRECT_PARAMS;
+    
+
+    const handleGoogleSignIn = async () => {
+        
+        try {
+          const res= await WebBrowser.openAuthSessionAsync(
+            `https://accounts.google.com/o/oauth2/v2/auth?` +
+              `&client_id=${googleConfig.expoClientId}` +
+              `&redirect_uri=${encodeURIComponent(
+                AuthSession.makeRedirectUri(REDIRECT_PARAMS)
+              )}` +
+              `&response_type=code` +
+              `&scope=${encodeURIComponent(googleConfig.scopes.join(' '))}`
+          );
+          console.log(res);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+    // Google.logInAsync(config).then((response) => {
+    //     console.log(response);
+    // })
+
 
 
     const [animSpeed, setAnimSpeed] = useState(false)
@@ -49,36 +104,6 @@ const LoginScreen = ({ navigation, route }) => {
     }
 
 
-    // const signIn = async (setCorpCode) => {
-    //     try {
-    //       await GoogleSignin.hasPlayServices();
-    //       const userInfo = await GoogleSignin.signIn();
-    //       console.log(userInfo)
-    //       setCorpCode(false)
-
-    //       await AsyncStorage.setItem('CorpState', "-1")
-    //       route.params.finishAuth()
-
-    //     //   await AsyncStorage.setItem('firstName', response.data.first_name)
-    //     //   else saveAuth(response.data.user_id.toString())
-    //     } catch (error) {
-    //         console.log(error);
-    //     //   if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-    //     //     // user cancelled the login flow
-    //     //   } else if (error.code === statusCodes.IN_PROGRESS) {
-    //     //     // operation (e.g. sign in) is in progress already
-    //     //   } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-    //     //     // play services not available or outdated
-    //     //   } else {
-    //     //     // some other error happened
-    //     //   }
-    //     }
-    //   };
-
-    // useEffect(()=>{
-    //     GoogleSignin.configure();
-
-    // },[])
 
     useEffect(() => {
         setTimeout(() => {
@@ -104,12 +129,6 @@ const LoginScreen = ({ navigation, route }) => {
     }
 
 
-
-
-    // function safeLogin() {
-    //     if (isChecked) corpLogin()
-    //     else login()
-    // }
 
     async function login(setCorpCode) {
         if (email.trim().length === 0 || pass.trim().length === 0) {
@@ -290,35 +309,10 @@ const LoginScreen = ({ navigation, route }) => {
                             </Text>
                         </View>
 
-                        {/* <View style={{ flexDirection: 'row', alignSelf: 'center', width: '90%', marginTop: 14, justifyContent: 'space-between', alignItems: 'center' }}>
-
-                    <BouncyCheckbox
-                        size={25}
-                        fillColor={COLORS.blue}
-                        unfillColor={COLORS.grey}
-                        iconStyle={{ borderColor: COLORS.grey }}
-                        innerIconStyle={{ borderWidth: 2 }}
-                        onPress={(isChecked) => { setChecked(isChecked) }}
-                    />
-
-                    <Text
-                        style={{
-                            fontSize: SIZES.font,
-                            fontFamily: FONTS.medium,
-                            color: COLORS.grey,
-                            width: '90%',
-                            textAlign: 'left',
-                        }}
-                    >
-                        Choose this for Corporate Login
-                    </Text>
-
-                </View> */}
 
 
                         <RectButton marginTop={24} text="Sign In" onClick={() => {
                             login(setCorpCode)
-                            // route.params.finishAuth()
                         }} />
 
                         <Text
@@ -334,13 +328,12 @@ const LoginScreen = ({ navigation, route }) => {
                             Or
                         </Text>
 
-                        {/* <TouchableOpacity style={{marginTop:8}}>
-                    <Image source={assets.google} style={{width:42, height:42, resizeMode:'contain'}}/>
-                </TouchableOpacity> */}
+
 
                         <GSignInButton text="Sign In with Google" onClick={() => {
                             // promptAsync()
                             // signIn(setCorpCode)
+                            handleGoogleSignIn()
 
                         }} />
 
@@ -358,8 +351,8 @@ const LoginScreen = ({ navigation, route }) => {
                                                 AppleAuthentication.AppleAuthenticationScope.EMAIL,
                                             ],
                                         });
-                                        console.log("SUccess");
-                                        route.params.finishAuth()
+                                        console.log(credential);
+                                        // route.params.finishAuth()
 
                                         // signed in
                                     } catch (e) {
