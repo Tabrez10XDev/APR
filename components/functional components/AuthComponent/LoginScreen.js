@@ -1,11 +1,11 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Feather } from "@expo/vector-icons";
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
-  } from '@react-native-google-signin/google-signin';
+// import {
+//     GoogleSignin,
+//     GoogleSigninButton,
+//     statusCodes,
+//   } from '@react-native-google-signin/google-signin';
 import {
     Text,
     View,
@@ -49,36 +49,36 @@ const LoginScreen = ({ navigation, route }) => {
     }
 
 
-    const signIn = async (setCorpCode) => {
-        try {
-          await GoogleSignin.hasPlayServices();
-          const userInfo = await GoogleSignin.signIn();
-          console.log(userInfo)
-          setCorpCode(false)
+    // const signIn = async (setCorpCode) => {
+    //     try {
+    //       await GoogleSignin.hasPlayServices();
+    //       const userInfo = await GoogleSignin.signIn();
+    //       console.log(userInfo)
+    //       setCorpCode(false)
 
-          await AsyncStorage.setItem('CorpState', "-1")
-          route.params.finishAuth()
+    //       await AsyncStorage.setItem('CorpState', "-1")
+    //       route.params.finishAuth()
 
-        //   await AsyncStorage.setItem('firstName', response.data.first_name)
-        //   else saveAuth(response.data.user_id.toString())
-        } catch (error) {
-            console.log(error);
-        //   if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        //     // user cancelled the login flow
-        //   } else if (error.code === statusCodes.IN_PROGRESS) {
-        //     // operation (e.g. sign in) is in progress already
-        //   } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        //     // play services not available or outdated
-        //   } else {
-        //     // some other error happened
-        //   }
-        }
-      };
+    //     //   await AsyncStorage.setItem('firstName', response.data.first_name)
+    //     //   else saveAuth(response.data.user_id.toString())
+    //     } catch (error) {
+    //         console.log(error);
+    //     //   if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+    //     //     // user cancelled the login flow
+    //     //   } else if (error.code === statusCodes.IN_PROGRESS) {
+    //     //     // operation (e.g. sign in) is in progress already
+    //     //   } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+    //     //     // play services not available or outdated
+    //     //   } else {
+    //     //     // some other error happened
+    //     //   }
+    //     }
+    //   };
 
-    useEffect(()=>{
-        GoogleSignin.configure();
+    // useEffect(()=>{
+    //     GoogleSignin.configure();
 
-    },[])
+    // },[])
 
     useEffect(() => {
         setTimeout(() => {
@@ -340,7 +340,7 @@ const LoginScreen = ({ navigation, route }) => {
 
                         <GSignInButton text="Sign In with Google" onClick={() => {
                             // promptAsync()
-                            signIn(setCorpCode)
+                            // signIn(setCorpCode)
 
                         }} />
 
