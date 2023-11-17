@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity, Share } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
@@ -12,22 +12,44 @@ import * as FileSystem from 'expo-file-system';
 
 const BookingInfo = ({ route, navigation }) => {
 
+    const data = route.params
 
-    async function downloadInvoice() {
-        // FileSystem.downloadAsync(
-        //     `${CONST.baseUrlRegister}/fetchInvoice?orderId=${route.params.display.orderId}`,
-        //     FileSystem.documentDirectory + 'ticket.pdf'
-        // )
-        //     .then(({ uri }) => {
-        //         console.log('Finished downloading to ', uri);
-        //         share(uri);
-        //     })
-        //     .catch(error => {
-        //         console.error(error);
-        //     });
+    const share = async (url) => {
+        try {
+            const result = await Share.share({
+                url
+            });
+
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
-    const data = route.params
+
+    async function downloadInvoice() {
+        console.log(data);
+        FileSystem.downloadAsync(
+            `${CONST.baseUrlRegister}api/payment/invoice/data/${data.registerantInfo.registrant_id}/${data.order_id_ref}/${data.booking_id}`,
+            FileSystem.documentDirectory + `${""}-invoice.pdf`
+        )
+            .then(({ uri }) => {
+                console.log('Finished downloading to ', uri);
+                share(uri);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
 
     return (
         <authContext.Consumer>

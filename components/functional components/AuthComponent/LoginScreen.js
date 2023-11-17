@@ -34,12 +34,12 @@ import { Linking } from 'react-native';
 
 const LoginScreen = ({ navigation, route }) => {
 
-let scheme;
-    useEffect(async ()=>{
-     scheme = await Linking.getInitialURL();
-     console.log(scheme);
+    let scheme;
+    useEffect(async () => {
+        scheme = await Linking.getInitialURL();
+        console.log(scheme);
 
-    },[])
+    }, [])
 
 
 
@@ -62,33 +62,33 @@ let scheme;
     const EXPO_REDIRECT_PARAMS = {
         useProxy: true,
         projectNameForProxy: scheme,
-      };
-      
-      const NATIVE_REDIRECT_PARAMS = { native: scheme };
-      
-      const REDIRECT_PARAMS =
+    };
+
+    const NATIVE_REDIRECT_PARAMS = { native: scheme };
+
+    const REDIRECT_PARAMS =
         Constants.appOwnership === 'expo'
-          ? EXPO_REDIRECT_PARAMS
-          : NATIVE_REDIRECT_PARAMS;
-    
+            ? EXPO_REDIRECT_PARAMS
+            : NATIVE_REDIRECT_PARAMS;
+
 
     const handleGoogleSignIn = async () => {
-        
+
         try {
-          const res= await WebBrowser.openAuthSessionAsync(
-            `https://accounts.google.com/o/oauth2/v2/auth?` +
-              `&client_id=${googleConfig.expoClientId}` +
-              `&redirect_uri=${encodeURIComponent(
-                AuthSession.makeRedirectUri(REDIRECT_PARAMS)
-              )}` +
-              `&response_type=code` +
-              `&scope=${encodeURIComponent(googleConfig.scopes.join(' '))}`
-          );
-          console.log(res);
+            const res = await WebBrowser.openAuthSessionAsync(
+                `https://accounts.google.com/o/oauth2/v2/auth?` +
+                `&client_id=${googleConfig.expoClientId}` +
+                `&redirect_uri=${encodeURIComponent(
+                    AuthSession.makeRedirectUri(REDIRECT_PARAMS)
+                )}` +
+                `&response_type=code` +
+                `&scope=${encodeURIComponent(googleConfig.scopes.join(' '))}`
+            );
+            console.log(res);
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
-      };
+    };
 
     // Google.logInAsync(config).then((response) => {
     //     console.log(response);

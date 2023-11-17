@@ -27,6 +27,9 @@ const CreateOrder = ({ navigation, route }) => {
         setAnimSpeed(true)
     }
 
+    console.log("-------");
+    console.log(route.params)
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -167,7 +170,7 @@ const CreateOrder = ({ navigation, route }) => {
                                 marginTop: 6,
                             }}
                         >
-                            John Smith
+                            JOhn
 
                         </Text>
 
@@ -194,7 +197,7 @@ const CreateOrder = ({ navigation, route }) => {
                                 marginTop: 6,
                             }}
                         >
-                            7338272812
+                            828282882
 
                         </Text>
 

@@ -61,7 +61,8 @@ const MasterList = ({ route, navigation }) => {
                 "registrant_class": orderDetails.registrant_class,
                 "payment_date": `${currDate.getFullYear()}-${currDate.getMonth() + 1}-${currDate.getDate() < 10 ? "0" + currDate.getDate() : currDate.getDate()}`
             };
-
+            console.log("+++");
+            console.log(response.data);
             navigation.navigate("CreateOrder", { payload: data, orderDetails: orderDetails, billingAddress: response.data.billing_address })
 
 
