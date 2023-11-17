@@ -324,7 +324,7 @@ const BookingInfo = ({ route, navigation }) => {
                                     maxWidth: '100%'
                                 }}
                             >
-                                Lorem ipsum dolor sit amet consectetur. Rhoncus adipiscing pellentesque viverra faucibus cursus auctor vehicula malesuada laoreet.
+                                No refund or cancellation of tickets not applicable. If you need further assistance regarding your booking process. Kindly contact apr marathon volunteer team.
                             </Text>
 
                             <Text

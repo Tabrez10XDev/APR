@@ -66,7 +66,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
     function safeSignUp() {
         if (state.corpCode == null) signup()
-        else if (corpCode.trim().length == 0) signup()
+        else if (state.corpCode.trim().length == 0) signup()
         else corpSignup()
     }
 
@@ -103,13 +103,16 @@ const SignUpScreen = ({ navigation, route }) => {
         }
 
         console.log(payload)
+        playAnimation()
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/corp/user/signup`, payload).then(async (response) => {
                 console.log(response.data)
                 await AsyncStorage.setItem('CorpState', "1")
+                pauseAnimation()
                 navigation.navigate("OTPScreen", { number: state.number, email: state.email })
             }).catch((err) => {
                 console.log(err.response)
+                pauseAnimation()
                 Toast.show({
                     type: 'error',
                     text1: err.response.data ?? "Please try again later"
@@ -117,6 +120,7 @@ const SignUpScreen = ({ navigation, route }) => {
             })
 
         } catch (error) {
+            pauseAnimation()
             Toast.show({
                 type: 'error',
                 text1: error.response.data

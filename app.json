@@ -17,7 +17,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bwt.apr",
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "googleServicesFile": "./GoogleService-Info.plist"
+
     },
     "android": {
       "adaptiveIcon": {
@@ -40,7 +42,9 @@
           }
         }
       ],
-      ["expo-apple-authentication"]
+      ["expo-apple-authentication"],
+      ["@react-native-google-signin/google-signin"]
+
     ],
     "extra": {
       "eas": {
