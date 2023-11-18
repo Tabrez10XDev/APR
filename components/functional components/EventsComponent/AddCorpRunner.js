@@ -952,7 +952,16 @@ const AddCorpRunner = ({ route, navigation }) => {
                                     Toast.show({
                                         type: 'error',
                                         text1: 'Missing Data',
-                                        visibilityTime: 500
+                                        visibilityTime: 1000
+                                    });
+                                }
+                                else if (
+                                    common.isEmpty(state.runCategory)
+                                ) {
+                                    Toast.show({
+                                        type: 'error',
+                                        text1: 'Please select a Run Category',
+                                        visibilityTime: 1000
                                     });
                                 }
                                 else {

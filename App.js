@@ -30,7 +30,7 @@ import BookingInfo from './components/functional components/ScheduleComponent/Bo
 import PaymentHistory from './components/functional components/ProfileComponent/PaymentHistory';
 import EditProfile from './components/functional components/ProfileComponent/EditProfile';
 import AddCorpRunner from './components/functional components/EventsComponent/AddCorpRunner';
-
+import ForgotPassword from './components/functional components/AuthComponent/ForgotPassword';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -165,6 +165,7 @@ export default function App() {
 
                     <Stack.Screen name="MobileVerification" component={MobileVerification} initialParams={{ finishAuth: finishAuth }} />
 
+                    <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
 
                     <Stack.Screen name="OTPScreen" component={OTPScreen} initialParams={{ finishAuth: finishAuth }} />
 

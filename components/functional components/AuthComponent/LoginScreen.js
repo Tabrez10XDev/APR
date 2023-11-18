@@ -37,8 +37,6 @@ const LoginScreen = ({ navigation, route }) => {
     let scheme;
     useEffect(async () => {
         scheme = await Linking.getInitialURL();
-        console.log(scheme);
-
     }, [])
 
 
@@ -61,14 +59,14 @@ const LoginScreen = ({ navigation, route }) => {
 
     const EXPO_REDIRECT_PARAMS = {
         useProxy: true,
-        projectNameForProxy: scheme,
+        projectNameForProxy: "@lowjunkie/APR",
     };
 
     const NATIVE_REDIRECT_PARAMS = { native: scheme };
 
     const REDIRECT_PARAMS =
-        Constants.appOwnership === 'expo'
-            ? EXPO_REDIRECT_PARAMS
+    //     Constants.appOwnership === 'expo'
+         true   ? EXPO_REDIRECT_PARAMS
             : NATIVE_REDIRECT_PARAMS;
 
 
@@ -302,7 +300,7 @@ const LoginScreen = ({ navigation, route }) => {
 
                                 }}
                                 onPress={() => {
-                                    // navigation.navigate("ForgotPassword")
+                                    navigation.navigate("ForgotPassword")
                                 }}
                             >
                                 Forgot Password ?

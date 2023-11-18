@@ -18,15 +18,15 @@ const ProfileScreen = ({ route, navigation }) => {
 
     const [name, setName] = useState("")
 
-    const deleteAccount = () =>
-    Alert.alert('Are you sure you want to delete your account', 'Once deleted it cannot be recovered', [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ]);
+    const deleteAccount = (userId) =>
+        Alert.alert('Are you sure you want to delete your account', 'Once deleted it cannot be recovered', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            { text: 'OK', onPress: () => _deleteAccount(userId) },
+        ]);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
@@ -36,6 +36,33 @@ const ProfileScreen = ({ route, navigation }) => {
 
         return unsubscribe;
     }, [navigation]);
+
+
+
+    async function _deleteAccount(userId) {
+
+
+
+
+        axios.put(`${CONST.baseUrlAuth}api/registrant/delete/account/${userId}`).then((response) => {
+            console.log(response.data)
+            Toast.show({
+                type: 'success',
+                text1: 'Success'
+            });
+
+            setTimeout(() => {
+                route.params.logout()
+            }, 1000)
+
+
+        }).catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: error
+            });
+        })
+    }
 
     return (
         <authContext.Consumer>
@@ -163,7 +190,7 @@ const ProfileScreen = ({ route, navigation }) => {
 
 
                         <TouchableOpacity
-                            onPress={deleteAccount}
+                            onPress={() => deleteAccount(userId)}
                             style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 

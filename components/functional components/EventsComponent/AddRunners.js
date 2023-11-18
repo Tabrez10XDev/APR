@@ -513,14 +513,26 @@ const AddRunners = ({ route, navigation }) => {
                                     common.isEmpty(state.email) ||
                                     common.isEmpty(state.number) ||
                                     common.isEmpty(state.emergencyNumber ?? data.param.phone_number) ||
-                                    common.isEmpty(selectedDate)
+                                    common.isEmpty(selectedDate) 
                                 ) {
                                     Toast.show({
                                         type: 'error',
                                         text1: 'Missing Data',
-                                        visibilityTime: 500
+                                        visibilityTime: 1000
                                     });
                                 }
+
+                                else if (
+                                    common.isEmpty(state.runCategory)
+                                ) {
+                                    Toast.show({
+                                        type: 'error',
+                                        text1: 'Please select a Run Category',
+                                        visibilityTime: 1000
+                                    });
+                                }
+
+                                
                                 else if (current < data.total - 1) {
                                     let _state = state
                                     _state["date"] = selectedDate
