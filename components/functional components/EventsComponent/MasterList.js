@@ -45,7 +45,8 @@ const MasterList = ({ route, navigation }) => {
             "registrant_class_ref": responseData.registrant_class_ref,
             "booking_id_ref": responseData.booking_id_ref,
             "event_id_ref": responseData.event_id_ref,
-            "runner_count": responseData.runner_count
+            "runner_count": responseData.runner_count,
+            "total_amount": responseData.total_amount
         }
 
 
@@ -66,7 +67,12 @@ const MasterList = ({ route, navigation }) => {
             navigation.navigate("CreateOrder", { payload: data, orderDetails: orderDetails, billingAddress: response.data.billing_address })
 
 
-        }).finally(() => {
+        }).catch((err)=>{
+            console.log("---");
+            console.log(payload);
+            console.log(err.response.data,"mistake");
+        })
+        .finally(() => {
             pauseAnimation()
         })
     }
@@ -138,6 +144,7 @@ const MasterList = ({ route, navigation }) => {
         try {
             axios.put(`${CONST.baseUrlRegister}api/registration/add/registrant/web`, payload).then((response) => {
                 console.log("Success")
+                console.log(response.data);
                 createOrder(response.data)
 
             })

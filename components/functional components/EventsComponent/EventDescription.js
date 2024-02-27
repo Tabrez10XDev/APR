@@ -40,12 +40,14 @@ const EventDescription = ({ route, navigation }) => {
 
 
     async function joinNow() {
-
         playAnimation()
+        // axios.get(`${CONST.baseUrlRegister}api/registration/registration/data`)
+        console.log(`${CONST.baseUrlRegister}api/registration/registration/data`);
         axios.post(`${CONST.baseUrlRegister}api/registration/registration/data`, {
             registrant_id: parseInt(data.userId),
             registrant_type_id: data.type_id
-        }).then((response) => {
+        })
+        .then((response) => {
             let towers = []
             let phases = []
             response.data.tower_details.map((ele, inx) => {
@@ -61,6 +63,40 @@ const EventDescription = ({ route, navigation }) => {
                 temp['value'] = ele.category_id
                 classes.push(temp)
             })
+            // if(data.type_id == 1){
+            //     console.log("One");
+            //     response.data.registrant_class["marathon runners"].map((ele, inx) => {
+            //         let temp = {}
+            //         if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
+            //         else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
+    
+            //         temp['value'] = ele.category_id
+            //         classes.push(temp)
+            //     })
+            // }
+            // else if(data.type_id == 2){
+            //     console.log("Two");
+            //     response.data.registrant_class["donors with runners"].map((ele, inx) => {
+            //         let temp = {}
+            //         if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
+            //         else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
+    
+            //         temp['value'] = ele.category_id
+            //         classes.push(temp)
+            //     })
+            // }
+            // else if(data.type_id == 3){
+            //     console.log("Three");
+            //     response.data.registrant_class["donate"].map((ele, inx) => {
+            //         let temp = {}
+            //         if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
+            //         else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
+    
+            //         temp['value'] = ele.category_id
+            //         classes.push(temp)
+            //     })
+            // }
+        
 
             let _run_category = []
             response.data.run_category.map((ele) => {
@@ -72,9 +108,10 @@ const EventDescription = ({ route, navigation }) => {
 
             navigation.navigate("AddRegistrant", { ...response.data, run_category: _run_category, towers: towers, phases: phases, classes: classes, typeName: data.type_name })
 
-        }).catch((err) => {
+        })
+        .catch((err) => {
             console.error("Error")
-            console.log(err.response)
+            console.log(err.response.data)
         }).finally(() => {
             pauseAnimation()
         })

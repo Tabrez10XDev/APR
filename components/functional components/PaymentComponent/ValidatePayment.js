@@ -61,10 +61,13 @@ const ValidatePayment = ({ route, navigation }) => {
                 payload,
             )
 
+            console.log(response.data);
+            console.log(response.status);
 
 
 
-            if (response.status === 200 && response.data[0].payment_status == "PAYMENT_SUCCESS") {
+
+            if (response.status === 200 && response.data.payment_status == "success") {
                 console.log('Request successful! Cancelling all pending requests.');
                 const payload = {
                     "booking_id": route.params.details.booking_id,

@@ -27,7 +27,6 @@ import Input from "../../ui components/Input";
 import { RectButton, GSignInButton } from "../../ui components/Buttons";
 import Lottie from 'lottie-react-native';
 import authContext from '../../../contants/authContext';
-import Constants from 'expo-constants';
 import { makeRedirectUri } from 'expo-auth-session';
 import { Linking } from 'react-native';
 
@@ -46,11 +45,8 @@ const LoginScreen = ({ navigation, route }) => {
         androidClientId: "268422767928-ri09ptpm76mlhh46tavtov9gka82vpj4.apps.googleusercontent.com",
         expoClientId: '268422767928-c6cum37jvg5sk6aprm92hd4fg7kfgunn.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
-
     }
 
-
-    const [isChecked, setChecked] = useState(false)
 
     const [passIcon, setPassIcon] = useState(false)
     const [visibility, setVisibility] = useState(false)
@@ -148,9 +144,6 @@ const LoginScreen = ({ navigation, route }) => {
             "google_id": null
         }
 
-
-
-
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then(async (response) => {
                 console.log(response.data)
@@ -172,7 +165,10 @@ const LoginScreen = ({ navigation, route }) => {
                     else saveAuth(response.data.user_id.toString())
                 }
 
-            }).finally(() => {
+            }).catch((err)=>{
+                console.log(err.response.data);
+            })
+            .finally(() => {
                 pauseAnimation(1)
             })
             // route.params.finishAuth()
@@ -187,10 +183,6 @@ const LoginScreen = ({ navigation, route }) => {
             throw error
         }
     }
-
-
-
-
 
 
     return (
