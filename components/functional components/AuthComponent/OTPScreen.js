@@ -11,13 +11,13 @@ import { StatusBar } from "react-native";
 
 import { COLORS, SIZES, FONTS, assets, CONST } from "../../../contants";
 import { RectButton } from "../../ui components/Buttons";
-import OTPInputView from "@twotalltotems/react-native-otp-input";
+// import OTPInputView from "@twotalltotems/react-native-otp-input";
 import { useState, useEffect, useRef } from "react";
 import Toast from 'react-native-toast-message';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Lottie from 'lottie-react-native';
-
+import OTPTextView from "react-native-otp-textinput";
 
 const OTPScreen = ({ route }) => {
 
@@ -29,6 +29,8 @@ const OTPScreen = ({ route }) => {
         setAnimSpeed(true)
     }
 
+
+    const [otp, setOtp] = useState("")
 
     useEffect(() => {
         setTimeout(() => {
@@ -169,8 +171,25 @@ const OTPScreen = ({ route }) => {
                     Enter 6 digit code that sent to your phone number
                 </Text>
 
+                <OTPTextView
+                    tintColor={COLORS.blue}
 
-                <OTPInputView
+                    textInputStyle={{
+
+                        borderRadius: 10,
+                        borderWidth: 1,
+
+                    }}
+                    inputCount={6} handleTextChange={(text) => {
+                        if (text.length == 6) {
+                            setOtp(text)
+                            console.log(text);
+                            verifyOTP(text)
+                        }
+                    }} />
+
+
+                {/* <OTPInputView
                     style={{ width: '100%', height: 100 }}
                     pinCount={6}
                     autoFocusOnLoad={false}
@@ -188,7 +207,7 @@ const OTPScreen = ({ route }) => {
                         verifyOTP(code)
                         console.log(`Code is ${code}, you are good to go!`)
                     })}
-                />
+                /> */}
 
                 <View style={{ flexDirection: 'row' }}>
 
@@ -214,7 +233,8 @@ const OTPScreen = ({ route }) => {
                             fontSize: SIZES.font,
                             fontFamily: FONTS.regular,
                             color: COLORS.blue,
-                            marginLeft: 6
+                            marginLeft: 6,
+                            marginTop:16
                             // textDecorationLine: 'underline'
 
                         }}

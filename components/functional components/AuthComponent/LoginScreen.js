@@ -2,7 +2,6 @@ import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Feather } from "@expo/vector-icons";
 import * as AuthSession from "expo-auth-session";
-import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from "expo-web-browser";
 import {
     Text,
@@ -27,7 +26,6 @@ import Input from "../../ui components/Input";
 import { RectButton, GSignInButton } from "../../ui components/Buttons";
 import Lottie from 'lottie-react-native';
 import authContext from '../../../contants/authContext';
-import { makeRedirectUri } from 'expo-auth-session';
 import { Linking } from 'react-native';
 
 
@@ -122,8 +120,6 @@ const LoginScreen = ({ navigation, route }) => {
         }
     }
 
-
-
     async function login(setCorpCode) {
         if (email.trim().length === 0 || pass.trim().length === 0) {
             Toast.show({
@@ -155,16 +151,13 @@ const LoginScreen = ({ navigation, route }) => {
                 }
                 else if (response.data.mobile_no_verify_status == false) navigation.navigate("MobileVerification", response.data)
                 else {
-
                     if (response.data.corporate_id) setCorpCode(true)
                     else setCorpCode(false)
-
                     await AsyncStorage.setItem('CorpState', response.data.corporate_id ? response.data.corporate_id.toString() : "-1")
                     await AsyncStorage.setItem('firstName', response.data.first_name)
                     if (response.data.registrant_id) saveAuth(response.data.registrant_id.toString())
                     else saveAuth(response.data.user_id.toString())
                 }
-
             }).catch((err)=>{
                 console.log(err.response.data);
             })

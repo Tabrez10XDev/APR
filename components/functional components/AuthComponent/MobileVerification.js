@@ -11,7 +11,6 @@ import { StatusBar } from "react-native";
 
 import { COLORS, SIZES, FONTS, assets, CONST } from "../../../contants";
 import { RectButton } from "../../ui components/Buttons";
-import OTPInputView from "@twotalltotems/react-native-otp-input";
 import { useState, useEffect } from "react";
 import Toast from 'react-native-toast-message';
 import axios from "axios";

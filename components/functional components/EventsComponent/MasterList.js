@@ -66,7 +66,6 @@ const MasterList = ({ route, navigation }) => {
             console.log(response.data);
             navigation.navigate("CreateOrder", { payload: data, orderDetails: orderDetails, billingAddress: response.data.billing_address })
 
-
         }).catch((err)=>{
             console.log("---");
             console.log(payload);

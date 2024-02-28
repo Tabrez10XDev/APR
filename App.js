@@ -131,6 +131,7 @@ export default function App() {
               <Stack.Navigator theme={theme} screenOptions={{ headerShown: false }} initialRouteName="Dashboard">
 
                 <Stack.Group screenOptions={{ headerStyle: { backgroundColor: COLORS.white } }}  >
+                <Stack.Screen name="OTPScreen" component={OTPScreen} initialParams={{ finishAuth: finishAuth }} />
 
                   <Stack.Screen name="Home" component={TabNav} />
 
