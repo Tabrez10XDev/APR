@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
+    ScrollView,
     Dimensions
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -17,7 +18,6 @@ import { COLORS, SIZES, FONTS, assets, CONST, } from "../../../contants";
 // import { TextInput } from "@react-native-material/core";
 import Toast from 'react-native-toast-message';
 import axios from "axios";
-import { ScrollView } from "react-native-gesture-handler";
 // import {Input} from "../../ui components";
 import Input from "../../ui components/Input";
 import { RectButton, GSignInButton } from "../../ui components/Buttons";

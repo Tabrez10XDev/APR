@@ -31,6 +31,9 @@ import PaymentHistory from './components/functional components/ProfileComponent/
 import EditProfile from './components/functional components/ProfileComponent/EditProfile';
 import AddCorpRunner from './components/functional components/EventsComponent/AddCorpRunner';
 import ForgotPassword from './components/functional components/AuthComponent/ForgotPassword';
+import PaymentWebView from './components/functional components/PaymentComponent/PaymentWebView';
+
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -131,7 +134,6 @@ export default function App() {
               <Stack.Navigator theme={theme} screenOptions={{ headerShown: false }} initialRouteName="Dashboard">
 
                 <Stack.Group screenOptions={{ headerStyle: { backgroundColor: COLORS.white } }}  >
-                <Stack.Screen name="OTPScreen" component={OTPScreen} initialParams={{ finishAuth: finishAuth }} />
 
                   <Stack.Screen name="Home" component={TabNav} />
 
@@ -145,6 +147,7 @@ export default function App() {
                   <Stack.Screen name="BookingConfirmed" component={BookingConfirmed} />
                   <Stack.Screen name="BookingInfo" component={BookingInfo} />
                   <Stack.Screen name="PaymentHistory" component={PaymentHistory} />
+                  <Stack.Screen name="PaymentWebView" component={PaymentWebView} />
                   <Stack.Screen name="EditProfile" component={EditProfile} />
 
                   

@@ -12,6 +12,7 @@ import {
     TextInput,
     Dimensions,
     StyleSheet,
+    ScrollView,
     Platform
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,7 +22,6 @@ import { StatusBar } from "react-native";
 import { COLORS, SIZES, FONTS, assets, CONST, } from "../../../contants";
 import Toast from 'react-native-toast-message';
 import axios from "axios";
-import { ScrollView } from "react-native-gesture-handler";
 import Input from "../../ui components/Input";
 import { RectButton, GSignInButton } from "../../ui components/Buttons";
 import Lottie from 'lottie-react-native';
@@ -121,7 +121,9 @@ const LoginScreen = ({ navigation, route }) => {
     }
 
     async function login(setCorpCode) {
-        if (email.trim().length === 0 || pass.trim().length === 0) {
+        if (email.trim().length === 0 
+        // || pass.trim().length === 0
+        ) {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -135,28 +137,32 @@ const LoginScreen = ({ navigation, route }) => {
             "first_name": null,
             "last_name": null,
             "email_id": email.toLowerCase(),
-            "password": pass,
+            "password": null,
             "notif_token": null,
             "google_id": null
         }
 
         try {
-            axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, payload).then(async (response) => {
+            axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, {
+                mobile_number: email.toLowerCase()
+            }).then(async (response) => {
                 console.log(response.data)
                 if (response.status !== 200) {
                     Toast.show({
                         type: 'error',
-                        text1: response.data
+                        text1: response.data.message
                     });
                 }
                 else if (response.data.mobile_no_verify_status == false) navigation.navigate("MobileVerification", response.data)
                 else {
-                    if (response.data.corporate_id) setCorpCode(true)
-                    else setCorpCode(false)
-                    await AsyncStorage.setItem('CorpState', response.data.corporate_id ? response.data.corporate_id.toString() : "-1")
-                    await AsyncStorage.setItem('firstName', response.data.first_name)
-                    if (response.data.registrant_id) saveAuth(response.data.registrant_id.toString())
-                    else saveAuth(response.data.user_id.toString())
+                    navigation.navigate("OTPScreen")
+
+                    // if (response.data.corporate_id) setCorpCode(true)
+                    // else setCorpCode(false)
+                    // await AsyncStorage.setItem('CorpState', response.data.corporate_id ? response.data.corporate_id.toString() : "-1")
+                    // await AsyncStorage.setItem('firstName', response.data.first_name)
+                    // if (response.data.registrant_id) saveAuth(response.data.registrant_id.toString())
+                    // else saveAuth(response.data.user_id.toString())
                 }
             }).catch((err)=>{
                 console.log(err.response.data);
@@ -182,7 +188,7 @@ const LoginScreen = ({ navigation, route }) => {
         <authContext.Consumer>
             {({ userId, setUserId, setCorpCode }) => (
                 <View style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
-                    <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ alignItems: 'center', alignItems: 'center' }}>
+                    <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ alignItems: 'center', alignItems: 'center' }} style={{width:'100%'}}>
 
 
 
@@ -227,7 +233,7 @@ const LoginScreen = ({ navigation, route }) => {
                                 marginTop: 14
                             }}
                         >
-                            Email/ Phone Number
+                            Phone Number
                         </Text>
 
                         <Input
@@ -238,41 +244,6 @@ const LoginScreen = ({ navigation, route }) => {
                             inputStyle={{ marginTop: 8 }}
 
                         />
-
-                        <Text
-                            style={{
-                                fontSize: SIZES.medium,
-                                fontFamily: FONTS.bold,
-                                color: COLORS.black,
-                                width: '90%',
-                                textAlign: 'left',
-                                marginTop: 16
-                            }}
-                        >
-                            Password
-                        </Text>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-                            <Input
-                                placeholder="Enter Here"
-                                onChangeText={(value) => setPass(value)}
-                                value={pass}
-                                placeholderTextColor={COLORS.lightGray}
-                                inputprops={{ secureTextEntry: !visibility }}
-                            />
-                            {/* <TextInput value={pass} onChangeText={(text) => { setPass(text) }} secureTextEntry={!visibility} variant="outlined" label="Password" style={{ marginHorizontal: 16, width: '90%' }} color={COLORS.blue} /> */}
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setVisibility(!visibility)
-                                    setPassIcon(!passIcon)
-                                }}
-                                style={{ alignItems: 'center', justifyContent: 'center', width: 32, height: 32, position: 'absolute', right: 24, zIndex: 5 }}
-                            >
-                                <Feather name={passIcon ? 'eye-off' : 'eye'} size={24} color={COLORS.grey} />
-
-
-                            </TouchableOpacity>
-                        </View>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 12, marginEnd: 24, alignSelf: 'flex-end' }}>
 
@@ -387,13 +358,13 @@ const LoginScreen = ({ navigation, route }) => {
 
 
 
-                        <Toast
+                       
+                    </ScrollView>
+
+                    <Toast
                             position='bottom'
                             bottomOffset={20}
                         />
-                    </ScrollView>
-
-
                     {animSpeed &&
                         <View style={{
                             shadowColor: COLORS.homeCard,

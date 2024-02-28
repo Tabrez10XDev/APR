@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Lottie from 'lottie-react-native';
 import { StackActions, useTheme } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native';
 
 
 const AddRegistrant = ({ route, navigation }) => {

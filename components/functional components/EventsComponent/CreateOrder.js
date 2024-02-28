@@ -64,7 +64,9 @@ const CreateOrder = ({ navigation, route }) => {
             .then((response) => {
                 console.log("Iniaited");
                 if (response.data.status.code == "PAYMENT_INITIATED") {
-                    navigation.navigate("ValidatePayment", { ...response.data.status.data, details: response.data.details, orderDetails: route.params.orderDetails })
+                    navigation.navigate("PaymentWebView", { ...response.data.status.data, details: response.data.details, orderDetails: route.params.orderDetails })
+
+                    // navigation.navigate("ValidatePayment", { ...response.data.status.data, details: response.data.details, orderDetails: route.params.orderDetails })
                 }
             })
             .catch((error) => {

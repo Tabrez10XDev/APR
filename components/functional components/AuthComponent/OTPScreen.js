@@ -65,7 +65,7 @@ const OTPScreen = ({ route }) => {
             "phone_number": route.params.number,
             "otp": parseInt(otp),
             "notif_token": "",
-            "email_id": route.params.email
+            "email_id": route.params.email ?? null
         }
         playAnimation()
 
@@ -97,7 +97,7 @@ const OTPScreen = ({ route }) => {
     async function resendOTP() {
 
         const payload = {
-            "email_id": route.params.email,
+            "email_id": route.params.email ?? null,
             "mobile_number": route.params.number
         }
         // try {

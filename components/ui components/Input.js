@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import propTypes from 'prop-types';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet, Platform } from 'react-native';
 import { COLORS, FONTS } from '../../contants';
 import { useTheme } from '@react-navigation/native';
 function Input({
