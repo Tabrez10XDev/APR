@@ -62,11 +62,13 @@ const OTPScreen = ({ route }) => {
     async function verifyOTP(otp) {
 
         const payload = {
-            "phone_number": route.params.number,
+            "phone_number": route.params.phone_number,
             "otp": parseInt(otp),
             "notif_token": "",
             "email_id": route.params.email ?? null
         }
+
+        console.log(payload);
         playAnimation()
 
         axios.post(`${CONST.baseUrlAuth}api/registrant/verify/otp`, payload).then(async (response) => {
@@ -85,7 +87,7 @@ const OTPScreen = ({ route }) => {
             console.log(err.response.data)
             Toast.show({
                 type: 'error',
-                text1: err.response.data
+                text1: err.response.data.message
             });
         }).finally(() => {
             pauseAnimation()

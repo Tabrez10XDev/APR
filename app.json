@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "APR",
-    "slug": "APR",
-    "version": "1.0.9",
+    "slug": "apr",
+    "version": "1.0.10",
     "scheme": "nitroapr",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
@@ -20,7 +20,6 @@
       "bundleIdentifier": "com.bwt.apr",
       "usesAppleSignIn": true,
       "googleServicesFile": "./GoogleService-Info.plist"
-
     },
     "android": {
       "adaptiveIcon": {
@@ -37,9 +36,9 @@
         "expo-build-properties",
         {
           "android": {
-            "compileSdkVersion": 33,
-            "targetSdkVersion": 33,
-            "buildToolsVersion": "33.0.0"
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
           }
         }
       ],
@@ -49,7 +48,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "0e2900b1-e542-490f-ba3d-7272376adcf0"
+        "projectId": "24735e75-857e-4cd1-84ff-805f9d3dc521"
       }
     }
   }

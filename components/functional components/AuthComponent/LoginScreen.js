@@ -155,7 +155,7 @@ const LoginScreen = ({ navigation, route }) => {
                 }
                 else if (response.data.mobile_no_verify_status == false) navigation.navigate("MobileVerification", response.data)
                 else {
-                    navigation.navigate("OTPScreen")
+                    navigation.navigate("OTPScreen", {phone_number: email.toLowerCase()})
 
                     // if (response.data.corporate_id) setCorpCode(true)
                     // else setCorpCode(false)
