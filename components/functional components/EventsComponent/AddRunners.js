@@ -91,7 +91,7 @@ const AddRunners = ({ route, navigation }) => {
                         </Text>
                     </View>
 
-                    <ScrollView contentContainerStyle={{ minHeight: '100%', width: '90%', alignSelf: 'center' }}>
+                    <ScrollView contentContainerStyle={{ minHeight: '0%', width: '90%', alignSelf: 'center' }}>
 
                         <Text
                             style={{
@@ -166,7 +166,7 @@ const AddRunners = ({ route, navigation }) => {
 
                                 <TouchableOpacity onPress={() => { setOpen(true) }} style={{ borderColor: COLORS.ash, borderWidth: 1, borderRadius: 6, marginTop: 8, width: '95%' }}>
                                     <Text style={{ paddingVertical: 12, paddingHorizontal: 8 }}>
-                                        {selectedDate.length == 0 ? "Enter Here" : selectedDate}
+                                        {selectedDate.length == 0 ? "Select Here" : selectedDate}
                                     </Text>
 
                                 </TouchableOpacity>

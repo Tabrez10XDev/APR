@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity, Pressable } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
@@ -22,6 +22,8 @@ const AddRegistrant = ({ route, navigation }) => {
 
     const [animSpeed, setAnimSpeed] = useState(false)
     const animRef = useRef()
+
+    const [counter, setCounter] = useState(0)
 
 
 
@@ -55,13 +57,13 @@ const AddRegistrant = ({ route, navigation }) => {
         tower: null,
         phase: null,
         city: "",
-        state: "Karnataka",
-        country: "India",
+        state: "",
+        country: "",
         zipCode: "",
         runnersClass: null,
         sourceRef: null,
         certificate: false,
-        panCard: null,
+        panCard: '',
         amount: "",
         runnerKits: false,
         block: null,
@@ -69,8 +71,8 @@ const AddRegistrant = ({ route, navigation }) => {
         laneNumber: null,
         villaNumber: ''
     })
-    
-        useEffect(() => {
+
+    useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             verifyVilla()
         }, 500)
@@ -90,9 +92,12 @@ const AddRegistrant = ({ route, navigation }) => {
             "registrant_class_ref": responseData.registrant_class_ref,
             "booking_id_ref": responseData.booking_id_ref,
             "event_id_ref": responseData.event_id_ref,
-            "runner_count": responseData.runner_count
+            "runner_count": responseData.runner_count,
+            "total_amount": responseData.total_amount
         }
 
+        console.log(payload);
+        console.log(`${CONST.baseUrlRegister}api/registration/create/order`);
 
         axios.post(`${CONST.baseUrlRegister}api/registration/create/order`, payload).then((response) => {
             console.log("order created");
@@ -109,17 +114,35 @@ const AddRegistrant = ({ route, navigation }) => {
             navigation.navigate("CreateOrder", { payload: data, orderDetails: orderDetails, billingAddress: response.data.billing_address })
 
 
-        }).finally(() => {
-            pauseAnimation()
+        }).catch((err) => {
+            console.log("error");
+            console.log(err.response.data);
         })
+            .finally(() => {
+                pauseAnimation()
+            })
     }
 
 
     async function register(userId) {
 
 
+        const panRegex = new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/);
 
-        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0  || state.runnersClass == undefined || state.runnersClass == null) {
+        // if (state.certificate == null || state.certificate == false) {
+        //     return
+        // }
+
+        if(state.certificate && !panRegex.test(state.panCard)){
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid Pancard',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
+        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0 || state.runnersClass == undefined || state.runnersClass == null) {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -176,6 +199,7 @@ const AddRegistrant = ({ route, navigation }) => {
         try {
             axios.put(`${CONST.baseUrlRegister}api/registration/add/registrant/web`, payload).then((response) => {
                 console.log("Success")
+                console.log(response.data);
                 createOrder(response.data)
 
             })
@@ -201,6 +225,27 @@ const AddRegistrant = ({ route, navigation }) => {
             })
         }
     }, [state.tower])
+
+
+    useEffect(() => {
+        if (state.residentOfAPR) {
+            setState((curr) => ({
+                ...curr,
+                city: "Bengaluru",
+                state: "Karnataka",
+                country: "India",
+                zipCode: "560103",
+            }))
+        } else {
+            setState((curr) => ({
+                ...curr,
+                city: "",
+                state: "",
+                country: "",
+                zipCode: "",
+            }))
+        }
+    }, [state.residentOfAPR])
 
 
     async function addRegistrant(userId) {
@@ -250,13 +295,20 @@ const AddRegistrant = ({ route, navigation }) => {
         }
 
         let _stateArray = []
-        data.registrant_class.map((ele) => {
-            if (ele.category_id == state.runnersClass) {
-                for (i = 0; i < ele.runners_allowed_count; i++) {
-                    _stateArray.push({})
+        if(isWithout){
+            for (i = 0; i < counter; i++) {
+                _stateArray.push({})
+            }      
+        }else{
+            data.registrant_class.map((ele) => {
+                if (ele.category_id == state.runnersClass) {
+                    for (i = 0; i < ele.runners_allowed_count; i++) {
+                        _stateArray.push({})
+                    }
                 }
-            }
-        })
+            })
+        }
+      
 
         console.log(JSON.stringify(payload))
 
@@ -286,7 +338,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
 
 
-        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0  || state.runnersClass == undefined || state.runnersClass == null) {
+        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0 || state.runnersClass == undefined || state.runnersClass == null) {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -332,7 +384,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
         playAnimation()
 
-     
+
 
 
 
@@ -593,7 +645,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
                         </View>
 
-                     
+
                         {
                             state.residentType == "villa" &&
                             <View style={{ width: '98%', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', alignSelf: 'center' }}>
@@ -609,7 +661,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                     />
                                 </View>
 
-                              
+
 
                             </View>
 
@@ -643,7 +695,7 @@ const AddRegistrant = ({ route, navigation }) => {
                         }
 
                         {
-                            state.residentType == "tower" &&
+                            state.residentType == "tower" && state.residentOfAPR &&
                             <Dropdown
                                 style={{
                                     height: 45,
@@ -681,7 +733,7 @@ const AddRegistrant = ({ route, navigation }) => {
                         }
 
                         {
-                            state.residentType == "tower" &&
+                            state.residentType == "tower" && state.residentOfAPR &&
                             <Dropdown
                                 style={{
                                     height: 45,
@@ -716,7 +768,7 @@ const AddRegistrant = ({ route, navigation }) => {
                             />
 
                         }
-                        {state.residentType == 'others' &&
+                        {state.residentType == 'others' && state.residentOfAPR !== true &&
 
                             <Input
                                 placeholder="Address"
@@ -808,6 +860,7 @@ const AddRegistrant = ({ route, navigation }) => {
                             <View style={{ width: '50%' }}>
                                 <Input
                                     placeholder="Zip Code"
+                                    inputType='numeric'
                                     inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
                                     onChangeText={(value) => setState(current => ({ ...current, zipCode: value }))}
                                     value={state.zipCode}
@@ -860,6 +913,88 @@ const AddRegistrant = ({ route, navigation }) => {
                             }}
 
                         />
+
+
+                        {
+                            state.runnersClass && isWithout &&
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignSelf: 'center', width: '100%', marginTop: 16, position: "relative", height: 40 }}>
+
+
+                                <Text
+                                    style={{
+                                        fontSize: SIZES.font,
+                                        fontFamily: FONTS.bold,
+                                        color: COLORS.black,
+                                        width: '90%',
+                                        alignSelf: 'center',
+                                        textAlign: 'left',
+                                    }}
+                                >
+                                    No. of Runners<Text style={{ color: COLORS.red }}></Text>
+                                </Text>
+
+                                <View style={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    borderRadius: 12,
+                                    flexDirection: 'row', width: 104, height: 40, padding: 8,
+                                    justifyContent: 'space-between',
+                                    backgroundColor: COLORS.white,
+                                    shadowColor: COLORS.homeCard,
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.2,
+                                    shadowRadius: 1,
+                                    elevation: 12,
+
+                                }}>
+
+                                    <Pressable onPress={() => {
+
+                                        if (counter > 0) {
+                                            setCounter(current => current - 1)
+                                        }
+
+                                    }}
+                                        style={{ height: 24, justifyContent: 'center', alignItems: 'center', width: 24 }}
+                                    >
+                                        <AntDesign name="minus" size={24} color="black" />
+                                    </Pressable>
+
+
+
+
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            alignSelf: 'center',
+                                            fontSize: SIZES.medium,
+                                            fontFamily: FONTS.semiBold,
+                                            color: COLORS.black,
+                                        }}
+                                    >
+                                        {counter}
+                                    </Text>
+
+
+                                    <Pressable onPress={() => {
+
+                                        setCounter(current => current + 1)
+
+                                    }}
+                                        style={{ height: 24, justifyContent: 'center', alignItems: 'center', width: 24 }}
+                                    >
+                                        <AntDesign name="plus" size={24} color="black" />
+
+                                    </Pressable>
+
+
+                                </View>
+                            </View>
+
+                        }
 
 
                         {isDonors &&
@@ -937,7 +1072,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                             textAlign: 'left',
                                         }}
                                     >
-                                        80G Certificate required<Text style={{ color: COLORS.red }}>*</Text>
+                                        80G Certificate required<Text style={{ color: COLORS.red }}></Text>
                                     </Text>
 
                                 </View>
@@ -995,7 +1130,7 @@ const AddRegistrant = ({ route, navigation }) => {
                             </View>
                         }
 
-{isDonors &&
+                        {isDonors &&
                             <View style={{ flexDirection: 'row', alignSelf: 'center', width: '95%', marginTop: 14, justifyContent: 'space-between', alignItems: 'center' }}>
 
                                 <BouncyCheckbox

@@ -272,6 +272,7 @@ const Events = ({ navigation }) => {
                     >
                         Upcoming Events
                     </Text>
+
                     <ScrollView>
                         <>
                             {data.registrant_type.map((ele, inx) => {

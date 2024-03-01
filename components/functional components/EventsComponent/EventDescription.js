@@ -57,19 +57,19 @@ const EventDescription = ({ route, navigation }) => {
             let classes = []
             response.data.registrant_class.map((ele, inx) => {
                 let temp = {}
-                if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
+                if (ele.runners_allowed_count !== null && data.type_id == 1) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
                 else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
 
                 temp['value'] = ele.category_id
                 classes.push(temp)
             })
+            
             // if(data.type_id == 1){
             //     console.log("One");
             //     response.data.registrant_class["marathon runners"].map((ele, inx) => {
             //         let temp = {}
             //         if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
             //         else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
-    
             //         temp['value'] = ele.category_id
             //         classes.push(temp)
             //     })
