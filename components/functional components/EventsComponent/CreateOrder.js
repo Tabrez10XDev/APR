@@ -172,7 +172,7 @@ const CreateOrder = ({ navigation, route }) => {
                                 marginTop: 6,
                             }}
                         >
-                            JOhn
+                            {route.params.orderDetails.first_name + " " + route.params.orderDetails.last_name}
 
                         </Text>
 
@@ -199,7 +199,7 @@ const CreateOrder = ({ navigation, route }) => {
                                 marginTop: 6,
                             }}
                         >
-                            828282882
+                            {route.params.orderDetails.mobile_number}
 
                         </Text>
 

@@ -69,7 +69,8 @@ const AddRegistrant = ({ route, navigation }) => {
         block: null,
         residentOfAPR: false,
         laneNumber: null,
-        villaNumber: ''
+        villaNumber: '',
+        amt: 0
     })
 
     useEffect(() => {
@@ -93,7 +94,7 @@ const AddRegistrant = ({ route, navigation }) => {
             "booking_id_ref": responseData.booking_id_ref,
             "event_id_ref": responseData.event_id_ref,
             "runner_count": responseData.runner_count,
-            "total_amount": responseData.total_amount
+            "total_amount": isDonors && showAmt ? state.amt :responseData.total_amount
         }
 
         console.log(payload);
@@ -140,6 +141,15 @@ const AddRegistrant = ({ route, navigation }) => {
                 visibilityTime: 1000
             });
             return;
+        }
+
+        if(state.amt == 0 && isDonors){
+            Toast.show({
+                type: 'error',
+                text1: 'Please enter valid amount',
+                visibilityTime: 1000
+            });
+            return; 
         }
 
         if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0 || state.runnersClass == undefined || state.runnersClass == null) {
@@ -246,6 +256,17 @@ const AddRegistrant = ({ route, navigation }) => {
             }))
         }
     }, [state.residentOfAPR])
+
+    const [showAmt, setShowAmt] = useState(false)
+
+    useEffect(()=>{
+        if(state.runnersClass == undefined) return
+        if(state.runnersClass == 19){
+                    setShowAmt(true)
+            }else{
+                setShowAmt(false)
+            }
+    },[state.runnersClass])
 
 
     async function addRegistrant(userId) {
@@ -909,6 +930,7 @@ const AddRegistrant = ({ route, navigation }) => {
                             placeholder="Select"
                             value={state.runnersClass}
                             onChange={item => {
+                                console.log(item, "asd");
                                 setState(current => ({ ...current, runnersClass: item.value }))
                             }}
 
@@ -996,6 +1018,20 @@ const AddRegistrant = ({ route, navigation }) => {
 
                         }
 
+                        {
+                            isDonors && showAmt &&
+                            <View style={{ width: '100%' }}>
+                            <Input
+                                placeholder="Enter amount"
+                                inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start' }}
+                                inputType='numeric'
+                                onChangeText={(value) => setState(current => ({ ...current, amt: value }))}
+                                value={state.amt}
+                                placeholderTextColor={COLORS.lightGray}
+                            />
+                        </View>
+                        }
+
 
                         {isDonors &&
                             <View>
@@ -1019,7 +1055,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                             textAlign: 'left',
                                         }}
                                     >
-                                        80G Certificate required<Text style={{ color: COLORS.red }}>*</Text>
+                                        80G Certificate required<Text style={{ color: COLORS.red }}></Text>
                                     </Text>
 
                                 </View>

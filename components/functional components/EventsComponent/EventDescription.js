@@ -38,11 +38,8 @@ const EventDescription = ({ route, navigation }) => {
         setAnimSpeed(false)
     }
 
-
     async function joinNow() {
         playAnimation()
-        // axios.get(`${CONST.baseUrlRegister}api/registration/registration/data`)
-        console.log(`${CONST.baseUrlRegister}api/registration/registration/data`);
         axios.post(`${CONST.baseUrlRegister}api/registration/registration/data`, {
             registrant_id: parseInt(data.userId),
             registrant_type_id: data.type_id

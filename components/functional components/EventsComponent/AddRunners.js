@@ -34,6 +34,8 @@ const AddRunners = ({ route, navigation }) => {
         value: "OTHERS"
     }]
 
+    const [missing, setMissing] = useState({})
+
     const newDate = new Date()
     const currDate = moment().format("YYYY-MM-DD")
     const sevenYearsAgo = moment().subtract(7, 'years').format("YYYY-MM-DD"); // Date 7 years ago
@@ -121,8 +123,11 @@ const AddRunners = ({ route, navigation }) => {
 
                                 <Input
                                     placeholder="Enter Here"
-                                    inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
-                                    onChangeText={(value) => setState(current => ({ ...current, firstName: value }))}
+                                    inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', borderColor:'red', borderWidth: missing.firstName ? 1 : 0 }}
+                                    onChangeText={(value) => {
+                                        setState(current => ({ ...current, firstName: value }),
+                                        setMissing(current => ({...current, firstName: false}))
+                                    )}}
                                     value={state.firstName}
                                     placeholderTextColor={COLORS.lightGray}
                                 />
@@ -142,7 +147,7 @@ const AddRunners = ({ route, navigation }) => {
 
                                 <Input
                                     placeholder="Enter Here"
-                                    inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
+                                    inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', }}
                                     onChangeText={(value) => setState(current => ({ ...current, lastName: value }))}
                                     value={state.lastName}
                                     placeholderTextColor={COLORS.lightGray}
@@ -455,40 +460,40 @@ const AddRunners = ({ route, navigation }) => {
 
                             />
 
-                                <Dropdown
-                                    style={{
-                                        height: 45,
-                                        borderColor: COLORS.lightGray,
-                                        borderRadius: 6,
-                                        borderWidth: 1,
-                                        width: '48%',
-                                        paddingHorizontal: 12,
-                                        alignSelf: 'flex-start',
-                                        marginTop: 10,
-                                        color: COLORS.black
-                                    }}
-                                    placeholderStyle={{ fontSize: 16, color: COLORS.black }}
-                                    selectedTextStyle={{
-                                        fontSize: SIZES.smallFont,
-                                        fontFamily: FONTS.semiBold,
-                                        color: COLORS.black
-                                    }}
-                                    inputSearchStyle={{}}
-                                    iconStyle={{}}
-                                    data={data.param.run_category}
-                                    maxHeight={300}
-                                    labelField="label"
-                                    valueField="label"
-                                    placeholder="Run Category"
-                                    value={state.runCategory}
-                                    onChange={item => {
-                                        setState(current => ({ ...current, runCategory: item.label }))
-                                        setState(current => ({ ...current, runCategoryId: item.value }))
+                            <Dropdown
+                                style={{
+                                    height: 45,
+                                    borderColor: COLORS.lightGray,
+                                    borderRadius: 6,
+                                    borderWidth: 1,
+                                    width: '48%',
+                                    paddingHorizontal: 12,
+                                    alignSelf: 'flex-start',
+                                    marginTop: 10,
+                                    color: COLORS.black
+                                }}
+                                placeholderStyle={{ fontSize: 16, color: COLORS.black }}
+                                selectedTextStyle={{
+                                    fontSize: SIZES.smallFont,
+                                    fontFamily: FONTS.semiBold,
+                                    color: COLORS.black
+                                }}
+                                inputSearchStyle={{}}
+                                iconStyle={{}}
+                                data={data.param.run_category}
+                                maxHeight={300}
+                                labelField="label"
+                                valueField="label"
+                                placeholder="Run Category"
+                                value={state.runCategory}
+                                onChange={item => {
+                                    setState(current => ({ ...current, runCategory: item.label }))
+                                    setState(current => ({ ...current, runCategoryId: item.value }))
 
-                                    }}
+                                }}
 
-                                />
-                                
+                            />
+
 
                         </View>
 
@@ -506,6 +511,11 @@ const AddRunners = ({ route, navigation }) => {
                                 }
                             }} text={"Back"} alignSelf={'center'} marginTop={24} width='45%' />
                             <RectButton onClick={() => {
+
+                                const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+                                const _emergencyNumber = state.emergencyNumber ?? data.param.phone_number
+
+
                                 if (
                                     common.isEmpty(state.firstName) ||
                                     common.isEmpty(state.lastName) ||
@@ -513,13 +523,41 @@ const AddRunners = ({ route, navigation }) => {
                                     common.isEmpty(state.email) ||
                                     common.isEmpty(state.number) ||
                                     common.isEmpty(state.emergencyNumber ?? data.param.phone_number) ||
-                                    common.isEmpty(selectedDate) 
+                                    common.isEmpty(selectedDate)
                                 ) {
                                     Toast.show({
                                         type: 'error',
                                         text1: 'Missing Data',
                                         visibilityTime: 1000
                                     });
+                                    return
+                                }
+
+                                else if(!emailRegex.test(state.email)){
+                                    Toast.show({
+                                        type: 'error',
+                                        text1: 'Invalid email',
+                                        visibilityTime: 1000
+                                    });
+                                    return
+                                }
+
+                                else if(state.number.length !== 10){
+                                    Toast.show({
+                                        type: 'error',
+                                        text1: 'Invalid Number',
+                                        visibilityTime: 1000
+                                    });
+                                    return
+                                }
+
+                                else if(_emergencyNumber.length !== 10){
+                                    Toast.show({
+                                        type: 'error',
+                                        text1: 'Invalid Emergency Number',
+                                        visibilityTime: 1000
+                                    });
+                                    return
                                 }
 
                                 else if (
@@ -532,7 +570,7 @@ const AddRunners = ({ route, navigation }) => {
                                     });
                                 }
 
-                                
+
                                 else if (current < data.total - 1) {
                                     let _state = state
                                     _state["date"] = selectedDate
