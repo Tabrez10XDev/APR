@@ -284,14 +284,14 @@ const LoginScreen = ({ navigation, route }) => {
 
 
 
-                        <GSignInButton text="Sign In with Google" onClick={() => {
+                        {/* <GSignInButton text="Sign In with Google" onClick={() => {
                             // promptAsync()
                             // signIn(setCorpCode)
                             handleGoogleSignIn()
 
-                        }} />
+                        }} /> */}
 
-                        {Platform.OS == "ios" &&
+                        {/* {Platform.OS == "ios" &&
                             <AppleAuthentication.AppleAuthenticationButton
                                 buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
                                 buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
@@ -318,7 +318,7 @@ const LoginScreen = ({ navigation, route }) => {
                                         }
                                     }
                                 }}
-                            />}
+                            />} */}
 
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: SIZES.medium }}>
                             <Text

@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import { StatusBar } from "react-native";
+import * as Clipboard from 'expo-clipboard';
 
 import { COLORS, SIZES, FONTS, assets, CONST } from "../../../contants";
 import { RectButton } from "../../ui components/Buttons";
@@ -21,6 +22,8 @@ import OTPTextView from "react-native-otp-textinput";
 
 const OTPScreen = ({ route }) => {
 
+    let otpinput= useRef(null);
+
 
     const [animSpeed, setAnimSpeed] = useState(false)
     const animRef = useRef()
@@ -31,6 +34,16 @@ const OTPScreen = ({ route }) => {
 
 
     const [otp, setOtp] = useState("")
+
+    const handleCellTextChange = async (text, i) => {
+        if (i === 0 && Clipboard) {
+          const clippedText = await Clipboard.getStringAsync();
+          console.log(clippedText);
+          if (clippedText && clippedText.slice(0, 1) === text) {
+                otpinput.current?.setValue(clippedText, true);
+              }
+        }
+};
 
     useEffect(() => {
         setTimeout(() => {
@@ -175,9 +188,9 @@ const OTPScreen = ({ route }) => {
 
                 <OTPTextView
                     tintColor={COLORS.blue}
-
+                    ref={otpinput}
+                    handleCellTextChange={handleCellTextChange}
                     textInputStyle={{
-
                         borderRadius: 10,
                         borderWidth: 1,
 

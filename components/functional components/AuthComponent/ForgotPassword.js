@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { StackActions } from '@react-navigation/native';
 import Lottie from 'lottie-react-native';
-
+import { Entypo } from '@expo/vector-icons';
 import { StatusBar } from "react-native";
 import { COLORS, SIZES, FONTS, assets, CONST } from "../../../contants";
 import { TextInput } from "@react-native-material/core";
@@ -107,10 +107,7 @@ const ForgotPassword = ({ navigation }) => {
                         navigation.dispatch(StackActions.pop(1))
                     }}
                     style={{ position: 'absolute', left: 24, width: 24, height: 24, justifyContent: 'center', alignItems: 'center' }}>
-                    <Image
-                        style={{ width: 18, height: 18, alignSelf: 'flex-start', resizeMode: 'contain' }}
-                        source={assets.leftArrow}
-                    />
+                    <Entypo name="chevron-left" size={24} color="black" />
 
                 </TouchableOpacity>
 

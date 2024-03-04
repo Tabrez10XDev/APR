@@ -9,6 +9,7 @@ import {
     Image,
     TextInput,
     ScrollView,
+    Platform,
     Dimensions
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -206,7 +207,7 @@ const SignUpScreen = ({ navigation, route }) => {
     return (
 
         <View style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
-            <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom: 300 }}>
+            <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom: Platform.OS == 'ios' ? 10 :300 }}>
 
 
 
