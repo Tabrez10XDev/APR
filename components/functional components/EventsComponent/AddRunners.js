@@ -47,11 +47,11 @@ const AddRunners = ({ route, navigation }) => {
     const [state, setState] = useState(stateArray[current])
 
     const [selectedDate, setSelectedDate] = useState(stateArray[current].date ?? "")
-    const [stackIndex, setStackIndex] = useState(state.size ?? 1);
+    const [stackIndex, setStackIndex] = useState(state.size ?? 0);
 
     useEffect(() => {
         setState(stateArray[current])
-        setStackIndex(stateArray[current].size ?? 1)
+        setStackIndex(stateArray[current].size ?? 0)
         setSelectedDate(stateArray[current].date ?? "")
     }, [current])
 
@@ -523,7 +523,8 @@ const AddRunners = ({ route, navigation }) => {
                                     common.isEmpty(state.email) ||
                                     common.isEmpty(state.number) ||
                                     common.isEmpty(state.emergencyNumber ?? data.param.phone_number) ||
-                                    common.isEmpty(selectedDate)
+                                    common.isEmpty(selectedDate) ||
+                                    stackIndex == 0
                                 ) {
                                     Toast.show({
                                         type: 'error',

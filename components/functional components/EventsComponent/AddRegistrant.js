@@ -143,7 +143,7 @@ const AddRegistrant = ({ route, navigation }) => {
             return;
         }
 
-        if(state.amt == 0 && isDonors){
+        if(state.amt == 0 && isDonors && showAmt){
             Toast.show({
                 type: 'error',
                 text1: 'Please enter valid amount',
@@ -156,6 +156,16 @@ const AddRegistrant = ({ route, navigation }) => {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
+
+        if (state.zipCode.trim().length !== 6) {
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid Zipcode',
                 visibilityTime: 1000
             });
             return;
@@ -281,6 +291,15 @@ const AddRegistrant = ({ route, navigation }) => {
             return;
         }
 
+        if (state.zipCode.trim().length !== 6) {
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid Zipcode',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
         let address = state.flatNo
         if (state.residentType == "villa") address += ", " + state.phase + ", "
         if (state.residentType == "tower") address += ", " + state.tower + ", "
@@ -363,6 +382,15 @@ const AddRegistrant = ({ route, navigation }) => {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
+        if (state.zipCode.trim().length !== 6) {
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid Zipcode',
                 visibilityTime: 1000
             });
             return;
@@ -654,7 +682,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                 }}
 
                             />
-                            {state.residentType == 'tower' &&
+                            {state.residentType == 'tower' && state.residentOfAPR &&
 
                                 <Input
                                     placeholder="Flat No"
@@ -668,7 +696,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
 
                         {
-                            state.residentType == "villa" &&
+                            state.residentType == "villa" && state.residentOfAPR &&
                             <View style={{ width: '98%', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', alignSelf: 'center' }}>
 
                                 <View style={{ width: '100%' }}>
@@ -690,7 +718,7 @@ const AddRegistrant = ({ route, navigation }) => {
                         }
 
                         {
-                            state.residentType == 'villa' &&
+                            state.residentType == 'villa' && state.residentOfAPR &&
                             <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
                                 <View style={{ width: '50%' }}>
                                     <Input

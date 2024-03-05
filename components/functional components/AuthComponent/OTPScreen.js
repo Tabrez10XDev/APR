@@ -61,9 +61,11 @@ const OTPScreen = ({ route }) => {
     const [timerActive, setTimerActive] = useState(false);
 
 
-    const saveAuth = async (id) => {
+    const saveAuth = async (id, name) => {
         try {
             await AsyncStorage.setItem('AuthState', id.toString())
+            await AsyncStorage.setItem('firstName', name.toString())
+
             route.params.finishAuth()
         } catch (err) {
             alert(err)
@@ -87,7 +89,7 @@ const OTPScreen = ({ route }) => {
         axios.post(`${CONST.baseUrlAuth}api/registrant/verify/otp`, payload).then(async (response) => {
             console.log(response.data)
             if (response.data.mobile_no_verify_status) {
-                saveAuth(response.data.registrant_id)
+                saveAuth(response.data.registrant_id, response.data.first_name + " " + response.data.last_name)
 
             } else {
                 Toast.show({

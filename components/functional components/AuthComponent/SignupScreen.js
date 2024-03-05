@@ -179,7 +179,7 @@ const SignUpScreen = ({ navigation, route }) => {
                 //     "mobile_number": state.number
                 // })
 
-                navigation.navigate("OTPScreen", { number: state.number, email: state.email })
+                navigation.navigate("OTPScreen", { phone_number: state.number, email: state.email })
             } else {
                 Toast.show({
                     type: 'error',
@@ -207,7 +207,7 @@ const SignUpScreen = ({ navigation, route }) => {
     return (
 
         <View style={{ flex: 1, backgroundColor: COLORS.white, alignItems: 'center' }}>
-            <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom: Platform.OS == 'ios' ? 10 :300 }}>
+            <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ alignItems: 'center', alignItems: 'center', paddingBottom: Platform.OS == 'ios' ? 10 :10 }}>
 
 
 

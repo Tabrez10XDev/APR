@@ -240,6 +240,7 @@ const LoginScreen = ({ navigation, route }) => {
                             placeholder="Enter Here"
                             onChangeText={(value) => setEmail(value)}
                             value={email}
+                            inputType='numeric'
                             placeholderTextColor={COLORS.lightGray}
                             inputStyle={{ marginTop: 8 }}
 

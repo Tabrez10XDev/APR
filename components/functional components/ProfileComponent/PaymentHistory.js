@@ -43,7 +43,7 @@ const PaymentHistory = ({ route, navigation }) => {
 
     async function getPaymentHistory() {
         playAnimation()
-        axios.get(`${CONST.baseUrlRegister}api/payment/details/3`).then((response) => {
+        axios.get(`${CONST.baseUrlRegister}api/payment/details/${route.params.userId}`).then((response) => {
             setState(response.data)
             setStaticState(response.data)
 
@@ -99,7 +99,6 @@ const PaymentHistory = ({ route, navigation }) => {
 
                 <TouchableOpacity onPress={() => {
                     navigation.dispatch(StackActions.pop(1))
-
                 }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf: 'flex-start' }}>
                     <Ionicons name="chevron-back" size={36} color="white" />
                 </TouchableOpacity>
@@ -229,7 +228,7 @@ const PaymentHistory = ({ route, navigation }) => {
                     elevation: 8,
                     zIndex: 5,
                     borderRadius: 16,
-                    position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
+                    position: 'absolute', height: '88%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0)', alignSelf: 'center', padding: 24, bottom: 0 
                 }}>
 
                     <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
