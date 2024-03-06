@@ -123,11 +123,12 @@ const AddRunners = ({ route, navigation }) => {
 
                                 <Input
                                     placeholder="Enter Here"
-                                    inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', borderColor:'red', borderWidth: missing.firstName ? 1 : 0 }}
+                                    inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', borderColor: 'red', borderWidth: missing.firstName ? 1 : 0 }}
                                     onChangeText={(value) => {
                                         setState(current => ({ ...current, firstName: value }),
-                                        setMissing(current => ({...current, firstName: false}))
-                                    )}}
+                                            setMissing(current => ({ ...current, firstName: false }))
+                                        )
+                                    }}
                                     value={state.firstName}
                                     placeholderTextColor={COLORS.lightGray}
                                 />
@@ -491,10 +492,7 @@ const AddRunners = ({ route, navigation }) => {
                                     setState(current => ({ ...current, runCategoryId: item.value }))
 
                                 }}
-
                             />
-
-
                         </View>
 
                         <View style={{ width: '100%', alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-evenly' }}>
@@ -534,66 +532,75 @@ const AddRunners = ({ route, navigation }) => {
                                     return
                                 }
 
-                                else if(!emailRegex.test(state.email)){
+                                if (!/^[a-zA-Z0-9]+$/.test(state.firstName) || !/^[a-zA-Z0-9]+$/.test(state.lastName)){
                                     Toast.show({
                                         type: 'error',
-                                        text1: 'Invalid email',
+                                        text1: 'Invalid name',
                                         visibilityTime: 1000
                                     });
-                                    return
+                                    return 
                                 }
 
-                                else if(state.number.length !== 10){
-                                    Toast.show({
-                                        type: 'error',
-                                        text1: 'Invalid Number',
-                                        visibilityTime: 1000
-                                    });
-                                    return
+                            else if(!emailRegex.test(state.email)){
+                                Toast.show({
+                                    type: 'error',
+                                    text1: 'Invalid email',
+                                    visibilityTime: 1000
+                                });
+                            return
                                 }
 
-                                else if(_emergencyNumber.length !== 10){
-                                    Toast.show({
-                                        type: 'error',
-                                        text1: 'Invalid Emergency Number',
-                                        visibilityTime: 1000
-                                    });
-                                    return
+                            else if(state.number.length !== 10){
+                                Toast.show({
+                                    type: 'error',
+                                    text1: 'Invalid Number',
+                                    visibilityTime: 1000
+                                });
+                            return
                                 }
 
-                                else if (
-                                    common.isEmpty(state.runCategory)
-                                ) {
-                                    Toast.show({
-                                        type: 'error',
-                                        text1: 'Please select a Run Category',
-                                        visibilityTime: 1000
-                                    });
+                            else if(_emergencyNumber.length !== 10){
+                                Toast.show({
+                                    type: 'error',
+                                    text1: 'Invalid Emergency Number',
+                                    visibilityTime: 1000
+                                });
+                            return
+                                }
+
+                            else if (
+                            common.isEmpty(state.runCategory)
+                            ) {
+                                Toast.show({
+                                    type: 'error',
+                                    text1: 'Please select a Run Category',
+                                    visibilityTime: 1000
+                                });
                                 }
 
 
-                                else if (current < data.total - 1) {
-                                    let _state = state
-                                    _state["date"] = selectedDate
-                                    _state['size'] = stackIndex
-                                    _state['emergencyNumber'] = state.emergencyNumber ?? data.param.phone_number
-                                    let temp = stateArray
-                                    temp[current] = _state
-                                    setStateArray(temp)
-                                    setCurrent(current + 1)
+                            else if (current < data.total - 1) {
+                                let _state = state
+                            _state["date"] = selectedDate
+                            _state['size'] = stackIndex
+                            _state['emergencyNumber'] = state.emergencyNumber ?? data.param.phone_number
+                            let temp = stateArray
+                            temp[current] = _state
+                            setStateArray(temp)
+                            setCurrent(current + 1)
                                 } else {
-                                    let _state = state
-                                    _state["date"] = selectedDate
-                                    _state['size'] = stackIndex
-                                    _state['emergencyNumber'] = state.emergencyNumber ?? data.param.phone_number
+                                let _state = state
+                            _state["date"] = selectedDate
+                            _state['size'] = stackIndex
+                            _state['emergencyNumber'] = state.emergencyNumber ?? data.param.phone_number
 
-                                    let temp = stateArray
-                                    temp[current] = _state
-                                    setStateArray(temp)
+                            let temp = stateArray
+                            temp[current] = _state
+                            setStateArray(temp)
 
-                                    let _data = data
-                                    data.stateArray = stateArray
-                                    navigation.navigate("MasterList", data)
+                            let _data = data
+                            data.stateArray = stateArray
+                            navigation.navigate("MasterList", data)
                                 }
                             }} text={"Next"} alignSelf={'center'} marginTop={24} width='45%' />
 
