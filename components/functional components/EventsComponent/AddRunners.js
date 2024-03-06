@@ -262,6 +262,7 @@ const AddRunners = ({ route, navigation }) => {
                                     <Feather name="phone" size={24} color={COLORS.icons} style={{ position: 'absolute', zIndex: 5, left: 8, top: '40%' }} />
                                     <Input
                                         placeholder="Enter Here"
+                                        inputType='numeric'
                                         inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start', paddingLeft: 42 }}
                                         onChangeText={(value) => setState(current => ({ ...current, number: value }))}
                                         value={state.number}
@@ -291,6 +292,7 @@ const AddRunners = ({ route, navigation }) => {
                                         onChangeText={(value) => setState(current => ({ ...current, emergencyNumber: value }))}
                                         value={state.emergencyNumber ?? data.param.phone_number}
                                         placeholderTextColor={COLORS.lightGray}
+                                        inputType='numeric'
                                         maxLength={10}
                                     />
                                 </View>
@@ -532,7 +534,7 @@ const AddRunners = ({ route, navigation }) => {
                                     return
                                 }
 
-                                if (!/^[a-zA-Z0-9]+$/.test(state.firstName) || !/^[a-zA-Z0-9]+$/.test(state.lastName)){
+                                if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(state.firstName) || !/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(state.lastName)){
                                     Toast.show({
                                         type: 'error',
                                         text1: 'Invalid name',

@@ -114,6 +114,8 @@ const PaymentHistory = ({ route, navigation }) => {
                 >
                     Payment History
                 </Text>
+
+              
             </View>
 
             <View style={{ width: '90%', alignSelf: 'center' }}>

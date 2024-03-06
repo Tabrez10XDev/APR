@@ -20,6 +20,7 @@ const EditProfile = ({ route, navigation }) => {
 
     const [animSpeed, setAnimSpeed] = useState(false)
     const animRef = useRef()
+    const [isEditable, setIsEditable] = useState(false)
 
     function playAnimation() {
         setAnimSpeed(true)
@@ -142,7 +143,7 @@ const EditProfile = ({ route, navigation }) => {
 
             Toast.show({
                 type: 'success',
-                text1: "Success"
+                text1: "Successfully Updated"
             });
 
             await AsyncStorage.setItem('firstName', state.first_name)
@@ -191,13 +192,13 @@ const EditProfile = ({ route, navigation }) => {
 
 
 
-            <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'flex-end', alignItems: 'center', position: 'relative' }}>
+            <View style={{ height: '12%', width: '100%', backgroundColor: COLORS.blue, justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative', flexDirection:'row', paddingHorizontal:8 }}>
 
 
                 <TouchableOpacity onPress={() => {
                     navigation.dispatch(StackActions.pop(1))
 
-                }} style={{ width: 36, height: 36, position: 'absolute', left: 12, top: 60, alignSelf: 'flex-start' }}>
+                }} style={{ width: 36, height: 36, marginBottom:10 }}>
                     <Ionicons name="chevron-back" size={36} color="white" />
                 </TouchableOpacity>
 
@@ -212,6 +213,17 @@ const EditProfile = ({ route, navigation }) => {
                 >
                     Edit Profile
                 </Text>
+
+                <TouchableOpacity onPress={() => {
+                    
+                }} style={{ width: 36, height: 36, marginBottom:4}}>
+                    {/* <Text style={{
+                        fontSize:SIZES.font,
+                        fontFamily: FONTS.medium,
+                        color: COLORS.white
+                    }}>Edit</Text> */}
+                </TouchableOpacity>
+                
             </View>
 
             <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ minHeight: '90%', paddingBottom: 50, width: '90%', alignSelf: 'center' }}>
@@ -223,7 +235,7 @@ const EditProfile = ({ route, navigation }) => {
                                 fontFamily: FONTS.bold,
                                 color: COLORS.black,
                                 textAlign: 'left',
-                                marginTop: 12
+                                marginTop: 12,
                             }}
                         >
                             First Name<Text style={{ color: COLORS.red }}>*</Text>
@@ -231,6 +243,7 @@ const EditProfile = ({ route, navigation }) => {
 
                         <Input
                             placeholder="Enter Here"
+                            editable={isEditable}
                             inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
                             onChangeText={(value) => setState(current => ({ ...current, first_name: value }))}
                             value={state.first_name}
@@ -252,6 +265,7 @@ const EditProfile = ({ route, navigation }) => {
 
                         <Input
                             placeholder="Enter Here"
+                            editable={isEditable}
                             inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
                             onChangeText={(value) => setState(current => ({ ...current, last_name: value }))}
                             value={state.last_name}
@@ -266,7 +280,8 @@ const EditProfile = ({ route, navigation }) => {
                         fontFamily: FONTS.bold,
                         color: COLORS.black,
                         textAlign: 'left',
-                        marginTop: 16
+                        marginTop: 16,
+                        
                     }}
                 >
                     Email ID<Text style={{ color: COLORS.red }}>*</Text>
@@ -298,6 +313,7 @@ const EditProfile = ({ route, navigation }) => {
                         inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start', paddingLeft: 42 }}
                         onChangeText={(value) => setState(current => ({ ...current, mobile_number: value }))}
                         value={state.mobile_number}
+                        editable={isEditable}
                         placeholderTextColor={COLORS.lightGray}
                     />
                 </View>
@@ -334,6 +350,7 @@ const EditProfile = ({ route, navigation }) => {
                     <BouncyCheckbox
                         size={25}
                         fillColor={COLORS.blue}
+                        disabled={!isEditable}
                         unfillColor={COLORS.grey}
                         iconStyle={{ borderColor: COLORS.grey }}
                         innerIconStyle={{ borderWidth: 2 }}
@@ -361,6 +378,7 @@ const EditProfile = ({ route, navigation }) => {
                             marginTop: 10,
                             color: COLORS.black
                         }}
+                        disable={!isEditable}
                         placeholderStyle={{ fontSize: 16, color: COLORS.black }}
                         selectedTextStyle={{
                             fontSize: SIZES.smallFont,
@@ -384,6 +402,7 @@ const EditProfile = ({ route, navigation }) => {
 
                         <Input
                             placeholder="Flat No"
+                            editable={isEditable}
                             inputprops={{ width: '48%', marginTop: 8, alignSelf: 'flex-start', marginLeft: 8 }}
                             onChangeText={(value) => setState(current => ({ ...current, addr_tower_flat_no: value }))}
                             value={state.addr_tower_flat_no}
@@ -400,6 +419,7 @@ const EditProfile = ({ route, navigation }) => {
 
                             <Input
                                 placeholder="Villa Number"
+                                editable={isEditable}
                                 inputprops={{ width: '100%', marginTop: 8 }}
                                 onChangeText={(value) => setState(current => ({ ...current, addr_villa_number: value }))}
                                 value={state.addr_villa_number}
@@ -460,6 +480,7 @@ const EditProfile = ({ route, navigation }) => {
                             marginTop: 10,
                             color: COLORS.black
                         }}
+                        disable={!isEditable}
                         placeholderStyle={{ fontSize: 16, color: COLORS.black }}
                         selectedTextStyle={{
                             fontSize: SIZES.smallFont,
@@ -498,6 +519,7 @@ const EditProfile = ({ route, navigation }) => {
                             marginTop: 10,
                             color: COLORS.black
                         }}
+                        disable={!isEditable}
                         placeholderStyle={{ fontSize: 16, color: COLORS.black }}
                         selectedTextStyle={{
                             fontSize: SIZES.smallFont,
@@ -527,6 +549,7 @@ const EditProfile = ({ route, navigation }) => {
                         inputprops={{ width: '100%', marginTop: 12, alignSelf: 'center' }}
                         onChangeText={(value) => setState(current => ({ ...current, external_address: value }))}
                         value={state.external_address}
+                        editable={isEditable}
                         placeholderTextColor={COLORS.lightGray}
                     />
                 }
@@ -544,6 +567,7 @@ const EditProfile = ({ route, navigation }) => {
                             marginTop: 10,
                             color: COLORS.black
                         }}
+                        disable={!isEditable}
                         placeholderStyle={{ fontSize: 16, color: COLORS.black }}
                         selectedTextStyle={{
                             fontSize: SIZES.smallFont,
@@ -576,6 +600,7 @@ const EditProfile = ({ route, navigation }) => {
                             marginTop: 10,
                             color: COLORS.black
                         }}
+                        disable={!isEditable}
                         placeholderStyle={{ fontSize: 16, color: COLORS.black }}
                         selectedTextStyle={{
                             fontSize: SIZES.smallFont,
@@ -606,6 +631,7 @@ const EditProfile = ({ route, navigation }) => {
                             inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
                             onChangeText={(value) => setState(current => ({ ...current, country: value }))}
                             value={state.country}
+                            editable={isEditable}
                             placeholderTextColor={COLORS.lightGray}
                         />
                     </View>
@@ -615,14 +641,16 @@ const EditProfile = ({ route, navigation }) => {
                             inputprops={{ width: '95%', marginTop: 8, alignSelf: 'flex-start' }}
                             onChangeText={(value) => setState(current => ({ ...current, pin_code: value }))}
                             value={state.pin_code}
+                            editable={isEditable}
                             placeholderTextColor={COLORS.lightGray}
                         />
                     </View>
                 </View>
 
 
-                <RectButton text={"Save Changes"} onClick={() => {
-                    updateUser()
+                <RectButton text={isEditable ? "Save Changes" : "Edit"} onClick={() => {
+                    if(isEditable) updateUser()
+                    else setIsEditable(true)
                 }} alignSelf="center" marginTop={48} />
 
 

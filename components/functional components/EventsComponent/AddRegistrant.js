@@ -651,7 +651,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
 
 
-                            <Dropdown
+                         {state.residentOfAPR &&   <Dropdown
                                 style={{
                                     height: 45,
                                     borderColor: COLORS.lightGray,
@@ -681,7 +681,7 @@ const AddRegistrant = ({ route, navigation }) => {
                                     setState(current => ({ ...current, residentType: item.value }))
                                 }}
 
-                            />
+                            />}
                             {state.residentType == 'tower' && state.residentOfAPR &&
 
                                 <Input
@@ -817,7 +817,7 @@ const AddRegistrant = ({ route, navigation }) => {
                             />
 
                         }
-                        {state.residentType == 'others' && state.residentOfAPR !== true &&
+                        {state.residentOfAPR !== true &&
 
                             <Input
                                 placeholder="Address"
