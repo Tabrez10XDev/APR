@@ -29,10 +29,11 @@ const AddRunners = ({ route, navigation }) => {
         label: "FEMALE",
         value: "FEMALE"
     },
-    {
-        label: "OTHERS",
-        value: "OTHERS"
-    }]
+    // {
+    //     label: "OTHERS",
+    //     value: "OTHERS"
+    // }
+]
 
     const [missing, setMissing] = useState({})
 
@@ -552,7 +553,7 @@ const AddRunners = ({ route, navigation }) => {
                             return
                                 }
 
-                            else if(state.number.length !== 10){
+                            else if(state.number.length !== 10 || !/^[0-9]+$/.test(state.number)){
                                 Toast.show({
                                     type: 'error',
                                     text1: 'Invalid Number',
@@ -561,7 +562,7 @@ const AddRunners = ({ route, navigation }) => {
                             return
                                 }
 
-                            else if(_emergencyNumber.length !== 10){
+                            else if(_emergencyNumber.length !== 10 || !/^[0-9]+$/.test(_emergencyNumber)){
                                 Toast.show({
                                     type: 'error',
                                     text1: 'Invalid Emergency Number',

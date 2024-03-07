@@ -36,10 +36,6 @@ const EditProfile = ({ route, navigation }) => {
             label: "Tower",
             value: "tower"
         },
-        {
-            label: 'Others',
-            value: 'others'
-        },
     ]
 
     const [blocks, setBlocks] = useState([])
@@ -106,6 +102,38 @@ const EditProfile = ({ route, navigation }) => {
     }
 
     async function updateUser() {
+
+
+        if (
+            (state.resident_of_apr && state.address_type == "villa" && state.addr_villa_number.trim() == '') ||
+            (state.resident_of_apr && state.address_type == "tower" && (state.addr_tower_no == null || state.addr_tower_block_no == null)) ||
+            (state.address_type == null && state.resident_of_apr) || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.pin_code.trim().length == 0) {
+           console.log(state.block);
+            Toast.show({
+                type: 'error',
+                text1: 'Missing Data',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
+        if (state.pin_code.trim().length !== 6 || !/^[0-9]+$/.test(state.pin_code)) {
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid pin_code',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
+        if (state.mobile_number.trim().length !== 10  || !/^[0-9]+$/.test(state.mobile_number)) {
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid Number',
+                visibilityTime: 1000
+            });
+            return;
+        }
         playAnimation()
 
         // let address = ""
@@ -146,7 +174,7 @@ const EditProfile = ({ route, navigation }) => {
                 text1: "Successfully Updated"
             });
 
-            await AsyncStorage.setItem('firstName', state.first_name)
+            await AsyncStorage.setItem('firstName', state.first_name + " " + state.last_name)
 
         }).catch((err) => {
             Toast.show({
@@ -310,6 +338,7 @@ const EditProfile = ({ route, navigation }) => {
                     <Feather name="phone" size={24} color={COLORS.icons} style={{ position: 'absolute', zIndex: 5, left: 8, top: '40%' }} />
                     <Input
                         placeholder="Enter Here"
+                        inputType='numeric'
                         inputprops={{ width: '100%', marginTop: 8, alignSelf: 'flex-start', paddingLeft: 42 }}
                         onChangeText={(value) => setState(current => ({ ...current, mobile_number: value }))}
                         value={state.mobile_number}
@@ -366,7 +395,7 @@ const EditProfile = ({ route, navigation }) => {
 
 
 
-                    <Dropdown
+                 {state.resident_of_apr &&   <Dropdown
                         style={{
                             height: 45,
                             borderColor: COLORS.lightGray,
@@ -397,8 +426,8 @@ const EditProfile = ({ route, navigation }) => {
                             setState(current => ({ ...current, address_type: item.value }))
                         }}
 
-                    />
-                    {state.address_type == 'tower' &&
+                    />}
+                    {state.address_type == 'tower' && state.resident_of_apr &&
 
                         <Input
                             placeholder="Flat No"
@@ -412,7 +441,7 @@ const EditProfile = ({ route, navigation }) => {
                 </View>
 
                 {
-                    state.address_type == "villa" &&
+                    state.address_type == "villa" && state.resident_of_apr &&
                     <View style={{ width: '98%', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', alignSelf: 'center' }}>
 
                         <View style={{ width: '100%' }}>
@@ -423,6 +452,7 @@ const EditProfile = ({ route, navigation }) => {
                                 inputprops={{ width: '100%', marginTop: 8 }}
                                 onChangeText={(value) => setState(current => ({ ...current, addr_villa_number: value }))}
                                 value={state.addr_villa_number}
+                                inputType='numeric'
                                 placeholderTextColor={COLORS.lightGray}
                             />
                         </View>
@@ -441,7 +471,7 @@ const EditProfile = ({ route, navigation }) => {
                 }
 
                 {
-                    state.address_type == 'villa' &&
+                    state.address_type == 'villa' && state.resident_of_apr &&
                     <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
                         <View style={{ width: '50%' }}>
                             <Input
@@ -467,7 +497,7 @@ const EditProfile = ({ route, navigation }) => {
                 }
 
                 {
-                    state.address_type == "tower" &&
+                    state.address_type == "tower" && state.resident_of_apr &&
                     <Dropdown
                         style={{
                             height: 45,
@@ -506,7 +536,7 @@ const EditProfile = ({ route, navigation }) => {
                 }
 
                 {
-                    state.address_type == "tower" &&
+                    state.address_type == "tower" && state.resident_of_apr &&
                     <Dropdown
                         style={{
                             height: 45,
@@ -542,7 +572,7 @@ const EditProfile = ({ route, navigation }) => {
                     />
 
                 }
-                {state.address_type == 'others' &&
+                {!state.resident_of_apr &&
 
                     <Input
                         placeholder="Address"
@@ -642,6 +672,7 @@ const EditProfile = ({ route, navigation }) => {
                             onChangeText={(value) => setState(current => ({ ...current, pin_code: value }))}
                             value={state.pin_code}
                             editable={isEditable}
+                            inputType='numeric'
                             placeholderTextColor={COLORS.lightGray}
                         />
                     </View>

@@ -31,6 +31,7 @@ const ProfileScreen = ({ route, navigation }) => {
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
             const result = await AsyncStorage.getItem('firstName')
+            console.log(result);
             setName(result ?? "User")
         });
 

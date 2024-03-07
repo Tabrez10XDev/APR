@@ -95,6 +95,10 @@ const Events = ({ navigation }) => {
             setData(current => ({ ...current, percentage: percent, eventDate: eventDate, ageCategories: ageCategories, raceCategories: raceCategories, registrant_type: registrant_type }))
 
         }).catch((err) => {
+            if(data.registrant_type.length == 0){
+                console.log("Running again");
+                fetchDashboard()
+            }
             console.log(err)
         }).finally(() => {
             pauseAnimation()

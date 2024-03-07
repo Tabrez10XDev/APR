@@ -152,7 +152,10 @@ const AddRegistrant = ({ route, navigation }) => {
             return; 
         }
 
-        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0 || state.runnersClass == undefined || state.runnersClass == null) {
+        if (
+            (state.residentOfAPR && state.residentType == "villa" && state.villaNumber.trim() == '') ||
+            (state.residentOfAPR && state.residentType == "tower" && (state.tower == null || state.block == null)) ||
+            (state.residentType == null && state.residentOfAPR) || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0 || state.runnersClass == undefined || state.runnersClass == null) {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -170,6 +173,17 @@ const AddRegistrant = ({ route, navigation }) => {
             });
             return;
         }
+
+        if (state.number.trim().length !== 10) {
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid Number',
+                visibilityTime: 1000
+            });
+            return;
+        }
+
+    
 
         let address = state.flatNo
         if (state.residentType == "villa") address = null
@@ -282,7 +296,11 @@ const AddRegistrant = ({ route, navigation }) => {
     async function addRegistrant(userId) {
 
 
-        if (state.residentType == null || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0 || state.runnersClass == undefined || state.runnersClass == null) {
+        if (
+            (state.residentOfAPR && state.residentType == "villa" && state.villaNumber.trim() == '') ||
+            (state.residentOfAPR && state.residentType == "tower" && (state.tower == null || state.block == null)) ||
+            (state.residentType == null && state.residentOfAPR) || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0 || state.runnersClass == undefined || state.runnersClass == null) {
+           console.log(state.block);
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -299,6 +317,17 @@ const AddRegistrant = ({ route, navigation }) => {
             });
             return;
         }
+
+        // if (data.number.trim().length !== 10) {
+        //     console.log(state.number);
+        //     Toast.show({
+        //         type: 'error',
+        //         text1: 'Invalid Number',
+        //         visibilityTime: 1000
+        //     });
+        //     return;
+        // }
+
 
         let address = state.flatNo
         if (state.residentType == "villa") address += ", " + state.phase + ", "
@@ -647,9 +676,6 @@ const AddRegistrant = ({ route, navigation }) => {
                         </View>
 
                         <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignSelf: 'center' }}>
-
-
-
 
                          {state.residentOfAPR &&   <Dropdown
                                 style={{
