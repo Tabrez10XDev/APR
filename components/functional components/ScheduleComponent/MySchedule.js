@@ -1,15 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, Pressable, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, Pressable, FlatList, TouchableOpacity } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useEffect, useRef } from 'react';
 import Lottie from 'lottie-react-native';
 import axios from 'axios';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MySchedule = ({ navigation }) => {
+
+
+    
 
 
     const [stackIndex, setStackIndex] = useState(1);
@@ -189,7 +191,7 @@ const MySchedule = ({ navigation }) => {
                                 >
                                     {item.type_name}
                                 </Text>
-                                <Ionicons name="md-checkmark-circle" size={24} color="#23A26D" style={{ marginHorizontal: 8 }} />
+                                <Ionicons name="checkmark-circle" size={24} color="#23A26D" style={{ marginHorizontal: 8 }} />
                             </View>
 
                             <Text

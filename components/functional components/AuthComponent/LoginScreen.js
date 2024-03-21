@@ -260,7 +260,7 @@ const LoginScreen = ({ navigation, route }) => {
                                     navigation.navigate("ForgotPassword")
                                 }}
                             >
-                                Forgot Password ?
+                                Change Phone Number
                             </Text>
                         </View>
 

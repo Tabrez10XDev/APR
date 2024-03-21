@@ -83,21 +83,21 @@ const Events = ({ navigation }) => {
             response.data.raceCategory.map((ele, inx) => {
                 raceCategories[ele.race_type_id] = ele.race_type_name
             })
-            
+
             let registrant_type = response.data.registrant_type
 
-            if (result2 != null && result2 == "1"){
-                registrant_type = response.data.registrant_type.filter(current=>current.type_name.toLowerCase().includes("marathon"))
+            if (result2 != null && result2 == "1") {
+                registrant_type = response.data.registrant_type.filter(current => current.type_name.toLowerCase().includes("marathon"))
             }
 
-            
+
 
             setData(current => ({ ...current, percentage: percent, eventDate: eventDate, ageCategories: ageCategories, raceCategories: raceCategories, registrant_type: registrant_type }))
 
         }).catch((err) => {
-            if(data.registrant_type.length == 0){
+            if (data.registrant_type.length == 0) {
                 console.log("Running again");
-                fetchDashboard()
+                // fetchDashboard()
             }
             console.log(err)
         }).finally(() => {
@@ -140,10 +140,7 @@ const Events = ({ navigation }) => {
 
             // if (result2 != null && result2 == "1") fetchDashboard()
             // else
-         fetchDashboard(result2)
-
-
-            // fetchDashboard()
+            await fetchDashboard(result2)
         }
         );
 

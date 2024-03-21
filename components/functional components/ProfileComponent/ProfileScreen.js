@@ -4,10 +4,8 @@ import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
-import Input from '../../ui components/Input';
-import { useState, useEffect } from 'react';
-import { Dropdown } from 'react-native-element-dropdown';
-import common from '../../../contants/common';
+import { useState, useEffect, useRef } from 'react';
+import Lottie from 'lottie-react-native';
 import authContext from '../../../contants/authContext';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +13,24 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 
 const ProfileScreen = ({ route, navigation }) => {
+    const [animSpeed, setAnimSpeed] = useState(false)
+    const animRef = useRef()
+
+    function playAnimation() {
+        setAnimSpeed(true)
+    }
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            animRef.current?.play();
+        }, 100)
+    }, [animSpeed])
+
+
+    function pauseAnimation() {
+        setAnimSpeed(false)
+    }
 
     const [name, setName] = useState("")
 
@@ -42,11 +58,13 @@ const ProfileScreen = ({ route, navigation }) => {
 
     async function _deleteAccount(userId) {
 
+        playAnimation()
 
 
 
         axios.put(`${CONST.baseUrlAuth}api/registrant/delete/account/${userId}`).then((response) => {
             console.log(response.data)
+            pauseAnimation()
             Toast.show({
                 type: 'success',
                 text1: 'Success'
@@ -58,6 +76,7 @@ const ProfileScreen = ({ route, navigation }) => {
 
 
         }).catch((error) => {
+            pauseAnimation()
             Toast.show({
                 type: 'error',
                 text1: error
@@ -214,7 +233,24 @@ const ProfileScreen = ({ route, navigation }) => {
 
                     </View>
 
+                    {animSpeed &&
+                        <View style={{
+                            shadowColor: COLORS.homeCard,
+                            shadowOffset: {
+                                width: 0,
+                                height: 2,
+                            },
+                            shadowOpacity: 0.3,
+                            shadowRadius: 2,
+                            elevation: 8,
+                            zIndex: 5,
+                            borderRadius: 16,
+                            position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
+                        }}>
 
+                            <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                        </View>
+                    }
 
 
                 </View>

@@ -45,8 +45,11 @@ const ForgotPassword = ({ navigation }) => {
 
 
     const [email, setEmail] = useState("")
+    const [number, setNumber] = useState("")
+    const [newNumber, setNewNumber] = useState("")
 
     async function resetPassword(email) {
+        
 
         const payload = {
             email_id: email,
@@ -67,6 +70,39 @@ const ForgotPassword = ({ navigation }) => {
             Toast.show({
                 type: 'error',
                 text1: error
+            });
+            pauseAnimation()
+        })
+    }
+
+    async function changeNumber() {
+
+        const payload = {
+            "email_id": email.toLowerCase(),
+            "current_mobile_number": number,
+            "new_mobile_number": newNumber,
+            "change_mobile_number": true,
+            "notif_token":null
+        }
+
+        console.log(payload);
+        playAnimation()
+
+
+        axios.post(`${CONST.baseUrlAuth}api/registrant/verify/mobile`, payload).then((response) => {
+            console.log(response.data)
+            Toast.show({
+                type: 'success',
+                text1: 'Success'
+            });
+            navigation.navigate("OTPScreen", { phone_number: number, email: email, new_phone_number: newNumber, isChange: true })
+
+            pauseAnimation()
+        }).catch((error) => {
+            console.log(error.response.data);
+            Toast.show({
+                type: 'error',
+                text1: error.response.data
             });
             pauseAnimation()
         })
@@ -120,7 +156,7 @@ const ForgotPassword = ({ navigation }) => {
                         color: COLORS.black,
                     }}
                 >
-                    Reset Password
+                    Update Phone Number
                 </Text>
 
 
@@ -147,8 +183,16 @@ const ForgotPassword = ({ navigation }) => {
                 <TextInput value={email} onChangeText={(text) => { setEmail(text) }} variant="outlined" label="Email" style={{ marginHorizontal: 16, width: '90%' }} color={COLORS.blue} />
             </View>
 
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 18 }}>
+                <TextInput inputMode="numeric" value={number} onChangeText={(text) => { setNumber(text) }} variant="outlined" label="Current Phone Number" style={{ marginHorizontal: 16, width: '90%' }} color={COLORS.blue} />
+            </View>
 
-            <RectButton text="Send Reset Link" position='absolute' bottom={60} onClick={() => { resetPassword(email) }} />
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 18 }}>
+                <TextInput inputMode="numeric" value={newNumber} onChangeText={(text) => { setNewNumber(text) }} variant="outlined" label="New Phone Number" style={{ marginHorizontal: 16, width: '90%' }} color={COLORS.blue} />
+            </View>
+
+
+            <RectButton text="Send Reset Link" position='absolute' bottom={60} onClick={() => { changeNumber() }} />
 
             <Toast
                 position='bottom'

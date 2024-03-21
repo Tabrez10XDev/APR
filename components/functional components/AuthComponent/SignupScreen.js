@@ -60,7 +60,6 @@ const SignUpScreen = ({ navigation, route }) => {
         firstName: "",
         lastName: "",
         email: "",
-        password: "",
         corpCode: null,
         number: ""
     })
@@ -82,7 +81,7 @@ const SignUpScreen = ({ navigation, route }) => {
             return;
         }
 
-        if (state.firstName.trim().length === 0 || state.lastName.trim().length === 0 || state.email.trim().length === 0 || state.password.trim().length === 0 || state.number.trim().length === 0) {
+        if (state.firstName.trim().length === 0 || state.lastName.trim().length === 0 || state.email.trim().length === 0 || state.number.trim().length === 0) {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -95,7 +94,6 @@ const SignUpScreen = ({ navigation, route }) => {
             "middle_name": null,
             "last_name": state.lastName,
             "email_id": state.email,
-            "password": state.password,
             "mobile_number": state.number,
             corporate_code: state.corpCode,
             corporate_user: true,
@@ -143,7 +141,7 @@ const SignUpScreen = ({ navigation, route }) => {
             return;
         }
 
-        if (state.firstName.trim().length === 0 || state.lastName.trim().length === 0 || state.email.trim().length === 0 || state.password.trim().length === 0 || state.number.trim().length === 0) {
+        if (state.firstName.trim().length === 0 || state.lastName.trim().length === 0 || state.email.trim().length === 0 || state.number.trim().length === 0) {
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -157,7 +155,6 @@ const SignUpScreen = ({ navigation, route }) => {
             "middle_name": null,
             "last_name": state.lastName,
             "email_id": state.email.toLowerCase(),
-            "password": state.password,
             "mobile_number": state.number,
             "google_id": null,
             "corporate_user": false,
@@ -317,40 +314,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
                 />
 
-                <Text
-                    style={{
-                        fontSize: SIZES.medium,
-                        fontFamily: FONTS.bold,
-                        color: COLORS.black,
-                        width: '90%',
-                        textAlign: 'left',
-                        marginTop: 16
-                    }}
-                >
-                    Password
-                </Text>
-
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-                    <Input
-                        placeholder="Enter Here"
-                        onChangeText={(value) => setState(current => ({ ...current, password: value }))}
-                        value={state.password}
-                        placeholderTextColor={COLORS.lightGray}
-                        inputprops={{ secureTextEntry: !visibility }}
-                    />
-                    {/* <TextInput value={pass} onChangeText={(text) => { setPass(text) }} secureTextEntry={!visibility} variant="outlined" label="Password" style={{ marginHorizontal: 16, width: '90%' }} color={COLORS.blue} /> */}
-                    <TouchableOpacity
-                        onPress={() => {
-                            setVisibility(!visibility)
-                            setPassIcon(!passIcon)
-                        }}
-                        style={{ alignItems: 'center', justifyContent: 'center', width: 32, height: 32, position: 'absolute', right: 24, zIndex: 5 }}
-                    >
-                        <Feather name={passIcon ? 'eye-off' : 'eye'} size={24} color={COLORS.grey} />
-
-
-                    </TouchableOpacity>
-                </View>
+     
 
 
                 <Text

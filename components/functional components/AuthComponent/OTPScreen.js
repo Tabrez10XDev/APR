@@ -22,7 +22,7 @@ import OTPTextView from "react-native-otp-textinput";
 
 const OTPScreen = ({ route }) => {
 
-    let otpinput= useRef(null);
+    let otpinput = useRef(null);
 
 
     const [animSpeed, setAnimSpeed] = useState(false)
@@ -37,13 +37,13 @@ const OTPScreen = ({ route }) => {
 
     const handleCellTextChange = async (text, i) => {
         if (i === 0 && Clipboard) {
-          const clippedText = await Clipboard.getStringAsync();
-          console.log(clippedText);
-          if (clippedText && clippedText.slice(0, 1) === text) {
+            const clippedText = await Clipboard.getStringAsync();
+            console.log(clippedText);
+            if (clippedText && clippedText.slice(0, 1) === text) {
                 otpinput.current?.setValue(clippedText, true);
-              }
+            }
         }
-};
+    };
 
     useEffect(() => {
         setTimeout(() => {
@@ -76,11 +76,24 @@ const OTPScreen = ({ route }) => {
 
     async function verifyOTP(otp) {
 
-        const payload = {
+        let payload = {
+            "current_phone_number": null,
             "phone_number": route.params.phone_number,
             "otp": parseInt(otp),
-            "notif_token": "",
+            "notif_token": null,
+            "change_phone_number": false,
             "email_id": route.params.email ?? null
+        }
+
+        if (route.params.isChange) {
+            payload = {
+                "current_phone_number": route.params.phone_number,
+                "phone_number": route.params.new_phone_number,
+                "change_phone_number": true,
+                "email_id": route.params.email ?? null,
+                "otp": parseInt(otp),
+                "notif_token": null
+            }
         }
 
         console.log(payload);
@@ -251,7 +264,7 @@ const OTPScreen = ({ route }) => {
                             fontFamily: FONTS.regular,
                             color: COLORS.blue,
                             marginLeft: 6,
-                            marginTop:16
+                            marginTop: 16
                             // textDecorationLine: 'underline'
 
                         }}
