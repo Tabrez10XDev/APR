@@ -41,11 +41,9 @@ const MySchedule = ({ navigation }) => {
     }
 
     async function fetchHistory(userId) {
-        console.log("Fetching My Schedule", userId)
         playAnimation()
 
         axios.get(`${CONST.baseUrlRegister}api/registration/myschedule/data/${userId}`).then((response) => {
-            console.log(response.data)
             if (response.data == []) return
             else if (response.data.runnerInfo === undefined) return
             const currDate = new Date()
@@ -53,8 +51,6 @@ const MySchedule = ({ navigation }) => {
             let _upcoming = []
             response.data.runnerInfo.map((ele, inx) => {
                 const eventDate = new Date(ele.event_date)
-                console.log(eventDate.getMonth())
-                console.log(currDate.getMonth())
                 if (currDate.getTime() > eventDate.getTime())
                     _completed.push(ele)
                 else
@@ -64,7 +60,7 @@ const MySchedule = ({ navigation }) => {
             setRegisterantInfo(response.data.registerant_info)
             setHistory(current => ({ ...current, completed: _completed, upcoming: _upcoming }))
             setState(response.data.runnerInfo)
-            console.log(response.data.runnerInfo.length)
+            console.log(response.data)
         }).catch((err) => {
             console.log(err)
         }).finally(() => {

@@ -203,7 +203,7 @@ const PaymentHistory = ({ route, navigation }) => {
                     })}
                 </ScrollView>
 
-                {state.length == 0 &&
+                {state.length == 0 && !animSpeed &&
                     <Text style={{
                         top: '30%', alignSelf: 'center', position: 'absolute',
                         fontSize: SIZES.font,

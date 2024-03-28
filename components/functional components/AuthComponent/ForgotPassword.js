@@ -114,7 +114,7 @@ const ForgotPassword = ({ navigation }) => {
             "notif_token":null
         }
 
-        console.log(payload);
+        console.log(payload, "pay");
         playAnimation()
 
 

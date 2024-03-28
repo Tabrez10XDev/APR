@@ -57,7 +57,6 @@ const Events = ({ navigation }) => {
 
         axios.get(`${CONST.baseUrlRegister}api/registration/get/registrant/category/details`).then((response) => {
             pauseAnimation()
-            console.log(response.data);
             setData(response.data)
             const combinedDateTimeStr = `${response.data.event_info.event_cut_off_date}T${response.data.event_info.event_cut_off_time}:00`;
 
@@ -150,7 +149,6 @@ const Events = ({ navigation }) => {
     useEffect(async () => {
 
         const result2 = await AsyncStorage.getItem('CorpState')
-        console.log("on it bro");
         fetchDashboard(result2)
     }, [])
 

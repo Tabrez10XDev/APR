@@ -82,7 +82,7 @@ const OTPScreen = ({ route }) => {
             "otp": parseInt(otp),
             "notif_token": null,
             "change_phone_number": false,
-            "email_id": route.params.email ?? null
+            "email_id": route.params.email ? route.params.email.toLowerCase() : null
         }
 
         if (route.params.isChange) {
@@ -90,7 +90,7 @@ const OTPScreen = ({ route }) => {
                 "current_phone_number": route.params.phone_number,
                 "phone_number": route.params.new_phone_number,
                 "change_phone_number": true,
-                "email_id": route.params.email ?? null,
+                "email_id": route.params.email ? route.params.email.toLowerCase() : null,
                 "otp": parseInt(otp),
                 "notif_token": null
             }

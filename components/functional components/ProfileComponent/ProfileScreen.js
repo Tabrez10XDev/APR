@@ -186,27 +186,7 @@ const ProfileScreen = ({ route, navigation }) => {
 
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={() => route.params.logout()}
-                            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                                <MaterialIcons name="logout" size={24} color={COLORS.blue} />
-                                <Text
-                                    style={{
-                                        fontSize: SIZES.font,
-                                        fontFamily: FONTS.regular,
-                                        color: COLORS.black,
-                                        textAlign: 'left',
-                                        marginLeft: 12
-                                    }}
-                                >
-                                    Logout
-                                </Text>
-                            </View>
-
-
-                        </TouchableOpacity>
+                   
 
 
                         <TouchableOpacity
@@ -225,6 +205,28 @@ const ProfileScreen = ({ route, navigation }) => {
                                     }}
                                 >
                                     Delete Account
+                                </Text>
+                            </View>
+
+
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => route.params.logout()}
+                            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                                <MaterialIcons name="logout" size={24} color={COLORS.blue} />
+                                <Text
+                                    style={{
+                                        fontSize: SIZES.font,
+                                        fontFamily: FONTS.regular,
+                                        color: COLORS.black,
+                                        textAlign: 'left',
+                                        marginLeft: 12
+                                    }}
+                                >
+                                    Logout
                                 </Text>
                             </View>
 

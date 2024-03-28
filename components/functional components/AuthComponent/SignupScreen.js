@@ -203,6 +203,7 @@ const SignUpScreen = ({ navigation, route }) => {
             "mobile_number": state.number,
             "google_id": null,
             "corporate_user": false,
+            "password": "",
             "corporate_code": null,
             "notif_token": null
 
@@ -233,7 +234,7 @@ const SignUpScreen = ({ navigation, route }) => {
                 console.log(err.response.data)
                 Toast.show({
                     type: 'error',
-                    text1: err.response.data.message ?? "Please try again later"
+                    text1: err.response.data ?? "Please try again later"
                 });
             }).finally(() => {
                 pauseAnimation()

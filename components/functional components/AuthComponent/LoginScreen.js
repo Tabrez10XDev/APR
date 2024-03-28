@@ -133,16 +133,7 @@ const LoginScreen = ({ navigation, route }) => {
         }
 
         playAnimation()
-        const payload = {
-            "first_name": null,
-            "last_name": null,
-            "email_id": email,
-            "password": null,
-            "notif_token": null,
-            "google_id": null
-        }
 
-        console.log(email.toLowerCase());
 
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, {
