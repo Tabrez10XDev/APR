@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity, Share } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity, Share, Platform } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
@@ -34,16 +34,40 @@ const BookingInfo = ({ route, navigation }) => {
         }
     }
 
+    async function saveFile(uri, filename, mimetype) {
+        console.log(mimetype,"log");
+
+        if (Platform.OS === "android") {
+          const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+          if (permissions.granted) {
+            const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+      
+            await FileSystem.StorageAccessFramework.createFileAsync(permissions.directoryUri, filename, mimetype)
+              .then(async (uri) => {
+                console.log("inn");
+                await FileSystem.writeAsStringAsync(uri, base64, { encoding: FileSystem.EncodingType.Base64 });
+                console.log("success");
+              })
+              .catch(e => console.log(e,"err"));
+          } else {
+            shareAsync(uri);
+          }
+        } else{
+            share(uri);
+
+        }
+      }
 
     async function downloadInvoice() {
         console.log(data);
         FileSystem.downloadAsync(
             `${CONST.baseUrlRegister}api/payment/invoice/data/${data.registerantInfo.registrant_id}/${data.order_id_ref}/${data.booking_id}`,
-            FileSystem.documentDirectory + `${""}-invoice.pdf`
+            FileSystem.documentDirectory + `invoice.pdf`
         )
-            .then(({ uri }) => {
+            .then((result) => {
+                const {uri} = result
                 console.log('Finished downloading to ', uri);
-                share(uri);
+                saveFile(result.uri, "invoice", "application/pdf");
             })
             .catch(error => {
                 console.error(error);

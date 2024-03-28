@@ -69,9 +69,9 @@ const PaymentHistory = ({ route, navigation }) => {
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            if(filterText.trim() == ""){
+            if(filterText.trim() == "" && staticState.length !== 0){
                 setState(staticState)
-            }else{
+            }else if(filterText.trim() !== ""){
                 const _filterText = filterText.toLowerCase()
                 let temp = staticState.filter(current=>(current.order_id.toLowerCase().includes(_filterText) || current.email_id.toLowerCase().includes(_filterText) || current.type_name.toLowerCase().includes(_filterText) ))
                 setState(temp)

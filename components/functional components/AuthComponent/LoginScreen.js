@@ -64,23 +64,23 @@ const LoginScreen = ({ navigation, route }) => {
             : NATIVE_REDIRECT_PARAMS;
 
 
-    const handleGoogleSignIn = async () => {
+    // const handleGoogleSignIn = async () => {
 
-        try {
-            const res = await WebBrowser.openAuthSessionAsync(
-                `https://accounts.google.com/o/oauth2/v2/auth?` +
-                `&client_id=${googleConfig.expoClientId}` +
-                `&redirect_uri=${encodeURIComponent(
-                    AuthSession.makeRedirectUri(REDIRECT_PARAMS)
-                )}` +
-                `&response_type=code` +
-                `&scope=${encodeURIComponent(googleConfig.scopes.join(' '))}`
-            );
-            console.log(res);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    //     try {
+    //         const res = await WebBrowser.openAuthSessionAsync(
+    //             `https://accounts.google.com/o/oauth2/v2/auth?` +
+    //             `&client_id=${googleConfig.expoClientId}` +
+    //             `&redirect_uri=${encodeURIComponent(
+    //                 AuthSession.makeRedirectUri(REDIRECT_PARAMS)
+    //             )}` +
+    //             `&response_type=code` +
+    //             `&scope=${encodeURIComponent(googleConfig.scopes.join(' '))}`
+    //         );
+    //         console.log(res);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
     // Google.logInAsync(config).then((response) => {
     //     console.log(response);
@@ -111,22 +111,22 @@ const LoginScreen = ({ navigation, route }) => {
 
 
 
-    const saveAuth = async (id) => {
-        try {
-            await AsyncStorage.setItem('AuthState', id.toString())
-            route.params.finishAuth()
-        } catch (err) {
-            alert(err)
-        }
-    }
+    // const saveAuth = async (id) => {
+    //     try {
+    //         await AsyncStorage.setItem('AuthState', id.toString())
+    //         route.params.finishAuth()
+    //     } catch (err) {
+    //         alert(err)
+    //     }
+    // }
 
     async function login(setCorpCode) {
-        if (email.trim().length === 0 
+        if (email.trim().length !== 10 
         // || pass.trim().length === 0
         ) {
             Toast.show({
                 type: 'error',
-                text1: 'Missing Data',
+                text1: 'Invalid Number',
                 visibilityTime: 1000
             });
             return;
@@ -136,11 +136,13 @@ const LoginScreen = ({ navigation, route }) => {
         const payload = {
             "first_name": null,
             "last_name": null,
-            "email_id": email.toLowerCase(),
+            "email_id": email,
             "password": null,
             "notif_token": null,
             "google_id": null
         }
+
+        console.log(email.toLowerCase());
 
         try {
             axios.post(`${CONST.baseUrlAuth}api/registrant/signin`, {

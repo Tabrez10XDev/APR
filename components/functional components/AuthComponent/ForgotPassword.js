@@ -77,6 +77,35 @@ const ForgotPassword = ({ navigation }) => {
 
     async function changeNumber() {
 
+
+        if(number.trim().length !== 10){
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid Current Number',
+                visibilityTime: 1000
+            });
+            return; 
+        }
+
+
+        if(newNumber.trim().length !== 10){
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid New Number',
+                visibilityTime: 1000
+            });
+            return; 
+        }
+
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase().trim())){
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid Email',
+                visibilityTime: 1000
+            });
+            return; 
+        }
+
         const payload = {
             "email_id": email.toLowerCase(),
             "current_mobile_number": number,
