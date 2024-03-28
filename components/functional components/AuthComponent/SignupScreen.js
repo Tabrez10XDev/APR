@@ -226,7 +226,7 @@ const SignUpScreen = ({ navigation, route }) => {
             } else {
                 Toast.show({
                     type: 'error',
-                    text1: response.data.message ?? "Please try again later"
+                    text1: response.data ?? "Please try again later"
                 });
             }
         })
@@ -234,7 +234,7 @@ const SignUpScreen = ({ navigation, route }) => {
                 console.log(err.response.data)
                 Toast.show({
                     type: 'error',
-                    text1: err.response.data ?? "Please try again later"
+                    text1: err.response.data.error_msg ? "Please try again later!" : err.response.data
                 });
             }).finally(() => {
                 pauseAnimation()

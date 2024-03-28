@@ -147,7 +147,13 @@ export default function App() {
                   <Stack.Screen name="BookingConfirmed" component={BookingConfirmed} />
                   <Stack.Screen name="BookingInfo" component={BookingInfo} />
                   <Stack.Screen name="PaymentHistory" component={PaymentHistory} />
-                  <Stack.Screen name="PaymentWebView" component={PaymentWebView} />
+                  <Stack.Screen 
+                  options={
+                    {
+                      gestureEnabled:false
+                    }
+                  }
+                  name="PaymentWebView" component={PaymentWebView} />
                   <Stack.Screen name="EditProfile" component={EditProfile} />
 
                   

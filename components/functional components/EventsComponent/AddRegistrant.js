@@ -174,14 +174,15 @@ const AddRegistrant = ({ route, navigation }) => {
             return;
         }
 
-        if (state.number.trim().length !== 10) {
-            Toast.show({
-                type: 'error',
-                text1: 'Invalid Number',
-                visibilityTime: 1000
-            });
-            return;
-        }
+        // if (state.number.trim().length !== 10) {
+        //     console.log(state.number);
+        //     Toast.show({
+        //         type: 'error',
+        //         text1: 'Invalid Number',
+        //         visibilityTime: 1000
+        //     });
+        //     return;
+        // }
 
     
 
@@ -294,6 +295,15 @@ const AddRegistrant = ({ route, navigation }) => {
 
 
     async function addRegistrant(userId) {
+
+        if(counter == 0){
+            Toast.show({
+                type: 'error',
+                text1: 'Please choose valid Runner count',
+                visibilityTime: 1000
+            });
+            return;
+        }
 
 
         if (
