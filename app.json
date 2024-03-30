@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "APR",
-    "slug": "apr",
-    "version": "1.0.18",
+    "slug": "APR",
+    "version": "1.0.19",
     "scheme": "nitroapr",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
@@ -27,7 +27,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.lowjunkie.APR",
-      "versionCode": 1017
+      "versionCode": 1019
 
     },
     "web": {
@@ -47,7 +47,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "24735e75-857e-4cd1-84ff-805f9d3dc521"
+        "projectId": "0e2900b1-e542-490f-ba3d-7272376adcf0"
       }
     }
   }

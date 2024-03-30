@@ -608,7 +608,7 @@ const EventDescription = ({ route, navigation }) => {
                         </View>
 
                         <View style={{ width: '90%', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', alignSelf: 'center', marginTop: 12 }}>
-                           {data.min_price !== 0 && <View>
+                           {data.min_price !== 0 ? <View>
                                 <Text
                                     style={{
                                         fontSize: SIZES.font,
@@ -629,7 +629,7 @@ const EventDescription = ({ route, navigation }) => {
                                 >
                                     ₹ {data.min_price}/-
                                 </Text>
-                            </View>}
+                            </View> : <View style={{width:10}}></View>}
 
                             <RectButton onClick={() => {
                                 if (corpCode) corpJoinNow()
