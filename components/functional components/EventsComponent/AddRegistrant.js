@@ -22,10 +22,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
     const [animSpeed, setAnimSpeed] = useState(false)
     const animRef = useRef()
-
     const [counter, setCounter] = useState(0)
-
-
 
     function playAnimation() {
         setAnimSpeed(true)
@@ -68,7 +65,7 @@ const AddRegistrant = ({ route, navigation }) => {
         runnerKits: false,
         block: null,
         residentOfAPR: false,
-        laneNumber: null,
+        laneNumber: "",
         villaNumber: '',
         amt: 0
     })
@@ -101,6 +98,7 @@ const AddRegistrant = ({ route, navigation }) => {
         console.log(`${CONST.baseUrlRegister}api/registration/create/order`);
 
         axios.post(`${CONST.baseUrlRegister}api/registration/create/order`, payload).then((response) => {
+            pauseAnimation()
             console.log("order created");
             const currDate = new Date()
             const orderDetails = response.data.order_details
@@ -116,12 +114,11 @@ const AddRegistrant = ({ route, navigation }) => {
 
 
         }).catch((err) => {
+            pauseAnimation()
             console.log("error");
             console.log(err.response.data);
         })
-            .finally(() => {
-                pauseAnimation()
-            })
+        
     }
 
 
@@ -186,20 +183,21 @@ const AddRegistrant = ({ route, navigation }) => {
 
     
 
-        let address = state.flatNo
-        if (state.residentType == "villa") address = null
-        if (state.residentType == "tower") address = null
-        else address += state.address
+        let address =  state.address
 
 
         let registrantOfAPR = false
         if (state.residentType == "villa" || state.residentType == "tower") registrantOfAPR = true
 
+        let addressType = state.residentType ?? "others"
+        if(!state.residentOfAPR)
+        addressType = "others"
+
         const _payload = {
             "registrant_id": parseInt(userId),
             "registrant_type_ref": data.registrant_class[0].registrant_type_id_ref,
-            "resident_of_apr": registrantOfAPR,
-            "address_type": state.residentType,
+            "resident_of_apr": state.residentOfAPR,
+            "address_type": addressType,
             "external_address": address,
             "city": state.city,
             "state": state.state,
@@ -234,12 +232,14 @@ const AddRegistrant = ({ route, navigation }) => {
         try {
             axios.put(`${CONST.baseUrlRegister}api/registration/add/registrant/web`, payload).then((response) => {
                 console.log("Success")
+                // pauseAnimation()
                 console.log(response.data);
                 createOrder(response.data)
 
             })
         } catch (error) {
 
+            // pauseAnimation()
             console.log(err.response.data)
             Toast.show({
                 type: 'error',
@@ -296,7 +296,7 @@ const AddRegistrant = ({ route, navigation }) => {
 
     async function addRegistrant(userId) {
 
-        if(counter == 0){
+        if(counter == 0 && isWithout){
             Toast.show({
                 type: 'error',
                 text1: 'Please choose valid Runner count',
@@ -338,21 +338,21 @@ const AddRegistrant = ({ route, navigation }) => {
         //     return;
         // }
 
+        let address =  state.address
 
-        let address = state.flatNo
-        if (state.residentType == "villa") address += ", " + state.phase + ", "
-        if (state.residentType == "tower") address += ", " + state.tower + ", "
-
-        address += state.address
 
         let registrantOfAPR = false
         if (state.residentType == "villa" || state.residentType == "tower") registrantOfAPR = true
 
+        let addressType = state.residentType ?? "others"
+        if(!state.residentOfAPR)
+        addressType = "others"
+
         const payload = {
-            "registrant_id": userId,
+            "registrant_id": parseInt(userId),
             "registrant_type_ref": data.registrant_class[0].registrant_type_id_ref,
-            "resident_of_apr": registrantOfAPR,
-            "address_type": state.residentType,
+            "resident_of_apr": state.residentOfAPR,
+            "address_type": addressType,
             "address": address,
             "city": state.city,
             "state": state.state,

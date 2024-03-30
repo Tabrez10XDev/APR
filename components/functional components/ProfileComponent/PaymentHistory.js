@@ -194,7 +194,7 @@ const PaymentHistory = ({ route, navigation }) => {
                                             textAlign: 'right',
                                         }}
                                     >
-                                        {ele.order_status.toUpperCase()}
+                                        {ele.order_status.toUpperCase().replace("PAYMENT INITIATED", "PENDING")}
                                     </Text>
                                 </View>
 

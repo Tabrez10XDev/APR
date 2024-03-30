@@ -158,7 +158,12 @@ const LoginScreen = ({ navigation, route }) => {
                     // else saveAuth(response.data.user_id.toString())
                 }
             }).catch((err)=>{
+                pauseAnimation()
                 console.log(err.response.data);
+                Toast.show({
+                    type: 'error',
+                    text1: err.response.data
+                });
             })
             .finally(() => {
                 pauseAnimation(1)

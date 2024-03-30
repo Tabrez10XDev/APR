@@ -313,10 +313,10 @@ const AddRunners = ({ route, navigation }) => {
                             T Shirt Size<Text style={{ color: COLORS.red }}>*</Text>
                         </Text>
 
-                        <View style={{ width: '100%', height: 60 }}>
+                        <View style={{ width: '100%', height: 60, }}>
                             <ScrollView
                                 horizontal={true}
-                                showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} style={{ width: '98%', alignSelf: 'center', height: 60 }}>
+                                showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} style={{ width: '100%', alignSelf: 'center', height: 60 }} contentContainerStyle={{width:'100%', justifyContent:'center'}}>
 
 
                                 <View style={{
@@ -324,7 +324,7 @@ const AddRunners = ({ route, navigation }) => {
                                     borderColor: "#CCE4FF",
                                     height: 60,
                                     flexDirection: 'row',
-                                    justifyContent: 'center', alignItems: 'center', width: '100%', height: 45, marginTop: 8, backgroundColor: COLORS.white, borderRadius: 6, padding: 2,
+                                    justifyContent: 'center', alignItems: 'center', width: '100%', height: 45, marginTop: 8, backgroundColor: COLORS.white, borderRadius: 6, padding:6
                                 }}>
 
                                     <Pressable
@@ -644,10 +644,10 @@ export default AddRunners
 
 const styles = StyleSheet.create({
     unSelectedBox: {
-        borderRadius: 6, width: 30, marginHorizontal: 12, backgroundColor: COLORS.white, height: 28, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'
+        borderRadius: 6, marginHorizontal: 12, backgroundColor: COLORS.white, height: 28, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'
     },
     selectedBox: {
-        borderRadius: 6, width: 30, marginHorizontal: 12, backgroundColor: COLORS.white, height: 28, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'
+        borderRadius: 6,  marginHorizontal: 12, backgroundColor: COLORS.white, height: 28, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'
     },
     unSelectedText: {
         textAlign: 'center',

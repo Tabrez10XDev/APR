@@ -2,7 +2,7 @@
   "expo": {
     "name": "APR",
     "slug": "apr",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "scheme": "nitroapr",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
@@ -27,7 +27,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.lowjunkie.APR",
-      "versionCode": 1015
+      "versionCode": 1016
 
     },
     "web": {
