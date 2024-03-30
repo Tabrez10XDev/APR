@@ -35,7 +35,6 @@ const BookingInfo = ({ route, navigation }) => {
     }
 
     async function saveFile(uri, filename, mimetype) {
-        console.log(mimetype,"log");
 
         if (Platform.OS === "android") {
           const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -44,7 +43,6 @@ const BookingInfo = ({ route, navigation }) => {
       
             await FileSystem.StorageAccessFramework.createFileAsync(permissions.directoryUri, filename, mimetype)
               .then(async (uri) => {
-                console.log("inn");
                 await FileSystem.writeAsStringAsync(uri, base64, { encoding: FileSystem.EncodingType.Base64 });
                 console.log("success");
               })
@@ -59,7 +57,6 @@ const BookingInfo = ({ route, navigation }) => {
       }
 
     async function downloadInvoice() {
-        console.log(data);
         FileSystem.downloadAsync(
             `${CONST.baseUrlRegister}api/payment/invoice/data/${data.registerantInfo.registrant_id}/${data.order_id_ref}/${data.booking_id}`,
             FileSystem.documentDirectory + `invoice.pdf`
@@ -79,7 +76,6 @@ const BookingInfo = ({ route, navigation }) => {
         <authContext.Consumer>
             {({ userId, setUserId, corpCode }) => (
                 <View style={{ width: '100%', height: '100%', backgroundColor: 'white' }}>
-                    {console.log(JSON.stringify(route.params))}
 
                     <StatusBar
                         background={COLORS.blue}
@@ -163,7 +159,7 @@ const BookingInfo = ({ route, navigation }) => {
                                 maxWidth: '95%'
                             }}
                         >
-                            Transaction/Booking ID: {data.order_id_ref}
+                            Transaction/Order ID: {data.order_id_ref}
                         </Text>
 
 
@@ -305,6 +301,7 @@ const BookingInfo = ({ route, navigation }) => {
 
                             {
                                 data.runners.map((ele, inx) => {
+                                    console.log(ele,"Item");
                                     return (
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
                                             <Text
@@ -317,6 +314,17 @@ const BookingInfo = ({ route, navigation }) => {
                                             >
                                                 {ele.runner_first_name} {ele.runner_last_name}
                                             </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: SIZES.font,
+                                                    fontFamily: FONTS.regular,
+                                                    color: COLORS.black,
+                                                    textAlign: 'left',
+                                                }}
+                                            >
+                                                {ele.race_type_name}
+                                            </Text>
+                                            
 
                                             <Text
                                                 style={{

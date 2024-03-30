@@ -44,10 +44,13 @@ const PaymentHistory = ({ route, navigation }) => {
     async function getPaymentHistory() {
         playAnimation()
         axios.get(`${CONST.baseUrlRegister}api/payment/details/${route.params.userId}`).then((response) => {
-            setState(response.data)
-            setStaticState(response.data)
+            let data = response.data
+            
+            data.sort((b, a) => new Date(a.created_at) - new Date(b.created_at));
 
-            console.log(response.data);
+            setState(data)
+            setStaticState(data)
+
         }).catch((err) => {
 
         }).finally(() => {
@@ -122,7 +125,7 @@ const PaymentHistory = ({ route, navigation }) => {
 
                 <TextInput value={filterText} onChangeText={(text) => { setFilterText(text) }} placeholder='Filter' style={{ width: '100%', height: 45, borderColor: '#656565', borderWidth: 1, marginTop: 10, padding: 6, borderRadius: 6, marginBottom: 18 }} color={COLORS.black} />
 
-                <ScrollView contentContainerStyle={{ minHeight: '100%' }} showsVerticalScrollIndicator={false}>
+                <ScrollView contentContainerStyle={{ paddingBottom:300}} showsVerticalScrollIndicator={false}>
                     {state.map((ele, inx) => {
                         return (
                             <View style={{ width: '100%', backgroundColor: '#EBF0F9', borderRadius: 10, padding: 10, marginVertical: 8, alignSelf: 'center' }}>

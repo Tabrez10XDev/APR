@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const MySchedule = ({ navigation }) => {
 
 
-    
+
 
 
     const [stackIndex, setStackIndex] = useState(1);
@@ -60,7 +60,6 @@ const MySchedule = ({ navigation }) => {
             setRegisterantInfo(response.data.registerant_info)
             setHistory(current => ({ ...current, completed: _completed, upcoming: _upcoming }))
             setState(response.data.runnerInfo)
-            console.log(response.data)
         }).catch((err) => {
             console.log(err)
         }).finally(() => {
@@ -169,13 +168,21 @@ const MySchedule = ({ navigation }) => {
                 style={{ width: '100%', alignSelf: 'center' }}
                 contentContainerStyle={{ alignItems: 'center', width: '100%', justifyContent: 'center', alignItems: 'center', alignSelf: 'center' }}
                 data={stackIndex == 1 ? history.upcoming : history.completed}
-                renderItem={({ item, index }) =>
-                    <TouchableOpacity
-                    onPress={()=>{navigation.navigate("BookingInfo", {...item, registerantInfo: registerantInfo})}}
-                    style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '90%', alignSelf: 'center', marginTop: 12 }}>
+                renderItem={({ item, index }) => {
+                    let categories = ""
+                    item.runners.forEach(element => {
+                        categories += element.race_type_name + ","
+                    });
 
-                        <View style={{alignItems:'flex-start', width:'80%', justifyContent:'flex-start'}}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',  width:'100%' }}>
+                    categories = categories.slice(0, -1)
+
+
+                    return (<TouchableOpacity
+                        onPress={() => { navigation.navigate("BookingInfo", { ...item, registerantInfo: registerantInfo }) }}
+                        style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '90%', alignSelf: 'center', marginTop: 12 }}>
+
+                        <View style={{ alignItems: 'flex-start', width: '80%', justifyContent: 'flex-start' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', width: '100%' }}>
 
                                 <Text
                                     style={{
@@ -201,7 +208,7 @@ const MySchedule = ({ navigation }) => {
                                 {item.event_date.substring(8, 10)} {monthMap[parseInt(item.event_date.substring(5, 7) - 1)]} {item.event_date.substring(0, 4)}
                             </Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                                <Text
+                                {item.runners.length !== 0 && <><Text
                                     style={{
                                         fontSize: SIZES.font,
                                         fontFamily: FONTS.regular,
@@ -211,7 +218,8 @@ const MySchedule = ({ navigation }) => {
                                 >
                                     {item.runners.length} ticket(s)
                                 </Text>
-                                <View style={{ width: 6, height: 6, borderRadius: 4, backgroundColor: COLORS.grey, marginHorizontal: 8 }}></View>
+                                    <View style={{ width: 6, height: 6, borderRadius: 4, backgroundColor: COLORS.grey, marginHorizontal: 8 }}></View>
+                                </>}
                                 <Text
                                     style={{
                                         fontSize: SIZES.font,
@@ -220,7 +228,7 @@ const MySchedule = ({ navigation }) => {
                                         textAlign: 'left',
                                     }}
                                 >
-                                    {item.run_category}
+                                    {item.runners[0] ? categories : item.category_name}
                                 </Text>
 
 
@@ -247,9 +255,10 @@ const MySchedule = ({ navigation }) => {
 
                         </View>
 
-                        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={{ marginLeft: 16}} />
+                        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={{ marginLeft: 16 }} />
 
-                    </TouchableOpacity>
+                    </TouchableOpacity>)
+                }
 
                 }
             />

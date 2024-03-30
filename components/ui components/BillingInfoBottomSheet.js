@@ -149,7 +149,7 @@ export default BillingInfoBottomSheet = ({ refRBSheet, billingAddress, setBillin
                     }}
                 >
 
-                    <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: FONTS.medium }}>Close</Text>
+                    <Text style={{ color: COLORS.white, fontSize: 20, fontFamily: FONTS.medium }}>Close</Text>
                 </TouchableOpacity>
             </View>
 

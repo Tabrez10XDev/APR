@@ -144,7 +144,7 @@ const CreateOrder = ({ navigation, route }) => {
 
                         </Text>
 
-                        <Text
+                        {/* <Text
                             onPress={() => {
                                 refRBSheet.current.open()
                             }}
@@ -159,7 +159,7 @@ const CreateOrder = ({ navigation, route }) => {
                         >
                             Edit
 
-                        </Text>
+                        </Text> */}
                     </View>
 
                     <View style={{ width: '90%', alignSelf: 'center' }}>
