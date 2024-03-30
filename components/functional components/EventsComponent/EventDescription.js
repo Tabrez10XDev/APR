@@ -56,6 +56,7 @@ const EventDescription = ({ route, navigation }) => {
                 let temp = {}
                 if (ele.runners_allowed_count !== null && data.type_id == 1) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
                 else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
+                temp['count'] = ele.runners_allowed_count
 
                 temp['value'] = ele.category_id
                 classes.push(temp)
@@ -103,6 +104,8 @@ const EventDescription = ({ route, navigation }) => {
                 })
             })
 
+            console.log(JSON.stringify(response.data));
+
             navigation.navigate("AddRegistrant", { ...response.data, run_category: _run_category, towers: towers, phases: phases, classes: classes, typeName: data.type_name })
 
         })
@@ -137,7 +140,7 @@ const EventDescription = ({ route, navigation }) => {
                 let temp = {}
                 if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
                 else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
-
+                temp['count'] = ele.runners_allowed_count
                 temp['value'] = ele.category_id
                 classes.push(temp)
             })
@@ -605,7 +608,7 @@ const EventDescription = ({ route, navigation }) => {
                         </View>
 
                         <View style={{ width: '90%', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', alignSelf: 'center', marginTop: 12 }}>
-                            <View>
+                           {data.min_price !== 0 && <View>
                                 <Text
                                     style={{
                                         fontSize: SIZES.font,
@@ -626,7 +629,7 @@ const EventDescription = ({ route, navigation }) => {
                                 >
                                     ₹ {data.min_price}/-
                                 </Text>
-                            </View>
+                            </View>}
 
                             <RectButton onClick={() => {
                                 if (corpCode) corpJoinNow()

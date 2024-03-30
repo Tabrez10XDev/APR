@@ -12,6 +12,26 @@ import * as FileSystem from 'expo-file-system';
 
 const BookingInfo = ({ route, navigation }) => {
 
+
+    const [animSpeed, setAnimSpeed] = useState(false)
+    const animRef = useRef()
+
+    function playAnimation() {
+        setAnimSpeed(true)
+    }
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            animRef.current?.play();
+        }, 100)
+    }, [animSpeed])
+
+
+    function pauseAnimation() {
+        setAnimSpeed(false)
+    }
+
     const data = route.params
 
     const share = async (url) => {
@@ -57,16 +77,19 @@ const BookingInfo = ({ route, navigation }) => {
       }
 
     async function downloadInvoice() {
+        playAnimation()
         FileSystem.downloadAsync(
             `${CONST.baseUrlRegister}api/payment/invoice/data/${data.registerantInfo.registrant_id}/${data.order_id_ref}/${data.booking_id}`,
             FileSystem.documentDirectory + `invoice.pdf`
         )
             .then((result) => {
                 const {uri} = result
+                pauseAnimation()
                 console.log('Finished downloading to ', uri);
                 saveFile(result.uri, "invoice", "application/pdf");
             })
             .catch(error => {
+                pauseAnimation()
                 console.error(error);
             });
     }
@@ -475,6 +498,24 @@ const BookingInfo = ({ route, navigation }) => {
 
 
                     </ScrollView>
+                    {animSpeed &&
+                <View style={{
+                    shadowColor: COLORS.homeCard,
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 2,
+                    elevation: 8,
+                    zIndex: 5,
+                    borderRadius: 16,
+                    position: 'absolute', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.0)', alignSelf: 'center', padding: 24, top: '0'
+                }}>
+
+                    <Lottie source={require('../../../assets/loading.json')} autoPlay style={{ height: 100, width: 100, alignSelf: 'center' }} loop ref={animRef} speed={1} />
+                </View>
+            }
 
                 </View>
             )}

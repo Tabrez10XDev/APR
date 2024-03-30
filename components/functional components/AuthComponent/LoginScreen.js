@@ -1,8 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Feather } from "@expo/vector-icons";
-import * as AuthSession from "expo-auth-session";
-import * as WebBrowser from "expo-web-browser";
 import {
     Text,
     View,
@@ -17,7 +15,6 @@ import {
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import * as AppleAuthentication from 'expo-apple-authentication';
 import { StatusBar } from "react-native";
 import { COLORS, SIZES, FONTS, assets, CONST, } from "../../../contants";
 import Toast from 'react-native-toast-message';

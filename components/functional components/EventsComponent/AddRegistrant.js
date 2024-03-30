@@ -58,6 +58,7 @@ const AddRegistrant = ({ route, navigation }) => {
         country: "",
         zipCode: "",
         runnersClass: null,
+        maxNumber: 12,
         sourceRef: null,
         certificate: false,
         panCard: '',
@@ -994,8 +995,8 @@ const AddRegistrant = ({ route, navigation }) => {
                             placeholder="Select"
                             value={state.runnersClass}
                             onChange={item => {
-                                console.log(item, "asd");
-                                setState(current => ({ ...current, runnersClass: item.value }))
+                                console.log(item.count);
+                                setState(current => ({ ...current, runnersClass: item.value, maxNumber: item.count}))
                             }}
 
                         />
@@ -1066,8 +1067,14 @@ const AddRegistrant = ({ route, navigation }) => {
 
 
                                     <Pressable onPress={() => {
-
+                                        if(counter < parseInt(state.maxNumber))
                                         setCounter(current => current + 1)
+                                        else
+                                        Toast.show({
+                                            type: 'info',
+                                            text1: `Max participants for chosen runner class is ${state.maxNumber}`,
+                                            visibilityTime: 1000
+                                        });
 
                                     }}
                                         style={{ height: 24, justifyContent: 'center', alignItems: 'center', width: 24 }}
