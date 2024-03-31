@@ -91,6 +91,7 @@ const EditProfile = ({ route, navigation }) => {
 
             })
             setState({ ...response.data.registrantDetail, towers: towers })
+            console.log(response.data.registrantDetail);
         }).catch((err) => {
             Toast.show({
                 type: 'error',
@@ -155,10 +156,10 @@ const EditProfile = ({ route, navigation }) => {
             "addr_villa_number": state.address_type == "villa" ? `${state.addr_villa_number}` : null,
             "addr_villa_lane_no": state.address_type == "villa" ? `${state.addr_villa_lane_no}` : null,
             "addr_villa_phase_no": state.address_type == "villa" ? `${state.addr_villa_phase_no}` : null,
-            "addr_tower_no": state.address_type == "tower" ? `Tower ${state.addr_tower_no}` : null,
+            "addr_tower_no": state.address_type == "tower" ? `${state.addr_tower_no}` : null,
             "addr_tower_block_no": state.address_type == "tower" ? `${state.addr_tower_block_no}` : null,
             "addr_tower_flat_no": state.address_type == "tower" ? `${state.addr_tower_flat_no}` : null,
-            "external_address": null,
+            "external_address": state.external_address,
             // "address": address,
             "city": state.city,
             "state": state.state,

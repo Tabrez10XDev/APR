@@ -996,6 +996,7 @@ const AddRegistrant = ({ route, navigation }) => {
                             value={state.runnersClass}
                             onChange={item => {
                                 console.log(item.count);
+                                setCounter(0)
                                 setState(current => ({ ...current, runnersClass: item.value, maxNumber: item.count}))
                             }}
 
