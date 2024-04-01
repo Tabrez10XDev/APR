@@ -2,13 +2,13 @@
   "expo": {
     "name": "APR",
     "slug": "apr",
-    "version": "1.0.20",
+    "version": "1.0.22",
     "scheme": "nitroapr",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/icons/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -26,8 +26,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.lowjunkie.APR",
-      "versionCode": 1020
+      "package": "org.act.apr",
+      "versionCode": 1022
 
     },
     "web": {
