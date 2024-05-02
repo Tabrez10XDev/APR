@@ -1,4 +1,4 @@
 export const CONST ={
-    baseUrlAuth: "https://apr-marathon-render.onrender.com/",
-    baseUrlRegister: "https://apr-marathon-registerticket-render.onrender.com/"
+    baseUrlAuth: "https://test-apr-signupsignin.onrender.com/",
+    baseUrlRegister: "https://test-apr-registerticket.onrender.com/"
 }

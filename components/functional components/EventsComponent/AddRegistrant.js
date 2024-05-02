@@ -464,8 +464,8 @@ const AddRegistrant = ({ route, navigation }) => {
             addr_villa_number: state.residentType == "villa" ? `Villa ` + state.villaNumber : null,
             addr_villa_lane_no: state.residentType == "villa" ? `Lane ` + state.laneNumber : null,
             addr_villa_phase_no: state.residentType == "villa" ? `Phase ` + state.phase : null,
-            addr_tower_no: state.residentType == "tower" ? `Tower ` + state.tower : null,
-            addr_tower_block_no: state.residentType == "tower" ? `Block ` + state.block : null,
+            addr_tower_no: state.residentType == "tower" ? `` + state.tower : null,
+            addr_tower_block_no: state.residentType == "tower" ? `` + state.block : null,
             addr_tower_flat_no: state.flatNo,
         }
 

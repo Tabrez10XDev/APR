@@ -23,6 +23,9 @@ const Events = ({ navigation }) => {
     }
 
 
+ 
+
+
     useEffect(() => {
         setTimeout(() => {
             animRef.current?.play();
