@@ -149,9 +149,9 @@ const MasterList = ({ route, navigation }) => {
 
             })
         } catch (error) {
-
-            console.log(err.response.data)
             pauseAnimation()
+
+            console.log(err.response)
             Toast.show({
                 type: 'error',
                 text1: error.response.data

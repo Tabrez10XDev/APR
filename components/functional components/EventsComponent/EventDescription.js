@@ -55,45 +55,14 @@ const EventDescription = ({ route, navigation }) => {
             response.data.registrant_class.map((ele, inx) => {
                 let temp = {}
                 if (ele.runners_allowed_count !== null && data.type_id == 1) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
-                else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
+                else if(ele.category_price !== null) temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
+                else temp['label'] = ele.category_name
                 temp['count'] = ele.runners_allowed_count
 
                 temp['value'] = ele.category_id
                 classes.push(temp)
             })
-            
-            // if(data.type_id == 1){
-            //     console.log("One");
-            //     response.data.registrant_class["marathon runners"].map((ele, inx) => {
-            //         let temp = {}
-            //         if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
-            //         else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
-            //         temp['value'] = ele.category_id
-            //         classes.push(temp)
-            //     })
-            // }
-            // else if(data.type_id == 2){
-            //     console.log("Two");
-            //     response.data.registrant_class["donors with runners"].map((ele, inx) => {
-            //         let temp = {}
-            //         if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
-            //         else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
-    
-            //         temp['value'] = ele.category_id
-            //         classes.push(temp)
-            //     })
-            // }
-            // else if(data.type_id == 3){
-            //     console.log("Three");
-            //     response.data.registrant_class["donate"].map((ele, inx) => {
-            //         let temp = {}
-            //         if (ele.runners_allowed_count !== null) temp['label'] = ele.category_name + " - " + ele.runners_allowed_count + " Persons" + " ( Rs." + ele.category_price + ")"
-            //         else temp['label'] = ele.category_name + " - " + " ( Rs." + ele.category_price + " )"
-    
-            //         temp['value'] = ele.category_id
-            //         classes.push(temp)
-            //     })
-            // }
+          
         
 
             let _run_category = []
@@ -104,7 +73,6 @@ const EventDescription = ({ route, navigation }) => {
                 })
             })
 
-            console.log(JSON.stringify(response.data));
 
             navigation.navigate("AddRegistrant", { ...response.data, run_category: _run_category, towers: towers, phases: phases, classes: classes, typeName: data.type_name })
 
@@ -119,10 +87,7 @@ const EventDescription = ({ route, navigation }) => {
 
     async function corpJoinNow() {
 
-        console.log({
-            registrant_id: parseInt(data.userId),
-            registrant_type_id: data.type_id
-        });
+      
         playAnimation()
         axios.post(`${CONST.baseUrlRegister}api/corporate/registration/data/runner`, {
             registrant_id: data.userId,

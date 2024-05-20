@@ -14,6 +14,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Lottie from 'lottie-react-native';
 import { StackActions, useTheme } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const AddRegistrant = ({ route, navigation }) => {
@@ -23,10 +24,23 @@ const AddRegistrant = ({ route, navigation }) => {
     const [animSpeed, setAnimSpeed] = useState(false)
     const animRef = useRef()
     const [counter, setCounter] = useState(0)
+    const [eventId, setEventId] = useState(-1)
 
     function playAnimation() {
         setAnimSpeed(true)
     }
+
+    useEffect(async () => {
+        const unsubscribe = navigation.addListener('focus', async () => {
+
+            const result = await AsyncStorage.getItem('EventId')
+            setEventId(result)
+
+        }
+        );
+
+        return unsubscribe;
+    }, []);
 
 
     useEffect(() => {
@@ -95,8 +109,7 @@ const AddRegistrant = ({ route, navigation }) => {
             "total_amount": isDonors && showAmt ? state.amt :responseData.total_amount
         }
 
-        console.log(payload);
-        console.log(`${CONST.baseUrlRegister}api/registration/create/order`);
+       console.log("creating order");
 
         axios.post(`${CONST.baseUrlRegister}api/registration/create/order`, payload).then((response) => {
             pauseAnimation()
@@ -172,15 +185,6 @@ const AddRegistrant = ({ route, navigation }) => {
             return;
         }
 
-        // if (state.number.trim().length !== 10) {
-        //     console.log(state.number);
-        //     Toast.show({
-        //         type: 'error',
-        //         text1: 'Invalid Number',
-        //         visibilityTime: 1000
-        //     });
-        //     return;
-        // }
 
     
 
@@ -193,6 +197,7 @@ const AddRegistrant = ({ route, navigation }) => {
         let addressType = state.residentType ?? "others"
         if(!state.residentOfAPR)
         addressType = "others"
+
 
         const _payload = {
             "registrant_id": parseInt(userId),
@@ -207,7 +212,7 @@ const AddRegistrant = ({ route, navigation }) => {
             "need_80G_certificate": state.certificate,
             "pancard_number": state.panCard,
             "registrant_class_ref": state.runnersClass,
-            "event_id_ref": 3,
+            "event_id_ref": eventId,
             "role": "registrant",
             addr_villa_number: state.residentType == "villa" ? state.villaNumber : null,
             addr_villa_lane_no: state.residentType == "villa" ? state.laneNumber : null,
@@ -227,20 +232,25 @@ const AddRegistrant = ({ route, navigation }) => {
             runner_details: runnerDetails
         }
 
-        console.log(JSON.stringify(payload));
 
 
         try {
             axios.put(`${CONST.baseUrlRegister}api/registration/add/registrant/web`, payload).then((response) => {
-                console.log("Success")
                 // pauseAnimation()
                 console.log(response.data);
                 createOrder(response.data)
 
+            }).catch((err)=>{
+                pauseAnimation()
+                console.log(err.response.data)
+                Toast.show({
+                    type: 'error',
+                    text1: error.response.data
+                });
             })
         } catch (error) {
 
-            // pauseAnimation()
+            pauseAnimation()
             console.log(err.response.data)
             Toast.show({
                 type: 'error',
@@ -311,7 +321,6 @@ const AddRegistrant = ({ route, navigation }) => {
             (state.residentOfAPR && state.residentType == "villa" && state.villaNumber.trim() == '') ||
             (state.residentOfAPR && state.residentType == "tower" && (state.tower == null || state.block == null)) ||
             (state.residentType == null && state.residentOfAPR) || state.runnersClass == null || state.city.trim().length == 0 || state.state.trim().length == 0 || state.country.trim().length == 0 || state.zipCode.trim().length == 0 || state.runnersClass == undefined || state.runnersClass == null) {
-           console.log(state.block);
             Toast.show({
                 type: 'error',
                 text1: 'Missing Data',
@@ -363,7 +372,7 @@ const AddRegistrant = ({ route, navigation }) => {
             "pancard_number": state.panCard,
             "registrant_source_ref": state.sourceRef,
             "registrant_class_ref": state.runnersClass,
-            "event_id_ref": 3,
+            "event_id_ref": eventId,
             "role": "registrant",
             addr_villa_number: state.residentType == "villa" ? `${state.villaNumber}` : null,
             addr_villa_lane_no: state.residentType == "villa" ? `${state.laneNumber}` : null,
@@ -390,7 +399,6 @@ const AddRegistrant = ({ route, navigation }) => {
         }
       
 
-        console.log(JSON.stringify(payload))
 
         navigation.navigate("AddRunners", { ...payload, current: 0, total: _stateArray.length, stateArray: _stateArray, param: data })
 
@@ -402,7 +410,6 @@ const AddRegistrant = ({ route, navigation }) => {
                 "villa_number": state.villaNumber
             }
         ).then((response) => {
-            console.log(response.data)
             setState(current => (
                 {
                     ...current,
@@ -410,7 +417,6 @@ const AddRegistrant = ({ route, navigation }) => {
                     phase: response.data.phase_no
                 }
             ))
-            console.log(response.data)
         })
     }
 
@@ -446,7 +452,7 @@ const AddRegistrant = ({ route, navigation }) => {
         if (state.residentType == "villa" || state.residentType == "tower") registrantOfAPR = true
 
         const payload = {
-            "event_id": 3, //Event ID
+            "event_id": eventId, //Event ID
             "registrant_id": parseInt(userId),
             "registrant_type_ref": data.registrant_class[0].registrant_type_id_ref,
             "resident_of_apr": registrantOfAPR,
@@ -459,7 +465,7 @@ const AddRegistrant = ({ route, navigation }) => {
             "need_80G_certificate": state.certificate,
             "pancard_number": state.panCard,
             "registrant_class_ref": state.runnersClass,
-            "event_id_ref": 3,
+            "event_id_ref": eventId,
             "role": "registrant",
             addr_villa_number: state.residentType == "villa" ? `Villa ` + state.villaNumber : null,
             addr_villa_lane_no: state.residentType == "villa" ? `Lane ` + state.laneNumber : null,
@@ -479,7 +485,6 @@ const AddRegistrant = ({ route, navigation }) => {
 
         try {
             axios.put(`${CONST.baseUrlRegister}api/registration/add/registrant/web`, payload).then((response) => {
-                console.log("Success")
                 navigation.navigate("BookingConfirmed", response.data)
 
             })
@@ -995,7 +1000,6 @@ const AddRegistrant = ({ route, navigation }) => {
                             placeholder="Select"
                             value={state.runnersClass}
                             onChange={item => {
-                                console.log(item.count);
                                 setCounter(0)
                                 setState(current => ({ ...current, runnersClass: item.value, maxNumber: item.count}))
                             }}

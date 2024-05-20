@@ -61,9 +61,9 @@ const Events = ({ navigation }) => {
         axios.get(`${CONST.baseUrlRegister}api/registration/get/registrant/category/details`).then((response) => {
             pauseAnimation()
             setData(response.data)
-            const combinedDateTimeStr = `${response.data.event_info.event_cut_off_date}T${response.data.event_info.event_cut_off_time}:00`;
+            const combinedDateTimeStr = response.data.event_info.event_cut_off_time
 
-            const createdAt = new Date(response.data.event_info.created_at);
+            const createdAt = new Date();
             const eventCutOffDateTime = new Date(combinedDateTimeStr);
             const timeDifferenceMs = eventCutOffDateTime - createdAt;
 
@@ -92,7 +92,12 @@ const Events = ({ navigation }) => {
                 registrant_type = response.data.registrant_type.filter(current => current.type_name.toLowerCase().includes("marathon"))
             }
 
-
+                try {
+                     AsyncStorage.setItem('EventId', response.data.event_info.event_id.toString())
+                } catch (err) {
+                    alert(err)
+                }
+            
 
             setData(current => ({ ...current, percentage: percent, eventDate: eventDate, ageCategories: ageCategories, raceCategories: raceCategories, registrant_type: registrant_type }))
 
@@ -139,8 +144,7 @@ const Events = ({ navigation }) => {
             const result2 = await AsyncStorage.getItem('CorpState')
             const result = await AsyncStorage.getItem('firstName')
             setName(result ?? "User")
-            // if (result2 != null && result2 == "1") fetchDashboard()
-            // else
+
             await fetchDashboard(result2)
         }
         );

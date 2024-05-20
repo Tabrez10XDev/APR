@@ -45,6 +45,7 @@ const PaymentHistory = ({ route, navigation }) => {
         playAnimation()
         axios.get(`${CONST.baseUrlRegister}api/payment/details/${route.params.userId}`).then((response) => {
             let data = response.data
+            console.log(response.data);
             
             data.sort((b, a) => new Date(a.created_at) - new Date(b.created_at));
 
@@ -52,6 +53,7 @@ const PaymentHistory = ({ route, navigation }) => {
             setStaticState(data)
 
         }).catch((err) => {
+            console.log(err.response.data, "err");
 
         }).finally(() => {
             pauseAnimation()

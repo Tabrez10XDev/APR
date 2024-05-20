@@ -65,6 +65,7 @@ const OTPScreen = ({ route }) => {
         try {
             await AsyncStorage.setItem('AuthState', id.toString())
             await AsyncStorage.setItem('firstName', name.toString())
+            // await AsyncStorage.setItem('eventId', event_id)
 
             route.params.finishAuth()
         } catch (err) {
@@ -103,6 +104,7 @@ const OTPScreen = ({ route }) => {
             console.log(response.data)
             if (response.data.mobile_no_verify_status) {
                 saveAuth(response.data.registrant_id, response.data.first_name + " " + response.data.last_name)
+
 
             } else {
                 Toast.show({
