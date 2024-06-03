@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { assets, SIZES, COLORS, FONTS, CONST } from '../../../contants';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, TouchableOpacity, Modal, Pressable } from 'react-native';
+import {  Text, View, Image, ScrollView, Dimensions, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { RectButton } from '../../ui components/Buttons';
 import axios from 'axios';
 import authContext from '../../../contants/authContext';
-import { StackActions, useTheme } from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
 import Lottie from 'lottie-react-native';
 

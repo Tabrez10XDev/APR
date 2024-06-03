@@ -1,0 +1,84 @@
+{
+  "project_info": {
+    "project_number": "268422767928",
+    "project_id": "apr-marathon-2023",
+    "storage_bucket": "apr-marathon-2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268422767928:android:66a238bdf9dffb155f8dcd",
+        "android_client_info": {
+          "package_name": "com.aprtestnotification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "268422767928-5l7kcauhelk72d25f0ohgeenaj27dpho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABXdv5Yv-WgUMRKfE3iF_3n6Dhi6xHPIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "268422767928-5l7kcauhelk72d25f0ohgeenaj27dpho.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "268422767928-p9clv3cve0oivpbicse6cpdp315466kq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bwt.apr",
+                "app_store_id": "6470662081"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268422767928:android:3b2b53a310d563465f8dcd",
+        "android_client_info": {
+          "package_name": "org.act.apr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "268422767928-5l7kcauhelk72d25f0ohgeenaj27dpho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABXdv5Yv-WgUMRKfE3iF_3n6Dhi6xHPIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "268422767928-5l7kcauhelk72d25f0ohgeenaj27dpho.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "268422767928-p9clv3cve0oivpbicse6cpdp315466kq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bwt.apr",
+                "app_store_id": "6470662081"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
